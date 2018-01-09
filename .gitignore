@@ -1,0 +1,8 @@
+# IDE folder
+.idea/
+
+# temp files
+*.pyc
+
+# django app for random experimentation
+driver/

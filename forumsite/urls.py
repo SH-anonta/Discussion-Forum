@@ -19,4 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path('forum/', include('forum.urls')),
     path('admin/', admin.site.urls),
+    path('driver/', include('driver.urls')),    #TODO delete line before deployment
 ]

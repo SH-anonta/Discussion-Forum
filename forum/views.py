@@ -5,4 +5,4 @@ from django.views import View
 
 class HomePage(View):
     def get(self, request):
-        return HttpResponse('hola')
+        return render(request, 'forum/home_page.html')

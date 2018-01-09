@@ -6,3 +6,6 @@
 
 # django app for random experimentation
 driver/
+
+# local db file
+db.sqlite3

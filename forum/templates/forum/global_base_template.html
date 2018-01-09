@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+{%load static%}
 
 {% comment %}
-This template every other templates of this site must extend
-It's main purpose is to include JS libraries, frameworks and global CSS rules
+    This template every other templates of this site must extend
+    It's main purpose is to include JS libraries, frameworks and global CSS rules
 {% endcomment %}
 
 <html lang="en">
@@ -12,10 +13,18 @@ It's main purpose is to include JS libraries, frameworks and global CSS rules
     {%block HeadContent%}
         <title>To be replaced </title>
     {%endblock%}
+
+    {# Styles... #}
+    <link rel="stylesheet" href="{%static 'forum/bootstrap/css/bootstrap.min.css' %}">
+
 </head>
 <body>
     {%block BodyContent%}
-        <p>To be replaced</p>
+        <p id="pp" class="jumbotrom">To be replaced</p>
     {%endblock%}
+
+    {# Scripts... #}
+    <script src="{%static 'forum/jquery/jquery-3.2.1.min.js' %}" defer type="text/javascript" ></script>
+    <script src="{%static 'forum/bootstrap/js/bootstrap.min.js' %}" defer type="text/javascript" ></script>
 </body>
 </html>

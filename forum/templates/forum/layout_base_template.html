@@ -1,5 +1,6 @@
 {%extends 'forum/global_base_template.html'%}
 
+
 {#
 This base template provides a standard layout to all pages
 This template decides how the Header, Footer, Sidebar and Body of the
@@ -9,10 +10,95 @@ It also provides default content for Header footer and sidebar
 #}
 
 {%block HeadContent%}
-
+    <title>To be replaced</title>
 {%endblock%}
 
 
 {%block BodyContent%}
 
+<div class="container">
+    
+    <div id="header" class="row">
+        {%block HeaderContent%}
+            <div class="col-sm-10">
+                <h3 class="h3">Site Forum</h3>
+            </div>
+
+            <div id="LoginLinkContainer" class="col-sm-2">
+                {#TODO: mock variable, replace with context and remove it with tag#}
+                {% with user_logged_in=False %}
+                    {%if user_logged_in %}
+                        <a class="" href="/forum"> Logout </a>
+                    {%else%}
+                        <a class="" href="/forum"> Login </a>
+                    {%endif%}
+                {%endwith%}
+            </div>
+        {%endblock%}
+
+    </div>
+    
+    <div id="navigation" class="row">
+        {%block NavigationContent%}
+        <div class="col-sm-12">
+            <nav class="nav">
+                <a class="nav-link" href="{%url 'forum:homepage'%}">Home</a>
+                <a class="nav-link" href="{%url 'forum:homepage'%}">About</a>
+                <a class="nav-link" href="/forum">Recent posts</a>
+                <a class="nav-link" href="/forum">Profile</a>
+                <a class="nav-link" href="/forum"></a>
+            </nav>
+        </div>
+
+        {%endblock%}
+    </div>
+    
+    
+    <div id="main_content" class="row">
+        {%block MainContent%}
+        <div class="col-sm-12">
+            <h1 class="h1"> To be replaced </h1>
+        </div>
+        {%endblock%}
+
+    </div>
+    
+    <div class="row">
+        <div id="footer" class="col-sm-12">
+            {%block FooterContent%}
+                <p>Replace footer</p>
+            
+            {%endblock%}
+        </div>
+        
+        
+    </div>
+</div>
+
+<style>
+<!--This style is for debugging only-->
+
+#footer{
+    border-style: solid;
+    border-color: black;
+    background-color: red;
+}
+
+#header{
+    border-style: solid;
+    border-color: black;
+    background-color: blanchedalmond;
+}
+
+#navigation{
+    background-color: aquamarine;
+}
+    
+#main_content{
+    min-height: 500px;
+    background-color: beige;
+}
+    
+
+</style>
 {%endblock%}

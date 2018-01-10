@@ -2,9 +2,13 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.core.exceptions import ValidationError
 from django.db import models
 
+class ModelConstraints:
+    min_user_name_len= 4
+    min_password_len= 8
+
 # validators
 def usernameIsValid(uname):
-    if (len(uname) < 4):
+    if (len(uname) < ModelConstraints.min_user_name_len):
         raise ValidationError('User name can not be less than 4 characters long')
 
 # models

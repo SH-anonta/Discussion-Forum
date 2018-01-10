@@ -1,6 +1,13 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.core.exceptions import ValidationError
 from django.db import models
 
+# validators
+def usernameIsValid(uname):
+    if (len(uname) < 4):
+        raise ValidationError('User name can not be less than 4 characters long')
+
+# models
 class UserManager(BaseUserManager):
     def create_user(self, username, password=None):
         if not username:
@@ -29,12 +36,15 @@ class UserManager(BaseUserManager):
 
         return user
 
-
-
 class User(AbstractBaseUser):
     objects = UserManager()
 
-    username= models.CharField(max_length= 20, unique= True, verbose_name= 'User Name')
+    username= models.CharField(
+        max_length= 20,
+        unique= True,
+        verbose_name= 'User Name',
+        validators=[usernameIsValid,],
+    )
 
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)

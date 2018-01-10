@@ -4,6 +4,9 @@
 # temp files
 *.pyc
 
+# log files
+debug.log
+
 # django app for random experimentation
 driver/
 

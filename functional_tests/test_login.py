@@ -1,9 +1,10 @@
-from django.test import LiveServerTestCase
 from selenium import webdriver
+from functional_tests.base_testcase import BaseTestCase
 from time import sleep
 
-class LoginTest(LiveServerTestCase):
+class LoginTest(BaseTestCase):
     def setUp(self):
+        self.loadData()
         self.home_page_url = self.live_server_url + '/forum'
         self.login_page_url = self.live_server_url + '/forum/login'
         self.browser = webdriver.Chrome()
@@ -11,20 +12,22 @@ class LoginTest(LiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
-    # Helper classes
-    def getBrowser(self):
-        return self.browser
-
-    def getHomepageAddress(self):
-        return self.home_page_url
-
-    def getLoginpageAddress(self):
-        return self.login_page_url
+    def loadData(self):
+        """Load data in database for this test"""
+        pass
 
     # tests
     def test_user_login(self):
         browser = self.getBrowser()
         browser.get(self.getLoginpageAddress())
 
-        # self.fail('Test is incomplete!')
+        uname_tb = browser.find_element_by_id('usernameTB')
+        pass_tb  = browser.find_element_by_id('passwordTB')
+        login_btn = browser.find_element_by_id('loginBTN')
+
+        uname_tb.send_keys('user')
+        pass_tb.send_keys('password')
+        login_btn.click()
+
+        self.fail('Test is incomplete!')
 

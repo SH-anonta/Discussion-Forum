@@ -82,7 +82,7 @@ DATABASES = {
     }
 }
 
-
+LOGIN_REDIRECT_URL= '/forum/temp'   # todo replace
 AUTH_USER_MODEL= 'forum.User'
 
 # Password validation

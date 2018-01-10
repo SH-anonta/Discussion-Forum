@@ -1,20 +1,16 @@
-from selenium import webdriver
+from forum.models import User
 from functional_tests.base_testcase import BaseTestCase
 from time import sleep
 
 class LoginTest(BaseTestCase):
-    def setUp(self):
-        self.loadData()
-        self.home_page_url = self.live_server_url + '/forum'
-        self.login_page_url = self.live_server_url + '/forum/login'
-        self.browser = webdriver.Chrome()
-
-    def tearDown(self):
-        self.browser.quit()
 
     def loadData(self):
         """Load data in database for this test"""
-        pass
+        u = User(username= 'User')
+        u.set_password('password')
+        u.save()
+
+    # todo refactor code
 
     # tests
     def test_user_login(self):
@@ -25,9 +21,10 @@ class LoginTest(BaseTestCase):
         pass_tb  = browser.find_element_by_id('passwordTB')
         login_btn = browser.find_element_by_id('loginBTN')
 
-        uname_tb.send_keys('user')
+        uname_tb.send_keys('User')
         pass_tb.send_keys('password')
         login_btn.click()
 
-        self.fail('Test is incomplete!')
+        self.assertTrue('User' in browser.page_source)
 
+    # todo create test for fail

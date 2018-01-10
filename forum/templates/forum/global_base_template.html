@@ -17,6 +17,9 @@
     {# Styles... #}
     <link rel="stylesheet" href="{%static 'forum/bootstrap/css/bootstrap.min.css' %}">
 
+    {%block PageStyles%}
+        {# It's important this block is bellow all styles of this page, so styles in derived templates cn overwrite them #}
+    {%endblock%}
 </head>
 
 <body>
@@ -24,11 +27,13 @@
         <p id="pp" class="jumbotrom">To be replaced</p>
     {%endblock%}
 
-    {%block PageScripts%}
-    {%endblock%}
 
     {# Scripts... #}
     <script src="{%static 'forum/jquery/jquery-3.2.1.min.js' %}" defer type="text/javascript" ></script>
     <script src="{%static 'forum/bootstrap/js/bootstrap.min.js' %}" defer type="text/javascript" ></script>
+
+    {%block PageScripts%}
+        {# It's important this block is bellow all scripts of this page, so scripts of derived classes can run after all libraries are loaded #}
+    {%endblock%}
 </body>
 </html>

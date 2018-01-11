@@ -21,6 +21,7 @@ class Login(LoginView):
             return redirect('forum:homepage')
 
         self.extra_context[self.context_var_print_login_fail_msg]= False
+
         return super().get(request, args, kwargs)
     
     def post(self, request, *args, **kwargs):

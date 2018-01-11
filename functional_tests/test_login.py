@@ -14,28 +14,6 @@ class LoginTest(BaseTestCase):
         u.set_password('password')
         u.save()
 
-    def login(self, uname, pw):
-        # User opens browser and goes to the login page
-        browser = self.getBrowser()
-        browser.get(self.getLoginpageAddress())
-
-        # The user sees a login
-        uname_tb = browser.find_element_by_id('usernameTB')
-        pass_tb = browser.find_element_by_id('passwordTB')
-        login_btn = browser.find_element_by_id('loginBTN')
-
-        # The user enters valid username and password then clicks on login button
-        uname_tb.send_keys(uname)
-        pass_tb.send_keys(pw)
-        login_btn.click()
-
-    def assertHomepageLoaded(self):
-        """test if he browser is currently in the homepage """
-        self.assertTrue(self.getHomepageAddress() in self.browser.current_url)
-
-    def assertLoginPageLoaded(self):
-        self.assertTrue(self.getLoginpageAddress() in self.browser.current_url)
-
     # tests
     def test_user_login_logout(self):
         """Simple login and then logout test"""

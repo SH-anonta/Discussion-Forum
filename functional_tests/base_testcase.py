@@ -16,10 +16,9 @@ class BaseTestCase(StaticLiveServerTestCase):
 
     # Helper methods
     def loadData(self):
-        """Load data in database for this test"""
+        """Load data in database for each test"""
         pass
 
-    # Helper classes
     def getBrowser(self):
         return self.browser
 
@@ -28,3 +27,25 @@ class BaseTestCase(StaticLiveServerTestCase):
 
     def getLoginpageAddress(self):
         return self.login_page_url
+
+    def assertHomepageLoaded(self):
+        """test if he browser is currently in the homepage """
+        self.assertTrue(self.getHomepageAddress() in self.browser.current_url)
+
+    def assertLoginPageLoaded(self):
+        self.assertTrue(self.getLoginpageAddress() in self.browser.current_url)
+
+    def login(self, uname, pw):
+        # User opens browser and goes to the login page
+        browser = self.getBrowser()
+        browser.get(self.getLoginpageAddress())
+
+        # The user sees a login
+        uname_tb = browser.find_element_by_id('usernameTB')
+        pass_tb = browser.find_element_by_id('passwordTB')
+        login_btn = browser.find_element_by_id('loginBTN')
+
+        # The user enters valid username and password then clicks on login button
+        uname_tb.send_keys(uname)
+        pass_tb.send_keys(pw)
+        login_btn.click()

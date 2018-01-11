@@ -1,4 +1,4 @@
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
@@ -10,6 +10,9 @@ class HomePage(View):
 
 class Login(LoginView):
     template_name= 'forum/login_page.html'
+
+class Logout(LogoutView):
+    next_page = 'forum:homepage'
 
 def tempview(request):
     # todo remove view

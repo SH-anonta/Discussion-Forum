@@ -26,9 +26,9 @@ It also provides default content for Header footer and sidebar
 
             <div id="LoginLogoutLinkContainer" class="col-sm-1">
                 {%if user.is_authenticated %}
-                    <a id="logoutLNK" class="" href="/forum"> Logout </a>
+                    <a id="logoutLNK" class="btn btn-primary" role="button" href="{%url 'forum:logout'%}"> Logout </a>
                 {%else%}
-                    <a class="loginLNK" href="{%url 'forum:loginpage'%}"> Login </a>
+                    <a id="loginLNK" class="btn btn-primary" role="button" href="{%url 'forum:loginpage'%}"> Login </a>
                 {%endif%}
             </div>
         {%endblock%}

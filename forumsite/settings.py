@@ -83,6 +83,8 @@ DATABASES = {
 }
 
 LOGIN_REDIRECT_URL= 'forum:homepage'
+LOGOUT_REDIRECT_URL= 'forum:homepage'
+
 AUTH_USER_MODEL= 'forum.User'
 
 # Password validation

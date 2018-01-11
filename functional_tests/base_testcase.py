@@ -29,10 +29,11 @@ class BaseTestCase(StaticLiveServerTestCase):
         return self.login_page_url
 
     def assertHomepageLoaded(self):
-        """test if he browser is currently in the homepage """
+        """test if he browser is currently in the homepage"""
         self.assertTrue(self.getHomepageAddress() in self.browser.current_url)
 
     def assertLoginPageLoaded(self):
+        """test if he browser is currently in the login page"""
         self.assertTrue(self.getLoginpageAddress() in self.browser.current_url)
 
     def login(self, uname, pw):

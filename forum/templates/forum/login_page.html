@@ -14,6 +14,10 @@
 
         <div class="row">
         <div class=" col-sm-4 offset-sm-4">
+            {%if print_login_fail_msg%}
+                <p id="LoginFailMessage">Login failed</p>
+            {%endif%}
+
             <form action="{%url 'forum:loginpage'%}" method="post">
                 {%csrf_token %}
                 {#IMPORTANT: name attribute of usernameTB and passwordTB must be set to "username" and "password" respectively, due to django's builtin loginview#}
@@ -29,5 +33,9 @@
 {%endblock%}
 
 {%block PageStyles%}
-
+<style>
+    #LoginFailMessage{
+        color: red;
+    }
+</style>
 {%endblock%}

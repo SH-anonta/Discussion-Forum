@@ -1,3 +1,5 @@
+from django.urls import reverse
+
 from forum.models import User
 from functional_tests.base_testcase import BaseTestCase
 from time import sleep
@@ -10,21 +12,41 @@ class LoginTest(BaseTestCase):
         u.set_password('password')
         u.save()
 
-    # todo refactor code
-
     # tests
-    def test_user_login(self):
+    def test_user_login_logout(self):
+        """Simple login and logout test"""
+        # User opens browser and goes to the login page
         browser = self.getBrowser()
         browser.get(self.getLoginpageAddress())
 
+        # The user sees a login
         uname_tb = browser.find_element_by_id('usernameTB')
         pass_tb  = browser.find_element_by_id('passwordTB')
         login_btn = browser.find_element_by_id('loginBTN')
 
-        uname_tb.send_keys('User')
-        pass_tb.send_keys('password')
+        uname = 'User'
+        pw = 'password'
+        # The user enters valid username and password then clicks on login button
+        uname_tb.send_keys(uname)
+        pass_tb.send_keys(pw)
         login_btn.click()
 
-        self.assertTrue('User' in browser.page_source)
+        # login is successful and user is redirected to the home page
+        self.assertTrue(self.getHomepageAddress() in browser.current_url)
 
-    # todo create test for fail
+        # the user sees there is a logout in the header of the page
+        logout_link= browser.find_element_by_id('logoutLNK')
+        self.assertTrue('Logout' in logout_link.text)
+
+        # the user clicks the link and
+        logout_link.click()
+
+        # The user is logged out and is redirected to the homepage
+        # Where he can see the login link
+
+        logout_link = browser.find_element_by_id('loginLNK')
+        self.assertTrue('Login' in logout_link.text)
+
+    # todo create test for invalid login
+
+    # todo create test for relogin attemp for logged in users

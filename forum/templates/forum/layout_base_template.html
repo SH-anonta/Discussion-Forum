@@ -20,19 +20,16 @@ It also provides default content for Header footer and sidebar
     
     <div id="header" class="row">
         {%block HeaderContent%}
-            <div class="col-sm-10">
+            <div class="col-sm-11">
                 <h3 class="h3">Site Forum</h3>
             </div>
 
-            <div id="LoginLinkContainer" class="col-sm-2">
-                {#TODO: mock variable, replace with context and remove it with tag#}
-                {% with user_logged_in=False %}
-                    {%if user_logged_in %}
-                        <a class="" href="/forum"> Logout </a>
-                    {%else%}
-                        <a class="" href="/forum"> Login </a>
-                    {%endif%}
-                {%endwith%}
+            <div id="LoginLogoutLinkContainer" class="col-sm-1">
+                {%if user.is_authenticated %}
+                    <a id="logoutLNK" class="" href="/forum"> Logout </a>
+                {%else%}
+                    <a class="loginLNK" href="{%url 'forum:loginpage'%}"> Login </a>
+                {%endif%}
             </div>
         {%endblock%}
 

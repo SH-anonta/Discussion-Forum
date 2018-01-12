@@ -22,7 +22,6 @@ class UserTest(TestCase):
 
     # todo write tests for invalid data handling
 
-# todo implement:
 class BoardTest(TestCase):
     def test_creation(self):
         Board.objects.create(title='Announcements')

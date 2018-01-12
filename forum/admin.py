@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from forum.models import User
+from forum.models import User, Board, Post, Reply
 from forum.forms import UserAdminChangeForm, UserAdminCreationForm
 
 class UserAdmin(BaseUserAdmin):
@@ -33,6 +33,9 @@ class UserAdmin(BaseUserAdmin):
 
 # registrations
 admin.site.register(User, UserAdmin)
+admin.site.register(Board)
+admin.site.register(Post)
+admin.site.register(Reply)
 
 # unregistrations
 # admin.site.unregister(Group)

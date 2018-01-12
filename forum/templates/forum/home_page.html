@@ -1,2 +1,17 @@
 {%extends 'forum/layout_base_template.html'%}
 
+{%block MainContent%}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+        <ul>
+        {%for board in boards%}
+            <li>{{board.title}}</li>
+        {%endfor%}
+        </ul>
+
+        </div>
+
+    </div>
+</div>
+{%endblock%}

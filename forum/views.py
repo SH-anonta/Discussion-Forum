@@ -4,12 +4,15 @@ from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.views import View
 
-from forum.models import User
+from forum.models import User, Board
 
 
 class HomePage(View):
     def get(self, request):
-        return render(request, 'forum/home_page.html')
+        context = {
+            'boards' : Board.objects.all()
+        }
+        return render(request, 'forum/home_page.html', context)
 
 class Login(LoginView):
     template_name= 'forum/login_page.html'
@@ -25,6 +28,8 @@ class Login(LoginView):
         self.extra_context[self.context_var_print_login_fail_msg]= False
 
         return super().get(request, args, kwargs)
+
+
     
     def post(self, request, *args, **kwargs):
         uname = request.POST['username']

@@ -1,17 +1,41 @@
 {%extends 'forum/layout_base_template.html'%}
+{%load static%}
 
 {%block MainContent%}
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-        <ul>
+        <h3 class="h3">Boards</h3>
+
+        <table class="table">
+            <tr>
+                <th>Board name</th>
+                <th>Post count</th>
+            </tr>
         {%for board in boards%}
-            <li>{{board.title}}</li>
+            <tr>
+                <td>
+                    <img class='BoardICON' src="{%static 'forum/images/placeholder_icon.png' %}"/>
+                    {{board.title}}
+                </td>
+                <td>0</td>  {#todo put variable here#}
+            </tr>
         {%endfor%}
-        </ul>
+        </table>
 
         </div>
 
     </div>
 </div>
+{%endblock%}
+
+{%block PageStyles%}
+<style>
+    .BoardICON{
+        max-height: 50px;
+        max-width: 50px;
+        margin-right: 10px;
+    }
+</style>
+
 {%endblock%}

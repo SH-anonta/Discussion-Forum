@@ -3,7 +3,7 @@ from django.db import models
 
 
 # models
-from forum.validators import validate_username
+from forum.validators import validate_username, POST_TITLE_MAX_LEN, POST_CONTENT_MAX_LEN
 
 
 class UserManager(BaseUserManager):
@@ -79,3 +79,22 @@ class User(AbstractBaseUser):
     @property
     def is_active(self):
         return self.active
+
+class Board(models.Model):
+    title = models.TextField(max_length= POST_TITLE_MAX_LEN)
+
+
+class Post(models.Model):
+    title = models.TextField(max_length= POST_TITLE_MAX_LEN)
+    content = models.TextField(max_length= POST_CONTENT_MAX_LEN)
+    creation_date= models.DateTimeField(auto_now_add= True, blank= True)
+    deleted = models.BooleanField(default= False)
+
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    board= models.ForeignKey(Board, on_delete=models.CASCADE)
+
+class Reply(models.Model):
+    creation_date= models.DateTimeField(auto_now_add= True, blank= True)
+
+    reply_to = models.ForeignKey(Post, on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)

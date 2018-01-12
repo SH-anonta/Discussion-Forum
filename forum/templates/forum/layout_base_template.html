@@ -20,11 +20,11 @@ It also provides default content for Header footer and sidebar
     
     <div id="header" class="row">
         {%block HeaderContent%}
-            <div class="col-sm-4">
+            <div class="col-sm-8">
                 <h3 class="h3">Site Forum</h3>
             </div>
 
-            <div id="UserNameT" class="col-sm-6">
+            <div id="UserNameT" class="col-sm-2">
             {%if user.is_authenticated%}
                 <p class="text-small text-right">{{user.username}}</p>
             {%endif%}
@@ -81,48 +81,60 @@ It also provides default content for Header footer and sidebar
 <style>
 /*This style is for debugging only*/
 
-#footer{
-    border-style: solid;
-    border-color: black;
-    background-color: red;
-}
-
-    
-#main_content{
-    min-height: 500px;
-    background-color: beige;
-}
-
 
 </style>
 
 <style>
 /* actual styles of this page*/
 
+
+
+p, a, td{
+    color: #1C0E0E;
+}
+     
 #header{
-    background-color: beige;
+    background-color: #F9F4F5;
+    min-height: 50px;
 }
 
 #header *{
     margin-top: auto;
     margin-bottom: auto;
 }
-
-#navigation{
-    background-color: #444554;
-}
-
-#navigation *{
-    color: white;
-}
-
+    
 #HeaderLOGO{
     width: 500px;
     height: 300px;
 }
 
+#navigation{
+    background-color: #70587C;
+}
 
+#navigation *{
+    color: #F9F4F5;
+}
+    
+#navigation a:hover{
+    color: white;
+    text-decoration: underline;
+}
+ 
+#main_content{
+    min-height: 500px;
+    background-color: #F9F4F5;
+}
+    
+    
+#footer{
+    color: white;
+    background-color: #70587C;
+}
 
+#footer *{
+    color: #F9F4F5;
+}
 </style>
 
 

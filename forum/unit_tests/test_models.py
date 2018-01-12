@@ -17,3 +17,4 @@ class UserTest(TestCase):
     def test_CustomUserModelIsInUse(self):
         self.assertEqual(User, get_user_model(), 'Customer User model is not in use')
 
+    # todo write tests for invalid data handling

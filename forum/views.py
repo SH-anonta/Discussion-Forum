@@ -1,8 +1,10 @@
-from django.contrib.auth import authenticate
 from django.contrib.auth.views import LoginView, LogoutView
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate
+from django.http import HttpResponse
 from django.views import View
+
+from forum.models import User
 
 
 class HomePage(View):
@@ -36,3 +38,31 @@ class Login(LoginView):
 
 class Logout(LogoutView):
     pass
+
+class Register(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('forum:homepage')
+
+        context= {'show_registration_failed_msg': False}
+        return render(request, 'forum/registration_page.html', context)
+
+    # todo complete validation, using model validators
+    def post(self, request):
+        post = request.POST
+        uname = post['username']
+        email= post['email']
+        pw= post['passowrd']
+        confirm_pw= post['confirm_password']
+
+        if pw != confirm_pw or User.objects.filter(username=uname).exists():
+            context = {'show_registration_failed_msg': True}
+            render(request, 'forum/registration_page.html', context)
+
+        user = User(username= uname)
+        user.set_password(pw)
+        user.save()
+
+        return redirect('forum:loginpage')
+
+

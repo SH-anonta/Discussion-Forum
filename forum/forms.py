@@ -2,7 +2,27 @@ from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from forum.models import User
+from forum.validators import validate_password, validate_username
 
+
+class UserRegistrationForm(forms.Form):
+    username = forms.CharField(validators= [validate_username])
+    email = forms.CharField()
+    password = forms.CharField(validators= [validate_password])
+    confirm_password = forms.CharField()
+
+    def clean_username(self):
+        if User.objects.filter(username= self.cleaned_data['username']).exists():
+            raise ValueError('User name not avalable')
+
+    def clean_confirm_password(self):
+        if self.cleaned_data['password'] != self.cleaned_data['confirm_password']:
+            raise ValueError('Passwords don\'t match')
+
+    #todo write and validators for confirm_password and email fields
+
+
+# For forms admin site
 class RegisterForm(forms.ModelForm):
     password1= forms.CharField(widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
@@ -28,7 +48,6 @@ class RegisterForm(forms.ModelForm):
             raise forms.ValidationError("Passwords don't match")
 
         return password2
-
 
 class UserAdminCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)

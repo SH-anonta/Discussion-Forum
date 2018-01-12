@@ -1,4 +1,7 @@
+from unittest import skip
+
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.urls import reverse
 from selenium import webdriver
 
 # This class is to be inherited, don't put test code in here
@@ -7,8 +10,9 @@ class BaseTestCase(StaticLiveServerTestCase):
 
     def setUp(self):
         self.loadData()
-        self.home_page_url = self.live_server_url + '/forum'
-        self.login_page_url = self.live_server_url + '/forum/login'
+        self.home_page_url = self.live_server_url + reverse('forum:homepage')
+        self.login_page_url = self.live_server_url + reverse('forum:loginpage')
+        self.registeration_page_url = self.live_server_url + reverse('forum:registration_page')
         self.browser = webdriver.Chrome()
 
     def tearDown(self):
@@ -16,30 +20,36 @@ class BaseTestCase(StaticLiveServerTestCase):
 
     # Helper methods
     def loadData(self):
-        """Load data in database for each test"""
+        """Load data in database for each test
+            This is the first thing setUp() calls"""
         pass
 
     def getBrowser(self):
         return self.browser
 
-    def getHomepageAddress(self):
+    # helpers: Location getters
+    def getHomePageAddress(self):
         return self.home_page_url
 
-    def getLoginpageAddress(self):
+    def getLoginPageAddress(self):
         return self.login_page_url
 
+    def getRegisterPageAddress(self):
+        return self.registeration_page_url
+
+    # helpers: custom asserts
     def assertHomepageLoaded(self):
         """test if he browser is currently in the homepage"""
-        self.assertTrue(self.getHomepageAddress() in self.browser.current_url)
+        self.assertTrue(self.getHomePageAddress() in self.browser.current_url)
 
     def assertLoginPageLoaded(self):
         """test if he browser is currently in the login page"""
-        self.assertTrue(self.getLoginpageAddress() in self.browser.current_url)
+        self.assertTrue(self.getLoginPageAddress() in self.browser.current_url)
 
     def login(self, uname, pw):
         # User opens browser and goes to the login page
         browser = self.getBrowser()
-        browser.get(self.getLoginpageAddress())
+        browser.get(self.getLoginPageAddress())
 
         # The user sees a login
         uname_tb = browser.find_element_by_id('usernameTB')

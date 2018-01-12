@@ -5,6 +5,7 @@
 *.pyc
 
 # log files
+*.log
 debug.log
 
 # django app for random experimentation

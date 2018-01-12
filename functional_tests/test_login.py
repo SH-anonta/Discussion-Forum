@@ -1,9 +1,8 @@
-from django.urls import reverse
-
-from forum.models import User
 from functional_tests.base_testcase import BaseTestCase
 from unittest import skip
 from time import sleep
+
+from forum.models import User
 
 class LoginTest(BaseTestCase):
 
@@ -68,7 +67,6 @@ class LoginTest(BaseTestCase):
         # and he sees the message 'Login failed' near the form
         self.assertTrue('Login failed' in browser.page_source)
 
-
     def test_relogin_attempt(self):
         """
             Story: User logs in successfully then tries to login again,
@@ -85,7 +83,7 @@ class LoginTest(BaseTestCase):
         self.assertHomepageLoaded()
 
         # User tries to go to the login page again
-        browser.get(self.getLoginpageAddress())
+        browser.get(self.getLoginPageAddress())
 
         # but he is redirected back to homepage
         self.assertHomepageLoaded()

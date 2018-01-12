@@ -21,9 +21,9 @@
             <form action="{%url 'forum:loginpage'%}" method="post">
                 {%csrf_token %}
                 {#IMPORTANT: name attribute of usernameTB and passwordTB must be set to "username" and "password" respectively, due to django's builtin loginview#}
-                <input id="usernameTB" class="form-control" type="text" name="username">
-                <input id="passwordTB" class="form-control" type="password" name="password">
-                <button id="loginBTN" class="btn" type="submit">Login</button>
+                <input id="usernameTB" class="form-control" type="text" name="username" placeholder="User name">
+                <input id="passwordTB" class="form-control" type="password" name="password" placeholder="Password">
+                <button id="loginBTN" class="btn btn-block" type="submit">Login</button>
             </form>
 
         </div>

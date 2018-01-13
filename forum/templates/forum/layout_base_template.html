@@ -24,22 +24,18 @@ It also provides default content for Header footer and sidebar
                 <h3 class="h3">Site Forum</h3>
             </div>
 
-<!--
-            <div id="UserNameT" class="col-sm-2">
-            
-            </div>
--->
-
             <div id="LoginLogoutLinkContainer" class="col-sm-4 text-right">
-                {%if user.is_authenticated%}
-                    <a class="d-inline mr-2 text-small text-right" href="{%url 'forum:user_detail' user.pk%}">{{user.username}}</a>
-                {%endif%}
-                
-                {%if user.is_authenticated %}
-                    <a id="logoutLNK" class="login-logout-btn btn btn-sm btn-outline-danger" role="button" href="{%url 'forum:logout'%}"> Logout </a>
-                {%else%}
-                    <a id="loginLNK" class="login-logout-btn btn btn-sm btn-outline-success" role="button" href="{%url 'forum:loginpage'%}"> Login </a>
-                {%endif%}
+                {%with user_logged_in=user.is_authenticated %}
+                    {%if user_logged_in%}
+                        <a id="UserNameT" class="d-inline mr-2 text-small text-right" href="{%url 'forum:user_detail' user.pk%}">{{user.username}}</a>
+                    {%endif%}
+
+                    {%if user_logged_in%}
+                        <a id="logoutLNK" class="login-logout-btn btn btn-sm btn-outline-danger" role="button" href="{%url 'forum:logout'%}"> Logout </a>
+                    {%else%}
+                        <a id="loginLNK" class="login-logout-btn btn btn-sm btn-outline-success" role="button" href="{%url 'forum:loginpage'%}"> Login </a>
+                    {%endif%}
+                {%endwith%}
             </div>
         {%endblock%}
 

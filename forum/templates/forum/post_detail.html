@@ -59,6 +59,16 @@
             
     </div>
     </div>
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <form class="text-right" method="POST" action="">
+                {%csrf_token%}
+                <textarea id="QuickReplyTA" class="form-control"></textarea>
+                <button type="submit" class="btn">Post</button>
+            </form>
+        </div>
+    </div>
 
 </div>
 {%endblock%}
@@ -88,6 +98,10 @@
 .ReplyContainer,
 .PostContainer{
     margin-bottom: 20px;
+}
+    
+#QuickReplyTA{
+    min-height: 200px;
 }
 
 

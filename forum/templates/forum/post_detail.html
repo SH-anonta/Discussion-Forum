@@ -19,29 +19,45 @@
 
     <div id="PostContentRow" class="row">
         <div class="col-sm-12">
-            <!---->
-            <div class="container">
+            <div class="container PostContainer">
                 <div class="row">
-                    <div class="col-sm-2 AvatarContainer text-center">
+                    <div class="col-sm-3 col-md-2 AvatarContainer text-center">
                         <img class="AvatarIMG" src="{%static 'forum/images/placeholder_icon.png' %}"/>
-                        <a href="{%url 'forum:user_detail' post.creator.pk %}">{{post.creator.username}}</a>
+                        <a class="d-block" href="{%url 'forum:user_detail' post.creator.pk %}">{{post.creator.username}}</a>
                     </div>
 
-                    <div id="PostBodyContainer" class="col-sm-10">
-                        <p>{{post.content}}</p>
+                    <div id="PostBodyContainer" class="col-sm-9 col-md-10">
+                        <pre>{{post.content}}</pre>
                     </div>
                 </div>
 
             </div>
-            <!---->
+
         </div>
             
 
     </div>
+    
+    
+    <div class="ReplyContainers row">
+    <div class="col-sm-12">
+        {%for reply in post.reply_set.all%}
+        <div class="ReplyContainer container">
+            <div class="row">
+                <div class="col-sm-3 col-md-2 AvatarContainer text-center">
+                    <img class="AvatarIMG" src="{%static 'forum/images/placeholder_icon.png' %}"/>
+                    <a class="d-block" href="{%url 'forum:user_detail' reply.creator.pk %}">{{reply.creator.username}}</a>
+                </div>
 
-    <div class="ReplyContainers">
-        <h3 class="h3">Replies go here</h3>
+                <div id="ReplyBodyContainer" class="col-sm-9 col-md-10">
+                    <pre>{{reply.content}}</pre>
+                </div>
+            </div>
 
+        </div>
+        {%endfor%}
+            
+    </div>
     </div>
 
 </div>
@@ -67,6 +83,11 @@
 .AvatarIMG{
     height: 80px;
     width:80px;
+}
+    
+.ReplyContainer,
+.PostContainer{
+    margin-bottom: 20px;
 }
 
 

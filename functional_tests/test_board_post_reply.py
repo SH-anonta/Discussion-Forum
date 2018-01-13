@@ -1,10 +1,14 @@
+from forum.models import Board
 from functional_tests.base_testcase import BaseTestCase
 
 
 class BoardTest(BaseTestCase):
-
     def loadData(self):
-        pass
+        b1= Board.objects.create(title='Announcements')
+        b2= Board.objects.create(title='General discussion')
+        b3= Board.objects.create(title='Programming')
 
     def test_board(self):
-        pass
+        browser= self.getBrowser()
+
+        browser.get(self.getHomePageAddress())

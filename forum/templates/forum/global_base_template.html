@@ -16,6 +16,16 @@
 
     {# Styles... #}
     <link rel="stylesheet" href="{%static 'forum/bootstrap/css/bootstrap.min.css' %}">
+    <style>
+        {#global site styles#}
+        a{
+            color: #502F4C;
+        }
+        a:hover{
+            color: black;
+        }
+    </style>
+
 
     {%block PageStyles%}
         {# It's important this block is bellow all styles of this page, so styles in derived templates cn overwrite them #}

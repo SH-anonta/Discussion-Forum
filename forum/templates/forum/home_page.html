@@ -1,6 +1,11 @@
 {%extends 'forum/layout_base_template.html'%}
 {%load static%}
 
+{%block HeadContent%}
+    <title>Home page</title>
+{%endblock%}
+
+
 {%block MainContent%}
 <div class="container">
     <div class="row">
@@ -17,9 +22,9 @@
             <tr>
                 <td class="fit"><img class='BoardICON' src="{%static 'forum/images/placeholder_icon.png' %}"/></td>
                 <td class="align-middle">
-                    {{board.title}}
+                    <a class="" href="{% url 'forum:board_posts' board.pk%}">{{board.title}}</a>
                 </td>
-                <td>0</td>  {#todo put variable here#}
+                <td class="align-middle">0</td>  {#todo put variable here#}
             </tr>
         {%endfor%}
         </table>
@@ -37,7 +42,8 @@
         max-width: 50px;
         margin-right: 10px;
     }
-    
+
+    /*make table columns fit to it's content*/
     .table td.fit, 
     .table th.fit {
         white-space: nowrap;

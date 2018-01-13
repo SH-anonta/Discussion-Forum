@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.views import View
 
-from forum.models import User, Board
+from forum.models import User, Board, Post
 
 
 class HomePage(View):
@@ -75,3 +75,14 @@ class Register(View):
         return redirect('forum:loginpage')
 
 
+class BoardPosts(View):
+    def get(self, request, board_id):
+        """View list of posts of a page"""
+        board = Board.objects.get(pk=board_id)
+        posts = board.post_set.all()
+
+        context= {
+            'board_posts' : posts
+        }
+
+        return render(request, 'forum/board_posts.html', context)

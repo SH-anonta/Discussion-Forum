@@ -1,0 +1,18 @@
+{%extends 'forum/layout_base_template.html'%}
+{%load static%}
+
+{%block HeadContent%}
+    <title>{{user.username}}</title>
+{%endblock%}
+
+{%block MainContent%}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <p>Profile of {{user.username}}</p>
+        </div>
+    </div>
+
+</div>
+
+{%endblock%}

@@ -36,3 +36,8 @@ class PostDetailTest(TestCase):
     def test_pageLoads(self):
         view = PostDetail()
         # todo implement
+
+class UserDetailTest(TestCase):
+    def test_pageLoads(self):
+        pass
+    #todo implement

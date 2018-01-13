@@ -97,3 +97,12 @@ class PostDetail(View):
         }
 
         return render(request, 'forum/post_detail.html', context)
+
+class UserDetail(View):
+    def get(self, request, user_id):
+        user = get_object_or_404(User, pk=user_id)
+        context={
+            'user' : user,
+        }
+        return render(request, 'forum/user_detail.html', context)
+

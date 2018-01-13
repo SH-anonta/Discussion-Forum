@@ -1,4 +1,5 @@
 {%extends 'forum/layout_base_template.html'%}
+{%load static%}
 
 
 {%block HeadContent%}
@@ -21,12 +22,12 @@
             <!---->
             <div class="container">
                 <div class="row">
-                    <div id="AvatarContainer" class="col-sm-3">
-                        <p>avatar</p>
-                        <p>Username</p>
+                    <div class="col-sm-2 AvatarContainer text-center">
+                        <img class="AvatarIMG" src="{%static 'forum/images/placeholder_icon.png' %}"/>
+                        <a href="{%url 'forum:user_detail' post.creator.pk %}">{{post.creator.username}}</a>
                     </div>
 
-                    <div id="PostBodyContainer" class="col-sm-9">
+                    <div id="PostBodyContainer" class="col-sm-10">
                         <p>{{post.content}}</p>
                     </div>
                 </div>
@@ -50,16 +51,25 @@
 {%block PageStyles%}
 
 <style>
-#AvatarContainer{
+.AvatarContainer{
     border-style: solid;
     background-color: #70587C;
 }
-#AvatarContainer *{
+    
+.AvatarContainer *{
     color: white;
 }
+    
 #PostContentRow{
     min-height: 250px;
 }
+
+.AvatarIMG{
+    height: 80px;
+    width:80px;
+}
+
+
 </style>
 
 {%endblock%}

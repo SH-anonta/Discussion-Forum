@@ -14,6 +14,10 @@ class HomePage(View):
         }
         return render(request, 'forum/home_page.html', context)
 
+class AboutPage(View):
+    def get(self, request):
+        return render(request, 'forum/about_page.html')
+
 class Login(LoginView):
     template_name= 'forum/login_page.html'
     extra_context = {}

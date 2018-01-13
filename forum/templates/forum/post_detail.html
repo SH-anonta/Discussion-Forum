@@ -6,7 +6,60 @@
 {%endblock%}
 
 {%block MainContent%}
-<h1>{{post.title}}</h1>
 
-<p>{{post.content}}</p>
+<div class="container">
+
+    <div id="PostTitleRow" class="row">
+        <div class="col-sm-12">
+            <h3 class="h3">{{post.title}}</h3>
+
+        </div>
+    </div>
+
+    <div id="PostContentRow" class="row">
+        <div class="col-sm-12">
+            <!---->
+            <div class="container">
+                <div class="row">
+                    <div id="AvatarContainer" class="col-sm-3">
+                        <p>avatar</p>
+                        <p>Username</p>
+                    </div>
+
+                    <div id="PostBodyContainer" class="col-sm-9">
+                        <p>{{post.content}}</p>
+                    </div>
+                </div>
+
+            </div>
+            <!---->
+        </div>
+            
+
+    </div>
+
+    <div class="ReplyContainers">
+        <h3 class="h3">Replies go here</h3>
+
+    </div>
+
+</div>
+{%endblock%}
+
+
+{%block PageStyles%}
+
+<style>
+#AvatarContainer{
+    border-style: solid;
+    background-color: #70587C;
+}
+#AvatarContainer *{
+    color: white;
+}
+#PostContentRow{
+    min-height: 250px;
+}
+</style>
+
 {%endblock%}

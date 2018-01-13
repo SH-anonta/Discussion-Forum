@@ -24,13 +24,17 @@ It also provides default content for Header footer and sidebar
                 <h3 class="h3">Site Forum</h3>
             </div>
 
+<!--
             <div id="UserNameT" class="col-sm-2">
-            {%if user.is_authenticated%}
-                <p class="text-small text-right">{{user.username}}</p>
-            {%endif%}
+            
             </div>
+-->
 
-            <div id="LoginLogoutLinkContainer" class="col-sm-2 text-right">
+            <div id="LoginLogoutLinkContainer" class="col-sm-4 text-right">
+                {%if user.is_authenticated%}
+                    <p class="d-inline mr-2 text-small text-right">{{user.username}}</p>
+                {%endif%}
+                
                 {%if user.is_authenticated %}
                     <a id="logoutLNK" class="login-logout-btn btn btn-sm btn-outline-danger" role="button" href="{%url 'forum:logout'%}"> Logout </a>
                 {%else%}
@@ -89,7 +93,7 @@ It also provides default content for Header footer and sidebar
 
 
 
-p, a, td{
+p, a, td, th{
     color: #1C0E0E;
 }
      
@@ -113,7 +117,7 @@ p, a, td{
 }
 
 #navigation *{
-    color: #F9F4F5;
+    color: white;
 }
     
 #navigation a:hover{

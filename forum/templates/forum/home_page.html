@@ -9,13 +9,14 @@
 
         <table class="table">
             <tr>
+                <th class="fit"></th>
                 <th>Board name</th>
                 <th>Post count</th>
             </tr>
         {%for board in boards%}
             <tr>
-                <td>
-                    <img class='BoardICON' src="{%static 'forum/images/placeholder_icon.png' %}"/>
+                <td class="fit"><img class='BoardICON' src="{%static 'forum/images/placeholder_icon.png' %}"/></td>
+                <td class="align-middle">
                     {{board.title}}
                 </td>
                 <td>0</td>  {#todo put variable here#}
@@ -36,6 +37,13 @@
         max-width: 50px;
         margin-right: 10px;
     }
+    
+    .table td.fit, 
+    .table th.fit {
+        white-space: nowrap;
+        width: 1%;
+    }
+
 </style>
 
 {%endblock%}

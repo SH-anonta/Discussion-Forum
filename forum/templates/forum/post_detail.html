@@ -1,0 +1,12 @@
+{%extends 'forum/layout_base_template.html'%}
+
+
+{%block HeadContent%}
+    <title>{{post.title}}</title>
+{%endblock%}
+
+{%block MainContent%}
+<h1>{{post.title}}</h1>
+
+<p>{{post.content}}</p>
+{%endblock%}

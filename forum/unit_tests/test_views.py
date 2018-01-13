@@ -2,7 +2,7 @@ from unittest import skip
 
 from django.http import HttpRequest
 from django.test import TestCase
-from forum.views import HomePage, Login, Register, AboutPage
+from forum.views import HomePage, Login, Register, AboutPage, PostDetail
 
 
 class HomePageTest(TestCase):
@@ -31,3 +31,8 @@ class AboutPageTest(TestCase):
 
         resp = view.get(HttpRequest())
         self.assertEqual(resp.status_code, 200)
+
+class PostDetailTest(TestCase):
+    def test_pageLoads(self):
+        view = PostDetail()
+        # todo implement

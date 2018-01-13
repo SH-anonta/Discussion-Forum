@@ -17,9 +17,11 @@
                 </tr>
             {%for post in board_posts%}
                 <tr>
-                    <td>{{post.title}}</td>
+                    <td>
+                        <a class="PostLink" href="{%url 'forum:post_detail' post.pk%}">{{post.title}}</a>
+                    </td>
                     <td>{{post.creation_date}}</td>
-                    <td>0</td>
+                    <td>{{post.reply_set.count}}</td>
                 </tr>
             {%endfor%}
             </table>

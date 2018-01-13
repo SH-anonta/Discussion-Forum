@@ -5,7 +5,6 @@ from time import sleep
 from forum.models import User
 from functional_tests.page_objects import RegistrationPage
 
-
 class RegistrationTest(BaseTestCase):
     def loadData(self):
         pass

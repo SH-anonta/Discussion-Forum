@@ -1,5 +1,5 @@
 from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.views import View
@@ -86,3 +86,14 @@ class BoardPosts(View):
         }
 
         return render(request, 'forum/board_posts.html', context)
+
+class PostDetail(View):
+    """
+        show the post's content and replies
+    """
+    def get(self, request, post_id):
+        context = {
+            'post': get_object_or_404(Post, pk=post_id)
+        }
+
+        return render(request, 'forum/post_detail.html', context)

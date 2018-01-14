@@ -18,7 +18,7 @@ It also provides default content for Header footer and sidebar
 
 <div class="container">
     
-    <div id="header" class="row">
+    <div id="header" class="row global-backgrount-color">
         {%block HeaderContent%}
             <div class="col-sm-8">
                 <h3 class="h3">Site Forum</h3>
@@ -57,7 +57,7 @@ It also provides default content for Header footer and sidebar
     </div>
     
     
-    <div id="main_content" class="row">
+    <div id="main_content" class="row global-backgrount-color">
         {%block MainContent%}
         <div class="col-sm-12">
             <h1 class="h1"> To be replaced </h1>
@@ -81,54 +81,46 @@ It also provides default content for Header footer and sidebar
 <style>
 /* actual styles of this page*/
 
+    #header{
+        min-height: 50px;
+    }
+
+    #header *{
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+
+    #HeaderLOGO{
+        width: 500px;
+        height: 300px;
+    }
+
+    #navigation{
+        background-color: #31493C;
+    }
+
+    #navigation *{
+        color: white;
+    }
+
+    #navigation a:hover{
+        color: white;
+        text-decoration: underline;
+    }
+
+    #main_content{
+        min-height: 500px;
+    }
 
 
-p, td, th{
-    color: #1C0E0E;
-}
-     
-#header{
-    background-color: #F9F4F5;
-    min-height: 50px;
-}
+    #footer{
+        color: white;
+        background-color: #31493C;
+    }
 
-#header *{
-    margin-top: auto;
-    margin-bottom: auto;
-}
-    
-#HeaderLOGO{
-    width: 500px;
-    height: 300px;
-}
-
-#navigation{
-    background-color: #70587C;
-}
-
-#navigation *{
-    color: white;
-}
-    
-#navigation a:hover{
-    color: white;
-    text-decoration: underline;
-}
- 
-#main_content{
-    min-height: 500px;
-    background-color: #F9F4F5;
-}
-    
-    
-#footer{
-    color: white;
-    background-color: #70587C;
-}
-
-#footer *{
-    color: #F9F4F5;
-}
+    #footer *{
+        color: white;
+    }
 </style>
 
 

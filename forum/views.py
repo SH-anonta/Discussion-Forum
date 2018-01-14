@@ -79,10 +79,12 @@ class Register(View):
 class BoardPosts(View):
     def get(self, request, board_id):
         """View list of posts of a page"""
+        # todo use get or 404 shortcut
         board = Board.objects.get(pk=board_id)
         posts = board.post_set.all().order_by('-creation_date')
 
         context= {
+            'board' : board,
             'board_posts' : posts
         }
 
@@ -119,3 +121,31 @@ class CreateReply(View):
 
         Reply.objects.create(reply_to= reply_to, creator= user, content= content)
         return redirect(reverse('forum:post_detail', args= [reply_to_post_id]) )
+
+class CreatePost(View):
+    def get(self, request):
+        
+        default_board = int(request.GET.get('board_id', '-1'))
+        
+        context= {
+            'default_post_to' : default_board, 
+            'boards' : Board.objects.all()
+        }
+
+        return render(request, 'forum/create_post_editor.html', context)
+    
+    def post(self, request):
+        user = request.user
+        
+        if not user.is_authenticated:
+            return redirect('forum:homepage')
+        
+        board= get_object_or_404(Board, pk=request.POST['post_to_board_id'])
+        
+        # todo add validation using forms
+        title = request.POST['post_title'].strip()
+        content = request.POST['post_content'].strip()
+        
+        post = Post.objects.create(title= title, content=content, board=board, creator=user)
+        
+        return redirect(reverse('forum:post_detail', args=[post.pk]))

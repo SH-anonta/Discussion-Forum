@@ -1,6 +1,7 @@
 from django.urls import path
 
-from forum.views import HomePage, Login, Logout, Register, AboutPage, BoardPosts, PostDetail, UserDetail, CreateReply
+from forum.views import HomePage, Login, Logout, Register, AboutPage
+from forum.views import CreatePost, BoardPosts, PostDetail, UserDetail, CreateReply
 
 app_name= 'forum'
 urlpatterns = [
@@ -10,6 +11,7 @@ urlpatterns = [
     path('post/<int:post_id>', PostDetail.as_view(), name='post_detail'),
     path('user/<int:user_id>', UserDetail.as_view(), name='user_detail'),
 
+    path('create-post', CreatePost.as_view(),name='create_post'),
     path('reply', CreateReply.as_view(), name='create_reply'),
     path('login', Login.as_view(), name='loginpage'),
     path('logout', Logout.as_view(), name='logout'),

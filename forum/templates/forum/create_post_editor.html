@@ -1,0 +1,58 @@
+{%extends 'forum/layout_base_template.html'%}
+
+{%block HeadContent%}
+    <title>New posts</title>
+{%endblock%}
+
+
+{%block MainContent%}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="h4">New post</h4>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-10 offset-sm-1">
+            <form class="text-right" action="{%url 'forum:create_post'%}" method="POST">
+                {%csrf_token%}
+                <select name="post_to_board_id" class="form-control" >
+                    {%for board in boards%}
+                        <option value="{{board.pk}}" {%if default_post_to == board.pk%} selected {%endif%}>
+                            {{board.title}}
+                        </option>
+                    {%endfor%}
+                </select>
+                <input type="text" name="post_title" class="form-control" placeholder="Post title">
+                <textarea id="PostContentTA" name="post_content" class="form-control" placeholder="Post content"></textarea>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+        </div>
+
+    </div>
+    
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="h4">Preview</h4>
+        </div>
+    
+    </div>
+</div>
+{%endblock%}
+
+{%block PageStyles%}
+<style>
+#PostContentTA{
+    min-height: 250px;
+}
+</style>
+
+{%endblock%}
+
+{%block PageScripts%}
+
+{%endblock%}
+

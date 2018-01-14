@@ -7,9 +7,25 @@
 {%block MainContent%}
 <div class="container">
     <div class="row">
+        <div class="col-sm-8">
+            <h5 class="h5">
+                <a href="{%url 'forum:homepage'%}">Boards</a>
+                -
+                {{board.title}}
+            </h5>
+        </div>
+
+        <div class="col-sm-4 text-right">
+            <a class="btn" href="{%url 'forum:create_post'%}?board_id={{board.pk}}">
+                Create post
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-sm-12">
 
-            <table class="table">
+            <table class="table table-striped">
                 <tr>
                     <th class="">Title</th>
                     <th>Poster</th>

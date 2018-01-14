@@ -11,16 +11,23 @@
 
             <table class="table">
                 <tr>
-                    <th>Title</th>
+                    <th class="">Title</th>
+                    <th>Poster</th>
                     <th>PostDate</th>
                     <th>Replies</th>
                 </tr>
             {%for post in board_posts%}
                 <tr>
-                    <td>
+                    <td class="">
                         <a class="PostLink" href="{%url 'forum:post_detail' post.pk%}">{{post.title}}</a>
                     </td>
-                    <td>{{post.creation_date}}</td>
+                    <td>
+                        <a href="{%url 'forum:user_detail' post.creator.pk%}">
+                            {{post.creator.username}}
+                        </a>
+
+                    </td>
+                    <td>{{post.creation_date|timesince }}</td>
                     <td>{{post.reply_set.count}}</td>
                 </tr>
             {%endfor%}

@@ -80,7 +80,7 @@ class BoardPosts(View):
     def get(self, request, board_id):
         """View list of posts of a page"""
         board = Board.objects.get(pk=board_id)
-        posts = board.post_set.all()
+        posts = board.post_set.all().order_by('-creation_date')
 
         context= {
             'board_posts' : posts

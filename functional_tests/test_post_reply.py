@@ -1,18 +1,11 @@
 from forum.models import Board, Post, User
 from functional_tests.base_testcase import BaseTestCase
-
+from forum.unit_tests.modelFactory import *
 
 class BoardTest(BaseTestCase):
     def loadData(self):
-        u = User.objects.create_user(username= 'Adminss', password='passwordss')
-
-        b1= Board.objects.create(title='Announcements')
-        b2= Board.objects.create(title='General discussion')
-        b3= Board.objects.create(title='Programming')
-
-        post_content='Welcome new members to our community.'
-        p1= Post.objects.create(title='Welcome to the community', creator=u, board=b1, content=post_content)
-
+        BoardFactory.createBoards(1)
+        UserFactory.createUsers(1)
 
     def test_board(self):
         browser= self.getBrowser()
@@ -25,7 +18,7 @@ class BoardTest(BaseTestCase):
 
         # The user sees 3 entries in the board table (3 boards were created in loadData method)
         links = browser.find_elements_by_class_name('BoardLink')
-        self.assertEqual(len(links), 3)
+        self.assertEqual(len(links), 1)
 
         # The user clicks on the first board link
 

@@ -12,7 +12,13 @@
 
     <div id="PostTitleRow" class="row">
         <div class="col-sm-12">
-            <h3 class="h3">{{post.title}}</h3>
+            <h5 class="h5">
+                <a href="{%url 'forum:homepage'%}">Boards</a>
+                /
+                <a href="{%url 'forum:board_posts' post.board.pk%}">{{post.board.title}}</a>
+                /
+                {{post.title}}
+            </h5>
 
         </div>
     </div>
@@ -20,6 +26,15 @@
     <div id="PostContentRow" class="row">
         <div class="col-sm-12">
             <div class="container PostContainer">
+                <div id="PostHeader" class="row text-right">
+                    <div class="col-sm-12">
+                        Posted {{post.creation_date|timesince}} ago
+                        <button class="btn btn-sm">Edit</button>
+                        <button class="btn btn-sm">Delete</button>
+                    </div>
+                </div>
+                
+                
                 <div class="row">
                     <div class="col-sm-3 col-md-2 AvatarContainer text-center">
                         <img class="AvatarIMG" src="{%static 'forum/images/placeholder_icon.png' %}"/>
@@ -27,6 +42,7 @@
                     </div>
 
                     <div id="PostBodyContainer" class="col-sm-9 col-md-10">
+                        <h5 class="h5">{{post.title}}</h5>
                         <pre>{{post.content}}</pre>
                     </div>
                 </div>
@@ -49,7 +65,7 @@
                     <a class="d-block" href="{%url 'forum:user_detail' reply.creator.pk %}">{{reply.creator.username}}</a>
                 </div>
 
-                <div id="ReplyBodyContainer" class="col-sm-9 col-md-10">
+                <div class="col-sm-9 col-md-10 ReplyBodyContainer">
                     <pre>{{reply.content}}</pre>
                 </div>
             </div>
@@ -92,11 +108,18 @@
         min-height: 250px;
     }
 
-    #PostBodyContainer{
+    #PostBodyContainer,
+    .ReplyBodyContainer{
         background-color: #F2F6F3;
         border-style: solid;
         border-width: thin;
         border-color: #001A23;
+    }
+    
+    #PostHeader{
+        background-color: #C3D0CA;
+        padding-top: 5px;
+        padding-bottom: 5px;
     }
     
     .AvatarIMG{

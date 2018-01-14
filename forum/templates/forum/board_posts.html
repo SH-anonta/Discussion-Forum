@@ -6,17 +6,17 @@
 
 {%block MainContent%}
 <div class="container">
-    <div class="row">
+    <div class="row mt-1 mb-1">
         <div class="col-sm-8">
             <h5 class="h5">
                 <a href="{%url 'forum:homepage'%}">Boards</a>
-                -
+                /
                 {{board.title}}
             </h5>
         </div>
 
         <div class="col-sm-4 text-right">
-            <a class="btn btn-secondary" href="{%url 'forum:create_post'%}?board_id={{board.pk}}">Create post</a>
+            <a class="btn btn-sm btn-secondary" href="{%url 'forum:create_post'%}?board_id={{board.pk}}">Create post</a>
         </div>
     </div>
 
@@ -25,9 +25,9 @@
 
             <table class="table table-striped">
                 <tr>
-                    <th class="">Title</th>
+                    <th class="">Post Title</th>
                     <th>Poster</th>
-                    <th>PostDate</th>
+                    <th>Post date</th>
                     <th>Replies</th>
                 </tr>
             {%for post in board_posts%}
@@ -41,7 +41,14 @@
                         </a>
 
                     </td>
-                    <td>{{post.creation_date|timesince }}</td>
+                    <td>
+                        {%if post.older_than_one_day %}
+                            {{post.creation_date}}
+                        {%else %}
+                            {{post.creation_date|timesince}} ago
+                        {%endif%}
+                        
+                    </td>
                     <td>{{post.reply_set.count}}</td>
                 </tr>
             {%endfor%}

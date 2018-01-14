@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
-
+from django.utils import timezone
+from datetime import timedelta, datetime
 
 # models
 from forum.validators import validate_username, POST_TITLE_MAX_LEN
@@ -93,6 +94,9 @@ class Post(models.Model):
 
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     board= models.ForeignKey(Board, on_delete=models.CASCADE)
+
+    def older_than_one_day(self):
+        return timezone.now() - self.creation_date > timedelta(days=1)
 
 class Reply(models.Model):
     content = models.TextField(max_length=REPLY_CONTENT_MAX_LEN)

@@ -59,17 +59,19 @@
             
     </div>
     </div>
-    
+
+    {%if user.is_authenticated%}
     <div class="row">
         <div class="col-sm-12">
-            <form class="text-right" method="POST" action="">
+            <form class="text-right" method="POST" action="{%url 'forum:create_reply'%}">
                 {%csrf_token%}
-                <textarea id="QuickReplyTA" class="form-control"></textarea>
+                <textarea id="QuickReplyTA" name="content" class="form-control"></textarea>
+                <input hidden name="reply_to_post_pk" value="{{post.pk}}">
                 <button type="submit" class="btn">Post</button>
             </form>
         </div>
     </div>
-
+    {%endif%}
 </div>
 {%endblock%}
 

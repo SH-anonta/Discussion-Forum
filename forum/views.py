@@ -2,9 +2,10 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
+from django.urls import reverse
 from django.views import View
 
-from forum.models import User, Board, Post
+from forum.models import User, Board, Post, Reply
 
 
 class HomePage(View):
@@ -106,3 +107,15 @@ class UserDetail(View):
         }
         return render(request, 'forum/user_detail.html', context)
 
+class CreateReply(View):
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('forum:homepage')
+
+        reply_to_post_id= request.POST['reply_to_post_pk']
+        reply_to= get_object_or_404(Post, pk=reply_to_post_id)
+        user = request.user
+        content = request.POST['content']
+
+        Reply.objects.create(reply_to= reply_to, creator= user, content= content)
+        return redirect(reverse('forum:post_detail', args= [reply_to_post_id]) )

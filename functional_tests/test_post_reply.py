@@ -3,16 +3,16 @@ from unittest import skip
 
 from functional_tests.base_testcase import BaseTestCase
 from forum.unit_tests.modelFactory import *
-from forum.models import User
+from forum.models import UserProfile
 from functional_tests.page_objects import HomePage, BoardPostsPage, PostEditorPage, PostDetailPage
 
-@skip
 class CreatePostTests(BaseTestCase):
     def loadData(self):
         BoardFactory.createBoards(1)
         uname= 'User'
         pw= 'password'
-        User.objects.create_user(username= uname, password= pw)
+        u= User.objects.create_user(username= uname, password= pw)
+        UserProfile.objects.create(user=u)
 
     def test_CreatePostButtonUnavailableWhenNotLoggedIn(self):
         """
@@ -101,7 +101,8 @@ class CreateReplyTest(BaseTestCase):
         PostFactory.createPosts(1)
         uname= 'User'
         pw= 'password'
-        User.objects.create_user(username= uname, password= pw)
+        u= User.objects.create_user(username= uname, password= pw)
+        UserProfile.objects.create(user= u)
 
     def test_createReply(self):
         browser = self.browser
@@ -143,12 +144,14 @@ class CreateReplyTest(BaseTestCase):
 
     #todo create test for trying to reply unauthorized
 
+
 class DeletePostTest(BaseTestCase):
     def loadData(self):
         PostFactory.createPosts(1)
         uname= 'User'
         pw= 'password'
-        User.objects.create_user(username= uname, password= pw)
+        u = User.objects.create_user(username= uname, password= pw)
+        UserProfile.objects.create(user=u)
 
     def test_DeleteButtonUnavailableWhenNotLoggedIn(self):
         browser = self.browser

@@ -1,4 +1,4 @@
-from forum.models import User, Board, Post, Reply
+from forum.models import User, Board, Post, Reply, UserProfile
 
 # count of each model objects created
 #these are used to make sure two function calls don't create objects with the same values for unique fields
@@ -24,6 +24,7 @@ class UserFactory:
         for x in range(n):
             name = uname + str(cls.nextid())
             u = User.objects.create_user(username=name, password=pw)
+            UserProfile.objects.create(user = u)
             users.append(u)
 
         return users
@@ -71,7 +72,7 @@ class PostFactory:
         posts= []
         for x in range(n):
             t = title + str(cls.nextid())
-            p = Post.objects.create(title=t, content=content, board= board, creator=user)
+            p = Post.objects.create(title=t, content=content, board= board, creator=user.userprofile)
             posts.append(p)
 
         return posts
@@ -98,7 +99,7 @@ class ReplyFactory:
 
         replies= []
         for x in range(n):
-            r = Reply.objects.create(content= content, reply_to=post, creator= user)
+            r = Reply.objects.create(content= content, reply_to=post, creator= user.userprofile)
             replies.append(r)
 
         return replies

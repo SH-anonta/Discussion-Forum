@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate
@@ -5,7 +6,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.views import View
 
-from forum.models import User, Board, Post, Reply
+from forum.models import Board, Post, Reply, UserProfile
 
 
 class HomePage(View):
@@ -59,11 +60,11 @@ class Register(View):
 
     # todo complete validation, using model validators
     def post(self, request):
-        post = request.POST
-        uname = post['username']
-        email= post['email']
-        pw= post['passowrd']
-        confirm_pw= post['confirm_password']
+        POST = request.POST
+        uname = POST['username']
+        email= POST['email']
+        pw= POST['passowrd']
+        confirm_pw= POST['confirm_password']
 
         if pw != confirm_pw or User.objects.filter(username=uname).exists():
             context = {'show_registration_failed_msg': True}
@@ -72,6 +73,8 @@ class Register(View):
         user = User(username= uname)
         user.set_password(pw)
         user.save()
+
+        UserProfile.objects.create(user= user)
 
         return redirect('forum:loginpage')
 
@@ -107,6 +110,7 @@ class UserDetail(View):
         context={
             'user_profile' : user,
         }
+
         return render(request, 'forum/user_detail.html', context)
 
 class CreateReply(View):
@@ -116,12 +120,13 @@ class CreateReply(View):
         user = request.user
         content = request.POST['content']
 
-        Reply.objects.create(reply_to= reply_to, creator= user, content= content)
+        Reply.objects.create(reply_to= reply_to, creator= user.userprofile, content= content)
         return redirect(reverse('forum:post_detail', args= [reply_to_post_id]) )
 
 class CreatePost(View):
     def get(self, request):
-        
+        """get the form page for creating a new post"""
+
         default_board = int(request.GET.get('board_id', '-1'))
         
         context= {
@@ -140,6 +145,6 @@ class CreatePost(View):
         title = request.POST['post_title'].strip()
         content = request.POST['post_content'].strip()
         
-        post = Post.objects.create(title= title, content=content, board=board, creator=user)
+        post = Post.objects.create(title= title, content=content, board=board, creator=user.userprofile)
         
         return redirect(reverse('forum:post_detail', args=[post.pk]))

@@ -96,7 +96,6 @@ class CreatePostTests(BaseTestCase):
         self.assertEqual(post_title, post_detail_page.getPostTitle())
         self.assertEqual(post_content, post_detail_page.getPostContent())
 
-@skip
 class CreateReplyTest(BaseTestCase):
     def loadData(self):
         PostFactory.createPosts(1)

@@ -29,8 +29,10 @@
                 <div id="PostHeader" class="row text-right">
                     <div class="col-sm-12">
                         Posted {{post.creation_date|timesince}} ago
-                        <button class="btn btn-sm">Edit</button>
-                        <button id="DeletePostBTN" class="btn btn-sm" >Delete</button>
+                        {%if user.is_admin or user == post.creator %}
+                            <button class="btn btn-sm">Edit</button>
+                            <button id="DeletePostBTN" class="btn btn-sm" >Delete</button>
+                        {%endif%}
                     </div>
                 </div>
                 

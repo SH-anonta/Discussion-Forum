@@ -86,8 +86,6 @@ LOGIN_URL = 'forum:loginpage'
 LOGIN_REDIRECT_URL= 'forum:homepage'
 LOGOUT_REDIRECT_URL= 'forum:homepage'
 
-AUTH_USER_MODEL= 'forum.User'
-
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [

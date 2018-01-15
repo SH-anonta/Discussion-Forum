@@ -16,7 +16,9 @@
         </div>
 
         <div class="col-sm-4 text-right">
-            <a class="btn btn-sm btn-secondary" href="{%url 'forum:create_post'%}?board_id={{board.pk}}">Create post</a>
+            {%if user.is_authenticated%}
+                <a id="NewPostBTN" class="btn btn-sm btn-secondary" href="{%url 'forum:create_post'%}?board_id={{board.pk}}">New post</a>
+            {%endif%}
         </div>
     </div>
 

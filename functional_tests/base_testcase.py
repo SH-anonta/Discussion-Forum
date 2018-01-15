@@ -3,6 +3,7 @@ from unittest import skip
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
 from selenium import webdriver
+import re
 
 # This class is to be inherited, don't put test code in here
 class BaseTestCase(StaticLiveServerTestCase):
@@ -45,6 +46,15 @@ class BaseTestCase(StaticLiveServerTestCase):
     def assertLoginPageLoaded(self):
         """test if he browser is currently in the login page"""
         self.assertTrue(self.getLoginPageAddress() in self.browser.current_url)
+
+    def aseertBoardPostsPageLoaded(self):
+        """test if he browser is currently in the Board posts page"""
+        # self.assertTrue(self.getBoardPostsPageAddress() in self.browser.current_url)
+
+        #url pattern of board posts page url
+        pattern = 'https?://[0-9a-zA-Z.]+:\d+/forum/board/\d+'
+        self.assertRegex(self.browser.current_url, pattern)
+
 
     def login(self, uname, pw):
         # User opens browser and goes to the login page

@@ -82,6 +82,7 @@ DATABASES = {
     }
 }
 
+LOGIN_URL = 'forum:loginpage'
 LOGIN_REDIRECT_URL= 'forum:homepage'
 LOGOUT_REDIRECT_URL= 'forum:homepage'
 

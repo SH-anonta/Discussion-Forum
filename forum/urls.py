@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import path
 
 from forum.views import HomePage, Login, Logout, Register, AboutPage

@@ -8,8 +8,7 @@ from forum.unit_tests.modelFactory import *
 from forum.models import User
 from functional_tests.page_objects import HomePage, BoardPostsPage, PostEditorPage, PostDetailPage
 
-
-class BoardTest(BaseTestCase):
+class PostTests(BaseTestCase):
     def loadData(self):
         BoardFactory.createBoards(1)
         uname= 'User'
@@ -17,6 +16,10 @@ class BoardTest(BaseTestCase):
         User.objects.create_user(username= uname, password= pw)
 
     def test_CreatePostButtonUnavailableWhenNotLoggedIn(self):
+        """
+            "New thread" button in board_posts template should
+            be unavailable when the user is not logged in
+        """
         browser = self.browser
 
         homepage= HomePage(browser)
@@ -36,33 +39,6 @@ class BoardTest(BaseTestCase):
 
         #He looks at the top right of the page and does not see any button named "New Post"
         self.assertFalse(board_posts_page.newPostButtonIsPresent())
-
-    def test_CreatePostButtonAvalableWhenLoggedIn(self):
-        browser = self.browser
-
-        homepage= HomePage(browser)
-        board_posts_page= BoardPostsPage(browser)
-
-        #Now the user login
-        # account created in loadData
-        uname = 'User'
-        pw = 'password'
-        self.login(uname, pw)
-
-        # The user goes to the home page
-        browser.get(self.getHomePageAddress())
-        self.assertHomepageLoaded()
-
-        # user sees a table of boards, there is 1 board in there
-        board_links = homepage.getBoardLinks()
-        self.assertEqual(len(board_links), 1)
-
-        # The user clicks on the first link and is brought to the board's posts page
-        board_links[0].click()
-        self.assertBoardPostsPageLoaded()
-
-        # He looks at the top right of the page and sees any button named "New Post"
-        self.assertTrue(board_posts_page.newPostButtonIsPresent())
 
     def test_CreatePost(self):
         browser = self.browser
@@ -120,3 +96,47 @@ class BoardTest(BaseTestCase):
         # user sees his post name and url in there
         self.assertEqual(post_title, post_detail_page.getPostTitle())
         self.assertEqual(post_content, post_detail_page.getPostContent())
+
+
+class ReplyTest(BaseTestCase):
+    def loadData(self):
+        PostFactory.createPosts(1)
+        uname= 'User'
+        pw= 'password'
+        User.objects.create_user(username= uname, password= pw)
+
+    def test_createReply(self):
+        browser = self.browser
+
+        homepage = HomePage(browser)
+        board_posts_page = BoardPostsPage(browser)
+        post_detail_page = PostDetailPage(browser)
+
+        uname = 'User'
+        pw = 'password'
+        #The user logs in
+        self.login(uname, pw)
+
+        # The user visits the homepage
+        browser.get(self.getHomePageAddress())
+        self.assertHomepageLoaded()
+
+        # sees there is a board in the boards table
+        # he clicks on the first board's link
+        board_links = homepage.getBoardLinks()
+        board_links[0].click()
+
+        # the board's page loads [board posts page]
+        # the sees a table of posts and clicks on the first post link
+        post_links = board_posts_page.getPostLinks()
+        post_links[0].click()
+
+        #The user is brought to the post's detail page
+        # where he can see the post's title and content and other replies
+        #The sees a form for writing replies and enters some text
+        reply_content= 'This is my reply'
+
+        post_detail_page.enterQuickReplyTextArea(reply_content)
+        post_detail_page.clickQuickReplyPostButton()
+
+        self.assertTrue(post_detail_page.pageHasReply(reply_content))

@@ -10,7 +10,7 @@
 
 <div class="container">
 
-    <div id="PostTitleRow" class="row">
+    <div id="PostTitleRow" class="row mt-1 mb-1">
         <div class="col-sm-12">
             <h5 class="h5">
                 <a href="{%url 'forum:homepage'%}">Boards</a>
@@ -78,12 +78,18 @@
 
     {%if user.is_authenticated%}
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-8 offset-sm-2">
+            <h5>Quick reply</h5>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-10 offset-sm-2">
             <form class="text-right" method="POST" action="{%url 'forum:create_reply'%}">
                 {%csrf_token%}
                 <textarea id="QuickReplyTA" name="content" class="form-control"></textarea>
                 <input hidden name="reply_to_post_pk" value="{{post.pk}}">
-                <button type="submit" class="btn">Post</button>
+                <button id="QuickReplySubmitBTN" type="submit" class="btn">Post</button>
             </form>
         </div>
     </div>
@@ -100,7 +106,8 @@
         background-color: #31493C;
     }
 
-    .AvatarContainer *{
+    .AvatarContainer *,
+    .AvatarContainer *:hover{
         color: white;
     }
 
@@ -123,6 +130,7 @@
     }
     
     .AvatarIMG{
+        margin-top: 10px;
         height: 80px;
         width:80px;
     }

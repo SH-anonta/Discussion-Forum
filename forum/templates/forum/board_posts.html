@@ -17,7 +17,7 @@
 
         <div class="col-sm-4 text-right">
             {%if user.is_authenticated%}
-                <a id="NewPostBTN" class="btn btn-sm btn-secondary" href="{%url 'forum:create_post'%}?board_id={{board.pk}}">New post</a>
+                <a id="NewPostBTN" class="btn btn-sm btn-secondary" href="{%url 'forum:create_post'%}?board_id={{board.pk}}">New thread</a>
             {%endif%}
         </div>
     </div>
@@ -32,7 +32,7 @@
                     <th>Rating</th>
                     <th>Views</th>
                     <th>Replies</th>
-                    <th>Post date</th>
+                    <th>Date posted</th>
                 </tr>
             {%for post in board_posts%}
                 <tr>

@@ -50,6 +50,9 @@ class BoardPostsPage:
         new_post_button = self.browser.find_element_by_id('NewPostBTN')
         new_post_button.click()
 
+    def getPostLinks(self):
+        return self.browser.find_elements_by_class_name('PostLink')
+
 
 class PostDetailPage:
     def __init__(self, web_driver):
@@ -60,6 +63,21 @@ class PostDetailPage:
 
     def getPostContent(self):
         return self.browser.find_element_by_id('PostContent').text
+
+    def quickReplyFormIsAvailable(self):
+        reply_text_areas= self.browser.find_elements_by_id('QuickReplyTA')
+        return len(reply_text_areas) != 0
+
+    def enterQuickReplyTextArea(self, content):
+        reply_text_area = self.browser.find_element_by_id('QuickReplyTA')
+        reply_text_area.send_keys(content)
+
+    def clickQuickReplyPostButton(self):
+        btn= self.browser.find_element_by_id('QuickReplySubmitBTN')
+        btn.click()
+
+    def pageHasReply(self, content):
+        return content in self.browser.page_source
 
 class PostEditorPage:
     def __init__(self, web_driver):
@@ -79,4 +97,4 @@ class PostEditorPage:
     def _dummy(self):
         #todo delete method
         c = webdriver.Chrome()
-        c.find_element_by_id('')
+        e = c.find_element_by_class_name('')

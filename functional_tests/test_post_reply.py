@@ -6,26 +6,8 @@ from selenium import webdriver
 
 from forum.unit_tests.modelFactory import *
 from forum.models import User
+from functional_tests.page_objects import HomePage, BoardPostsPage, PostEditorPage, PostDetailPage
 
-class BoardPostsPage:
-    def __init__(self, web_driver):
-        self.browser= web_driver
-
-    def newPostButtonIsPresent(self):
-        new_post_buttons = self.browser.find_elements_by_id('NewPostBTN')
-        return len(new_post_buttons) != 0
-
-
-class HomePage:
-    def __init__(self, web_driver):
-        self.browser= web_driver
-
-    def getBoardLinks(self):
-        return self.browser.find_elements_by_class_name('BoardLink')
-
-    def _dummy(self):
-        #todo delete method
-        c = webdriver.Chrome()
 
 class BoardTest(BaseTestCase):
     def loadData(self):
@@ -34,7 +16,7 @@ class BoardTest(BaseTestCase):
         pw= 'password'
         User.objects.create_user(username= uname, password= pw)
 
-    def test_CreatePostButtonVisibleOnlyIfLoggedIn(self):
+    def test_CreatePostButtonUnavailableWhenNotLoggedIn(self):
         browser = self.browser
 
         homepage= HomePage(browser)
@@ -50,10 +32,16 @@ class BoardTest(BaseTestCase):
 
         # The user clicks on the first link and is brought to the board's posts page
         board_links[0].click()
-        self.aseertBoardPostsPageLoaded()
+        self.assertBoardPostsPageLoaded()
 
         #He looks at the top right of the page and does not see any button named "New Post"
         self.assertFalse(board_posts_page.newPostButtonIsPresent())
+
+    def test_CreatePostButtonAvalableWhenLoggedIn(self):
+        browser = self.browser
+
+        homepage= HomePage(browser)
+        board_posts_page= BoardPostsPage(browser)
 
         #Now the user login
         # account created in loadData
@@ -71,29 +59,64 @@ class BoardTest(BaseTestCase):
 
         # The user clicks on the first link and is brought to the board's posts page
         board_links[0].click()
-        self.aseertBoardPostsPageLoaded()
+        self.assertBoardPostsPageLoaded()
 
         # He looks at the top right of the page and sees any button named "New Post"
         self.assertTrue(board_posts_page.newPostButtonIsPresent())
 
-    def test_board(self):
-        browser= self.getBrowser()
+    def test_CreatePost(self):
+        browser = self.browser
+
+        homepage = HomePage(browser)
+        board_posts_page = BoardPostsPage(browser)
+        post_editor_page = PostEditorPage(browser)
+        post_detail_page = PostDetailPage(browser)
+
+        # The use logs in
+        uname = 'User'
+        pw = 'password'
+        self.login(uname, pw)
 
         # User goes to the homepage
         browser.get(self.getHomePageAddress())
+        self.assertHomepageLoaded()
 
-        # user sees a table of boards, including links to the board's posts
-        class_name= 'BoardLink' #class of the board links
+        # User sees a table of boards and clicks the first one
+        board_links = homepage.getBoardLinks()
+        board_links[0].click()
 
-        # The user sees 3 entries in the board table (3 boards were created in loadData method)
-        links = browser.find_elements_by_class_name('BoardLink')
-        self.assertEqual(len(links), 1)
+        #The user is brought to the board's board_posts_view
+        self.assertBoardPostsPageLoaded()
 
-        # The user clicks on the first board link
+        #The user sees a button "New post" and clicks it
+        board_posts_page.newPostButtonIsPresent()
+        board_posts_page.clickNewPostButton()
 
-        links[0].click()
+        # The user is brought to the PostEditor page
+        self.assertPostEditorPageLoaded()
 
-        # The user is brought to the a page that shows all the posts of the board link he clicked
-        # He sees a table that shows all the posts of this board,
-        # in this case here is one.
+        #User sees a form with board, post title and post content fields
 
+        # valid post data form
+        post_title = 'Post1 title'
+        post_content = 'Post1 content'
+
+        # the user sees the dropdown menu for board, is already selected to the
+        # board page from which the "new post" button was clicked
+        # The user leaves it unchanged
+
+        # User Enters Post title and content
+        post_editor_page.enterPostTitleField(post_title)
+        post_editor_page.enterPostContentField(post_content)
+
+        # The user then clicks the post
+        post_editor_page.clickPostButton()
+
+        # the post is submitted, and the user is redirected to the new created post's
+        # post-detail page
+
+        self.assertPostDetailPageLoaded()
+
+        # user sees his post name and url in there
+        self.assertEqual(post_title, post_detail_page.getPostTitle())
+        self.assertEqual(post_content, post_detail_page.getPostContent())

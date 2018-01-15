@@ -14,7 +14,7 @@ class BaseTestCase(StaticLiveServerTestCase):
         self.home_page_url = self.live_server_url + reverse('forum:homepage')
         self.login_page_url = self.live_server_url + reverse('forum:loginpage')
         self.registeration_page_url = self.live_server_url + reverse('forum:registration_page')
-        self.browser = webdriver.Chrome()
+        self.browser = webdriver.Firefox()
 
     def tearDown(self):
         self.browser.quit()
@@ -40,21 +40,31 @@ class BaseTestCase(StaticLiveServerTestCase):
 
     # helpers: custom asserts
     def assertHomepageLoaded(self):
-        """test if he browser is currently in the homepage"""
+        """test if the browser is currently in the homepage"""
         self.assertTrue(self.getHomePageAddress() in self.browser.current_url)
 
     def assertLoginPageLoaded(self):
-        """test if he browser is currently in the login page"""
+        """test if the browser is currently in the login page"""
         self.assertTrue(self.getLoginPageAddress() in self.browser.current_url)
 
-    def aseertBoardPostsPageLoaded(self):
-        """test if he browser is currently in the Board posts page"""
+    def assertBoardPostsPageLoaded(self):
+        """test if the browser is currently in the Board posts page"""
         # self.assertTrue(self.getBoardPostsPageAddress() in self.browser.current_url)
 
         #url pattern of board posts page url
-        pattern = 'https?://[0-9a-zA-Z.]+:\d+/forum/board/\d+'
-        self.assertRegex(self.browser.current_url, pattern)
+        url_pattern = 'https?://[0-9a-zA-Z.]+:\d+/forum/board/\d+$'
+        self.assertRegex(self.browser.current_url, url_pattern)
 
+    def assertPostEditorPageLoaded(self):
+        """test if the browser is currently in post editor page"""
+
+        url_pattern = 'https?://[0-9a-zA-Z.]+:\d+/forum/create-post\?board_id=\d+$'
+        self.assertRegex(self.browser.current_url, url_pattern)
+
+    def assertPostDetailPageLoaded(self):
+        """test if the browser is currently in post editor page"""
+        url_pattern = '^https?://[0-9a-zA-Z.]+:\d+/forum/post/\d+$'
+        self.assertRegex(self.browser.current_url, url_pattern)
 
     def login(self, uname, pw):
         # User opens browser and goes to the login page

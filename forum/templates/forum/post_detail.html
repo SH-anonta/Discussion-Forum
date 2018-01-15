@@ -40,7 +40,7 @@
                 <div class="row">
                     <div class="col-sm-3 col-md-2 AvatarContainer text-center">
                         <img class="AvatarIMG" src="{%static 'forum/images/placeholder_icon.png' %}"/>
-                        <a class="d-block" href="{%url 'forum:user_detail' post.creator.pk %}">{{post.creator.username}}</a>
+                        <a class="d-block" href="{%url 'forum:user_detail' post.creator.pk %}">{{post.creator.user.username}}</a>
                     </div>
 
                     <div id="PostBodyContainer" class="col-sm-9 col-md-10">
@@ -64,7 +64,7 @@
             <div class="row">
                 <div class="col-sm-3 col-md-2 AvatarContainer text-center">
                     <img class="AvatarIMG" src="{%static 'forum/images/placeholder_icon.png' %}"/>
-                    <a class="d-block" href="{%url 'forum:user_detail' reply.creator.pk %}">{{reply.creator.username}}</a>
+                    <a class="d-block" href="{%url 'forum:user_detail' reply.creator.pk %}">{{reply.creator.user.username}}</a>
                 </div>
 
                 <div class="col-sm-9 col-md-10 ReplyBodyContainer">

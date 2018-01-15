@@ -30,7 +30,7 @@
                     <div class="col-sm-12">
                         Posted {{post.creation_date|timesince}} ago
                         <button class="btn btn-sm">Edit</button>
-                        <button class="btn btn-sm">Delete</button>
+                        <button id="DeletePostBTN" class="btn btn-sm" >Delete</button>
                     </div>
                 </div>
                 
@@ -147,4 +147,13 @@
 
 </style>
 
+{%endblock%}
+
+{%block PageScripts%}
+    <script>
+        $(function(){
+            
+        });
+
+    </script>
 {%endblock%}

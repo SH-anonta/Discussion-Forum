@@ -79,6 +79,10 @@ class PostDetailPage:
     def pageHasReply(self, content):
         return content in self.browser.page_source
 
+    def deletePostButtonIsAvailable(self):
+        delete_post_btns = self.browser.find_elements_by_id('DeletePostBTN')
+        return len(delete_post_btns) != 0
+
 class PostEditorPage:
     def __init__(self, web_driver):
         self.browser= web_driver

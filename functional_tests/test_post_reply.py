@@ -1,14 +1,13 @@
+from time import sleep
 from unittest import skip
 
-from selenium.common.exceptions import NoSuchElementException
 from functional_tests.base_testcase import BaseTestCase
-from selenium import webdriver
-
 from forum.unit_tests.modelFactory import *
 from forum.models import User
 from functional_tests.page_objects import HomePage, BoardPostsPage, PostEditorPage, PostDetailPage
 
-class PostTests(BaseTestCase):
+@skip
+class CreatePostTests(BaseTestCase):
     def loadData(self):
         BoardFactory.createBoards(1)
         uname= 'User'
@@ -97,8 +96,8 @@ class PostTests(BaseTestCase):
         self.assertEqual(post_title, post_detail_page.getPostTitle())
         self.assertEqual(post_content, post_detail_page.getPostContent())
 
-
-class ReplyTest(BaseTestCase):
+@skip
+class CreateReplyTest(BaseTestCase):
     def loadData(self):
         PostFactory.createPosts(1)
         uname= 'User'
@@ -133,6 +132,8 @@ class ReplyTest(BaseTestCase):
 
         #The user is brought to the post's detail page
         # where he can see the post's title and content and other replies
+        self.assertPostDetailPageLoaded()
+
         #The sees a form for writing replies and enters some text
         reply_content= 'This is my reply'
 
@@ -140,3 +141,40 @@ class ReplyTest(BaseTestCase):
         post_detail_page.clickQuickReplyPostButton()
 
         self.assertTrue(post_detail_page.pageHasReply(reply_content))
+
+    #todo create test for trying to reply unauthorized
+
+class DeletePostTest(BaseTestCase):
+    def loadData(self):
+        PostFactory.createPosts(1)
+        uname= 'User'
+        pw= 'password'
+        User.objects.create_user(username= uname, password= pw)
+
+    def test_DeleteButtonUnavailableWhenNotLoggedIn(self):
+        browser = self.browser
+
+        homepage = HomePage(browser)
+        board_posts_page = BoardPostsPage(browser)
+        post_detail_page = PostDetailPage(browser)
+
+        # The user visits the homepage
+        browser.get(self.getHomePageAddress())
+        self.assertHomepageLoaded()
+
+        # sees there is a board in the boards table
+        # he clicks on the first board's link
+        board_links = homepage.getBoardLinks()
+        board_links[0].click()
+
+        # the board's page loads [board posts page]
+        # the sees a table of posts and clicks on the first post link
+        post_links = board_posts_page.getPostLinks()
+        post_links[0].click()
+
+        # The user is brought to the post's detail page
+        # where he can see the post's title and content and other replies
+        self.assertPostDetailPageLoaded()
+        # The user want's to delete the post but realizes there is no
+        # delete button since he's not logged in
+        self.assertFalse(post_detail_page.deletePostButtonIsAvailable())

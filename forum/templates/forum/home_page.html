@@ -8,28 +8,32 @@
 
 {%block MainContent%}
 <div class="container">
+    <div class="row mt-1 mb-1">
+        <div class="col-sm-12">
+            <h5 class="h5">Boards</h5>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-12">
-        <h3 class="h3">Boards</h3>
-
         <table class="table table-striped">
             <tr>
                 <th class="fit"></th>
                 <th>Board name</th>
                 <th>Threads</th>
             </tr>
-        {%for board in boards%}
-            <tr>
-                <td class="fit"><img class='BoardICON' src="{%static 'forum/images/placeholder_icon.png' %}"/></td>
-                <td class="align-middle">
-                    <a class="BoardLink" href="{% url 'forum:board_posts' board.pk%}">{{board.title}}</a>
-                </td>
-                <td class="align-middle">{{board.post_set.count}}</td>  {#todo put variable here#}
-            </tr>
-        {%endfor%}
+            {%for board in boards%}
+                <tr>
+                    <td class="fit"><img class='BoardICON' src="{%static 'forum/images/placeholder_icon.png' %}"/></td>
+                    <td class="align-middle">
+                        <a class="BoardLink" href="{% url 'forum:board_posts' board.pk%}">{{board.title}}</a>
+                    </td>
+                    <td class="align-middle">{{board.post_set.count}}</td>  {#todo put variable here#}
+                </tr>
+            {%endfor%}
         </table>
-
         </div>
+    </div>
 
     </div>
 </div>

@@ -1,7 +1,7 @@
 {%extends 'forum/layout_base_template.html'%}
 
 {%block HeadContent%}
-    <title>New posts</title>
+    <title>New post</title>
 {%endblock%}
 
 
@@ -16,7 +16,7 @@
 
     <div class="row">
         <div class="col-sm-10 offset-sm-1">
-            <form class="text-right" action="{%url 'forum:create_post'%}" method="POST">
+            <form id="PostForm" class="text-right" action="{%url 'forum:create_post'%}" method="POST">
                 {%csrf_token%}
                 <select name="post_to_board_id" class="form-control" >
                     {%for board in boards%}
@@ -25,8 +25,9 @@
                         </option>
                     {%endfor%}
                 </select>
-                <input type="text" name="post_title" class="form-control" placeholder="Post title">
+                <input id="PostTitleTB" type="text" name="post_title" class="form-control" placeholder="Post title">
                 <textarea id="PostContentTA" name="post_content" class="form-control" placeholder="Post content"></textarea>
+                <button id="PreviewID" class="btn" type="button">Preview</button>
                 <button type="submit" class="btn">Submit</button>
             </form>
         </div>
@@ -38,21 +39,49 @@
         <div class="col-sm-12">
             <h4 class="h4">Preview</h4>
         </div>
+        
+    </div>
     
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 id="PreviewTitleH4" class="h4"></h4>
+            <pre id="PreviewContentPRE"></pre>
+        </div>
+        
     </div>
 </div>
 {%endblock%}
 
 {%block PageStyles%}
 <style>
-#PostContentTA{
-    min-height: 250px;
-}
+    #PostContentTA{
+        min-height: 250px;
+    }
+    
+    #PostForm *{
+        margin-top: 10px;
+    }
 </style>
 
 {%endblock%}
 
+
 {%block PageScripts%}
 
-{%endblock%}
+<script>
+    $(function(){
+        var preview_title = $('#PreviewTitleH4');
+        var preview_content = $('#PreviewContentPRE');
+        var post_title = $('#PostTitleTB');
+        var post_content = $('#PostContentTA')
+        function previewTitleUpdater(){
+            preview_title.text(post_title.val());
+            preview_content.text(post_content.val());
+        }
 
+        $('#PreviewID').click(previewTitleUpdater);
+    });
+
+</script>
+
+{%endblock%}

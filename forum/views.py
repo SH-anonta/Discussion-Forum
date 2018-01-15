@@ -111,9 +111,6 @@ class UserDetail(View):
 
 class CreateReply(View):
     def post(self, request):
-        if not request.user.is_authenticated:
-            return redirect('forum:homepage')
-
         reply_to_post_id= request.POST['reply_to_post_pk']
         reply_to= get_object_or_404(Post, pk=reply_to_post_id)
         user = request.user
@@ -136,10 +133,7 @@ class CreatePost(View):
     
     def post(self, request):
         user = request.user
-        
-        if not user.is_authenticated:
-            return redirect('forum:homepage')
-        
+
         board= get_object_or_404(Board, pk=request.POST['post_to_board_id'])
         
         # todo add validation using forms

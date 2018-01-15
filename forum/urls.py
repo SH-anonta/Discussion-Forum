@@ -12,9 +12,9 @@ urlpatterns = [
     path('post/<int:post_id>', PostDetail.as_view(), name='post_detail'),
     path('user/<int:user_id>', UserDetail.as_view(), name='user_detail'),
 
-    path('create-post', CreatePost.as_view(),name='create_post'),
-    path('reply', CreateReply.as_view(), name='create_reply'),
+    path('create-post', login_required(CreatePost.as_view()),name='create_post'),
+    path('reply', login_required(CreateReply.as_view()), name='create_reply'),
     path('login', Login.as_view(), name='loginpage'),
-    path('logout', Logout.as_view(), name='logout'),
     path('register', Register.as_view(), name='registration_page'),
+    path('logout', login_required(Logout.as_view()), name='logout'),
 ]

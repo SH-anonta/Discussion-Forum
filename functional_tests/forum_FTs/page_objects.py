@@ -1,5 +1,7 @@
 # This file hosts all the page object classes of site
 from selenium import webdriver
+from selenium.webdriver.common.alert import Alert
+
 
 class HomePage:
     def __init__(self, web_driver):
@@ -103,6 +105,19 @@ class PostDetailPage:
     def deletePostButtonIsAvailable(self):
         delete_post_btns = self.browser.find_elements_by_id('DeletePostBTN')
         return len(delete_post_btns) != 0
+
+    def clickDeletePostButton(self):
+        button = self.browser.find_element_by_id('DeletePostBTN')
+        button.click()
+
+    def clickYesOnConfirmPostDeleteDialogue(self):
+        alert = self.browser.switch_to.alert
+        alert.accept()
+
+        # todo accept does not work for some reason
+        # ff= webdriver.Firefox()
+        # al = ff.switch_to.alert()
+        # Alert(self.browser).accept()
 
 class PostEditorPage:
     def __init__(self, web_driver):

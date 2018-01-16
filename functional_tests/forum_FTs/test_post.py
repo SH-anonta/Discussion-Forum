@@ -90,6 +90,7 @@ class CreatePostTests(BaseTestCase):
         self.assertEqual(post_title, post_detail_page.getPostTitle())
         self.assertEqual(post_content, post_detail_page.getPostContent())
 
+
 class DeletePostTest(BaseTestCase):
     def loadData(self):
         uname= 'User'
@@ -151,3 +152,20 @@ class DeletePostTest(BaseTestCase):
 
         # the post's post detail page loads
         self.assertPostDetailPageLoaded()
+
+        # the user sees a delete button at the top right
+        post_detail_page.clickDeletePostButton()
+        # the page shows a confirm dialogue box
+        # the user clicks yes
+
+        post_detail_page.clickYesOnConfirmPostDeleteDialogue()
+
+        # the post is deleted and the user is redirected to the
+        # board posts page of the board that contained said post
+
+        #only one post was created (in loadData)
+        # that post has been
+
+        # todo fix test
+        # deleted_post_count= Post.objects.filter(deleted=True).count()
+        # self.assertEqual(deleted_post_count, 1)

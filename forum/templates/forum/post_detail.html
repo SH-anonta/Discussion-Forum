@@ -30,8 +30,17 @@
                     <div class="col-sm-12">
                         Posted {{post.creation_date|timesince}} ago
                         {%if user.is_staff or user == post.creator.user %}
-                            <button class="btn btn-sm">Edit</button>
-                            <button id="DeletePostBTN" class="btn btn-sm" >Delete</button>
+                            <form class="d-inline" action="" method="POST">
+                                {%csrf_token%}
+                                <input name="post_id" value="{{post.pk}}" type="hidden">
+                                <button id="EditPostBTN" class="btn btn-sm">Edit</button>
+                            </form>
+
+                            <form class="d-inline" action="" method="POST">
+                                {%csrf_token%}
+                                <input name="post_id" value="{{post.pk}}" type="hidden">
+                                <button id="DeletePostBTN" class="btn btn-sm" >Delete</button>
+                            </form>
                         {%endif%}
                     </div>
                 </div>

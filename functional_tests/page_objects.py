@@ -8,6 +8,13 @@ class HomePage:
     def getBoardLinks(self):
         return self.browser.find_elements_by_class_name('BoardLink')
 
+    def clickNthBoardLinkInHomePage(self, n):
+        """
+            Click the n-th link in
+            here n starts from 1
+        """
+        board_links = self.getBoardLinks()
+        board_links[n-1].click()
 
 
 class RegistrationPage:
@@ -52,6 +59,13 @@ class BoardPostsPage:
 
     def getPostLinks(self):
         return self.browser.find_elements_by_class_name('PostLink')
+
+    def clickNthPostLink(self, n):
+        """
+            n starts from 1
+        """
+        post_links = self.getPostLinks()
+        post_links[n-1].click()
 
 
 class PostDetailPage:

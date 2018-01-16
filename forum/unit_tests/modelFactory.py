@@ -66,6 +66,7 @@ class PostFactory:
 
         if user is None:
             user = UserFactory.createUsers(1)[0]
+            UserProfile.objects.create(user= user)
         if board is None:
             board = BoardFactory.createBoards(1)[0]
 

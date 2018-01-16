@@ -6,6 +6,7 @@ from forum.unit_tests.modelFactory import *
 from forum.models import UserProfile
 from functional_tests.page_objects import HomePage, BoardPostsPage, PostEditorPage, PostDetailPage
 
+@skip
 class CreatePostTests(BaseTestCase):
     def loadData(self):
         BoardFactory.createBoards(1)
@@ -96,6 +97,7 @@ class CreatePostTests(BaseTestCase):
         self.assertEqual(post_title, post_detail_page.getPostTitle())
         self.assertEqual(post_content, post_detail_page.getPostContent())
 
+@skip
 class CreateReplyTest(BaseTestCase):
     def loadData(self):
         PostFactory.createPosts(1)
@@ -147,11 +149,12 @@ class CreateReplyTest(BaseTestCase):
 
 class DeletePostTest(BaseTestCase):
     def loadData(self):
-        PostFactory.createPosts(1)
         uname= 'User'
         pw= 'password'
         u = User.objects.create_user(username= uname, password= pw)
         UserProfile.objects.create(user=u)
+
+        PostFactory.createPosts(1, user= u)
 
     def test_DeleteButtonUnavailableWhenNotLoggedIn(self):
         browser = self.browser
@@ -180,3 +183,30 @@ class DeletePostTest(BaseTestCase):
         # The user want's to delete the post but realizes there is no
         # delete button since he's not logged in
         self.assertFalse(post_detail_page.deletePostButtonIsAvailable())
+
+    def test_DeleteOwnPostSuccessful(self):
+        browser = self.browser
+
+        homepage = self.homepage
+        board_posts_page = self.board_posts_page
+        post_detail_page = self.post_detail_page
+
+        # user logs in
+        uname = 'User'
+        pw = 'password'
+        self.login(uname, pw)
+
+        # The user visits the homepage
+        self.goToHomePage()
+
+        # the user sees list of boards and clicks the first one
+        homepage.clickNthBoardLinkInHomePage(1)
+
+        # the user is in the board's board posts page
+        self.assertBoardPostsPageLoaded()
+
+        #the user clicks on the first post link
+        board_posts_page.clickNthPostLink(1)
+
+        # the post's post detail page loads
+        self.assertPostDetailPageLoaded()

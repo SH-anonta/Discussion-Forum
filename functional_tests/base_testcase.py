@@ -6,15 +6,17 @@ from selenium import webdriver
 import re
 
 # This class is to be inherited, don't put test code in here
+from functional_tests.page_objects import BoardPostsPage, PostDetailPage, HomePage
+
+
 class BaseTestCase(StaticLiveServerTestCase):
     """Host common helper methods and setup, tear down code"""
 
     def setUp(self):
         self.loadData()
-        self.home_page_url = self.live_server_url + reverse('forum:homepage')
-        self.login_page_url = self.live_server_url + reverse('forum:loginpage')
-        self.registeration_page_url = self.live_server_url + reverse('forum:registration_page')
+        self.declarePageAddresses()
         self.browser = webdriver.Firefox()
+        self.declarePageObjects()
 
     def tearDown(self):
         self.browser.quit()
@@ -24,6 +26,23 @@ class BaseTestCase(StaticLiveServerTestCase):
         """Load data in database for each test
             This is the first thing setUp() calls"""
         pass
+
+    def declarePageObjects(self):
+        """
+            Must be invoked in setUp method
+            and must done so after the self.browser is declared
+        """
+        self.homepage = HomePage(self.browser)
+        self.board_posts_page = BoardPostsPage(self.browser)
+        self.post_detail_page = PostDetailPage(self.browser)
+
+    def declarePageAddresses(self):
+        """
+            assign urls to variables with descriptive names
+        """
+        self.home_page_url = self.live_server_url + reverse('forum:homepage')
+        self.login_page_url = self.live_server_url + reverse('forum:loginpage')
+        self.registeration_page_url = self.live_server_url + reverse('forum:registration_page')
 
     def getBrowser(self):
         return self.browser
@@ -41,6 +60,7 @@ class BaseTestCase(StaticLiveServerTestCase):
     # helpers: custom asserts
     def assertHomepageLoaded(self):
         """test if the browser is currently in the homepage"""
+        msg= 'browser is not currently at homepage'
         self.assertTrue(self.getHomePageAddress() in self.browser.current_url)
 
     def assertLoginPageLoaded(self):
@@ -80,3 +100,8 @@ class BaseTestCase(StaticLiveServerTestCase):
         uname_tb.send_keys(uname)
         pass_tb.send_keys(pw)
         login_btn.click()
+
+    # shortcuts
+    def goToHomePage(self):
+        self.browser.get(self.getHomePageAddress())
+        self.assertHomepageLoaded()

@@ -2,7 +2,10 @@ from unittest import skip
 
 from django.http import HttpRequest
 from django.test import TestCase
-from forum.views import HomePage, Login, Register, AboutPage, PostDetail
+
+from forum.models import Post
+from forum.unit_tests.modelFactory import PostFactory
+from forum.views import HomePage, Login, Register, AboutPage, PostDetail, DeletePost, RestorePost
 
 
 class HomePageTest(TestCase):
@@ -41,3 +44,45 @@ class UserDetailTest(TestCase):
     def test_pageLoads(self):
         pass
     #todo implement
+
+
+class DeletePostTest(TestCase):
+    def test_view(self):
+        """
+            Test that by sending a valid post id
+            the post with said id gets deleted
+        """
+
+        posts = PostFactory.createPosts(1)
+
+        view = DeletePost()
+
+        req = HttpRequest()
+        req.POST['post_id']= 1  # delete the post with id= 1
+        req.method = 'POST'
+
+        view.post(req)
+
+        p= Post.objects.get(pk= 1)
+        self.assertTrue(p.deleted)
+
+
+class RestorePostTest(TestCase):
+    def test_view(self):
+        """
+            Test that by sending a valid post id
+            the post with said id gets deleted
+        """
+
+        PostFactory.createPosts(1)
+
+        view = RestorePost()
+
+        req = HttpRequest()
+        req.POST['post_id']= 1  # delete the post with id= 1
+        req.method = 'POST'
+
+        view.post(req)
+
+        p= Post.objects.get(pk= 1)
+        self.assertFalse(p.deleted)

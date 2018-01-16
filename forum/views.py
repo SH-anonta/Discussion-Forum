@@ -97,6 +97,7 @@ class PostDetail(View):
         show the post's content and replies
     """
     def get(self, request, post_id):
+        #todo check if post is deleted, if so check if user is authorized
         context = {
             'post': get_object_or_404(Post, pk=post_id)
         }
@@ -151,8 +152,24 @@ class CreatePost(View):
 class DeletePost(View):
     def post(self, request):
         # todo add authorizaton code
+        # todo show post deleted message after operation
 
         post_id  = int(request.POST.get('post_id', '-1'))
         post = get_object_or_404(Post, pk= post_id)
 
-        return HttpResponse('Post deleted')
+        post.deleted= True
+        post.save()
+
+        return redirect(reverse('forum:board_posts', args=[post.board.pk]))
+
+class RestorePost(View):
+    def post(self, request):
+        # todo add authorizaton code
+
+        post_id  = int(request.POST.get('post_id', '-1'))
+        post = get_object_or_404(Post, pk= post_id)
+
+        post.deleted= False
+        post.save()
+
+        return redirect(reverse('forum:board_posts', args=[post.board.pk]))

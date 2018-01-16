@@ -33,6 +33,7 @@ It also provides default content for Header footer and sidebar
                     {%if user_logged_in%}
                         <a id="logoutLNK" class="login-logout-btn btn btn-sm btn-outline-danger" role="button" href="{%url 'forum:logout'%}"> Logout </a>
                     {%else%}
+                        <a id="registerLNK" class="login-logout-btn btn btn-sm btn-outline-success" role="button" href="{%url 'forum:registration_page'%}"> Register</a>
                         <a id="loginLNK" class="login-logout-btn btn btn-sm btn-outline-success" role="button" href="{%url 'forum:loginpage'%}"> Login </a>
                     {%endif%}
                 {%endwith%}

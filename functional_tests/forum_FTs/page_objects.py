@@ -67,6 +67,13 @@ class BoardPostsPage:
         post_links = self.getPostLinks()
         post_links[n-1].click()
 
+    def deletePostButtonIsAvailable(self):
+        buttons= self.browser.find_elements_by_id('DeletePostBTN')
+        return len(buttons) != 0
+
+    def restorePostButtonIsAvailable(self):
+        buttons= self.browser.find_elements_by_id('RestorePostBTN')
+        return len(buttons) != 0
 
 class PostDetailPage:
     def __init__(self, web_driver):

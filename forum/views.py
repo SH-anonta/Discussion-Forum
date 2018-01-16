@@ -87,7 +87,7 @@ class BoardPosts(View):
 
         context= {
             'board' : board,
-            'board_posts' : posts
+            'post_list' : posts
         }
 
         return render(request, 'forum/board_posts.html', context)

@@ -7,7 +7,7 @@
 {%block MainContent%}
 
 <div class="container">
-    <div class="col-sm-4 offset-sm-4">
+    <div class="col-lg-4 offset-lg-4 col-sm-8 offset-sm-2 ">
         <form id="RegistrationForm" action="{%url 'forum:registration_page' %}" method="POST">
             {%csrf_token%}
             <input class="form-control" name="username" id="UserNameTB" type="text" placeholder="User name">

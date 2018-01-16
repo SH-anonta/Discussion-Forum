@@ -163,7 +163,7 @@
 {%block PageScripts%}
     <script>
         function confirmDeleteThread(){
-            return $('#DeleteThreadForm').confirm();
+            return confirm('Delete this thread?');
         }
 
         $(function(){

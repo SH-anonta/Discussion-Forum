@@ -173,3 +173,13 @@ class RestorePost(View):
         post.save()
 
         return redirect(reverse('forum:board_posts', args=[post.board.pk]))
+
+class DeletedPosts(View):
+    def get(self, request):
+        # do authorization
+
+        context = {
+            'post_list' : Post.objects.filter(deleted=True)
+        }
+
+        return render(request, 'forum/deleted_posts.html', context)

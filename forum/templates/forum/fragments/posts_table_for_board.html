@@ -1,10 +1,9 @@
-{#Table that shows details about posts#}
-
+{#This is a modified version of posts_table for board_posts template, any changes in posts_table fragment should also be made here#}
+{# the "Board" column is missing in this version of the fragment #}
 <table class="table table-striped">
     <tr>
         <th class="">Post Title</th>
         <th>Author</th>
-        <th>Board</th>
         <th>Rating</th>
         <th>Views</th>
         <th>Replies</th>
@@ -19,12 +18,6 @@
         <td>
             <a href="{%url 'forum:user_detail' post.creator.pk%}">
                 {{post.creator.user.username}}
-            </a>
-
-        </td>
-        <td>
-            <a href="{%url 'forum:board_posts' post.board.pk%}">
-                {{post.board.title}}
             </a>
 
         </td>

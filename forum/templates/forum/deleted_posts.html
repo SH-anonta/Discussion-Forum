@@ -1,7 +1,7 @@
 {%extends 'forum/layout_base_template.html'%}
 
 {%block HeadContent%}
-    <title>Board Posts</title>
+    <title>Deleted posts</title>
 {%endblock%}
 
 {%block MainContent%}
@@ -11,7 +11,7 @@
             <h5 class="h5">
                 <a href="{%url 'forum:homepage'%}">Boards</a>
                 /
-                {{board.title}}
+                Deleted posts
             </h5>
         </div>
 
@@ -25,7 +25,7 @@
     <div class="row">
         <div class="col-sm-12">
             {#This fragment uses "post_list" context variable#}
-            {%include 'forum/fragments/posts_table_for_board.html'%}
+            {%include 'forum/fragments/posts_table.html'%}
         </div>
 
     </div>

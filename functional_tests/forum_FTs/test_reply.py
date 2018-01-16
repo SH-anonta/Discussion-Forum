@@ -1,7 +1,7 @@
 from time import sleep
 from unittest import skip
 
-from functional_tests.base_testcase import BaseTestCase
+from functional_tests.forum_FTs.base_testcase import BaseTestCase
 from forum.unit_tests.modelFactory import *
 from forum.models import UserProfile
 

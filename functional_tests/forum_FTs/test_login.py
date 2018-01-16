@@ -1,4 +1,4 @@
-from functional_tests.base_testcase import BaseTestCase
+from functional_tests.forum_FTs.base_testcase import BaseTestCase
 from unittest import skip
 from time import sleep
 

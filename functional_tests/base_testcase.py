@@ -6,7 +6,7 @@ from selenium import webdriver
 import re
 
 # This class is to be inherited, don't put test code in here
-from functional_tests.page_objects import BoardPostsPage, PostDetailPage, HomePage
+from functional_tests.page_objects import BoardPostsPage, PostDetailPage, HomePage, PostEditorPage
 
 
 class BaseTestCase(StaticLiveServerTestCase):
@@ -32,9 +32,11 @@ class BaseTestCase(StaticLiveServerTestCase):
             Must be invoked in setUp method
             and must done so after the self.browser is declared
         """
-        self.homepage = HomePage(self.browser)
-        self.board_posts_page = BoardPostsPage(self.browser)
-        self.post_detail_page = PostDetailPage(self.browser)
+        browser= self.browser
+        self.homepage = HomePage(browser)
+        self.board_posts_page = BoardPostsPage(browser)
+        self.post_detail_page = PostDetailPage(browser)
+        self.post_editor_page = PostEditorPage(browser)
 
     def declarePageAddresses(self):
         """

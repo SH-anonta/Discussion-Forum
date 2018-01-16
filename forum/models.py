@@ -32,6 +32,9 @@ class Post(models.Model):
     def older_than_one_day(self):
         return timezone.now() - self.creation_date > timedelta(days=1)
 
+    #todo create method for counting un deleted posts
+    #todo BUG: Homepage board table count includes deleted posts too
+
 class Reply(models.Model):
     content = models.TextField(max_length=REPLY_CONTENT_MAX_LEN)
     creation_date= models.DateTimeField(auto_now_add= True, blank= True)

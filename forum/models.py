@@ -20,6 +20,10 @@ class UserProfile(models.Model):
 class Board(models.Model):
     title = models.CharField(max_length= POST_TITLE_MAX_LEN, unique= True)
 
+    def postCount(self):
+        """return count of posts in this board (excluding deleted posts)"""
+        return self.post_set.filter(deleted=False).count()
+
 class Post(models.Model):
     title = models.CharField(max_length= POST_TITLE_MAX_LEN)
     content = models.TextField(max_length= POST_CONTENT_MAX_LEN)
@@ -31,9 +35,6 @@ class Post(models.Model):
 
     def older_than_one_day(self):
         return timezone.now() - self.creation_date > timedelta(days=1)
-
-    #todo create method for counting un deleted posts
-    #todo BUG: Homepage board table count includes deleted posts too
 
 class Reply(models.Model):
     content = models.TextField(max_length=REPLY_CONTENT_MAX_LEN)

@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 
 from forum.models import User, Board, Post, Reply
 from forum.unit_tests import modelFactory
+from forum.unit_tests.modelFactory import BoardFactory, PostFactory
 
 
 class UserTest(TestCase):
@@ -20,6 +21,28 @@ class BoardTest(TestCase):
     def test_creation(self):
         modelFactory.BoardFactory.createBoards(2)
         self.assertEqual(Board.objects.count(), 2)
+
+    def testPostCount(self):
+        """
+            test that board models return correct number of post they contain
+            important count excludes deleted posts (posts with field deleted=True)
+        """
+        board = BoardFactory.createBoards(1)[0]
+
+        # create 5 posts in this board
+        posts = PostFactory.createPosts(5, board= board)
+
+        self.assertEqual(board.postCount(), 5)
+
+        # let's delete 2 posts
+        posts[0].deleted= True
+        posts[0].save()
+        posts[1].deleted= True
+        posts[1].save()
+
+
+        self.assertEqual(board.postCount(), 3)
+
 
 class PostTest(TestCase):
     def test_creation(self):

@@ -24,7 +24,7 @@ class UserFactory:
         for x in range(n):
             name = uname + str(cls.nextid())
             u = User.objects.create_user(username=name, password=pw)
-            UserProfile.objects.create(user = u)
+            up = UserProfile.objects.create(user= u)
             users.append(u)
 
         return users
@@ -66,7 +66,6 @@ class PostFactory:
 
         if user is None:
             user = UserFactory.createUsers(1)[0]
-            UserProfile.objects.create(user= user)
         if board is None:
             board = BoardFactory.createBoards(1)[0]
 

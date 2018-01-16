@@ -36,11 +36,19 @@
                                 <button id="EditPostBTN" class="btn btn-sm">Edit</button>
                             </form>
 
-                            <form id="DeleteThreadForm" class="d-inline" action="{%url 'forum:delete_post'%}" method="POST">
-                                {%csrf_token%}
-                                <input name="post_id" value="{{post.pk}}" type="hidden">
-                                <button id="DeletePostBTN" class="btn btn-sm" >Delete</button>
-                            </form>
+                            {%if post.deleted%}
+                                <form id="RestorePostForm" class="d-inline" action="{%url 'forum:restore_post'%}" method="POST">
+                                    {%csrf_token%}
+                                    <input name="post_id" value="{{post.pk}}" type="hidden">
+                                    <button id="RestorePostBTN" class="btn btn-sm" >Restore</button>
+                                </form>
+                            {%else%}
+                                <form id="DeletePostForm" class="d-inline" action="{%url 'forum:delete_post'%}" method="POST">
+                                    {%csrf_token%}
+                                    <input name="post_id" value="{{post.pk}}" type="hidden">
+                                    <button id="DeletePostBTN" class="btn btn-sm" >Delete</button>
+                                </form>
+                            {%endif%}
                         {%endif%}
                     </div>
                 </div>
@@ -122,8 +130,9 @@
         color: white;
     }
 
-    #PostContentRow{
-        min-height: 250px;
+    #PostBodyContainer,
+    .ReplyBodyContainer{
+        min-height: 200px;
     }
 
     #PostBodyContainer,
@@ -151,10 +160,6 @@
         margin-bottom: 20px;
     }
 
-    .ReplyBodyContainer{
-        min-height: 200px;
-    }
-
     #QuickReplyTA{
         min-height: 150px;
     }
@@ -166,12 +171,17 @@
 
 {%block PageScripts%}
     <script>
-        function confirmDeleteThread(){
-            return confirm('Delete this thread?');
+        function confirmDeletePost(){
+            return confirm('Delete this post?');
+        }
+
+        function confirmRestorePost(){
+            return confirm('Restore this post?');
         }
 
         $(function(){
-            $('#DeleteThreadForm').submit(confirmDeleteThread);
+            $('#DeletePostForm').submit(confirmDeletePost);
+            $('#RestorePostForm').submit(confirmRestorePost);
         });
 
     </script>

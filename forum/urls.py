@@ -12,8 +12,8 @@ urlpatterns = [
     path('post/<int:post_id>', PostDetail.as_view(), name='post_detail'),
     path('user/<int:user_id>', UserDetail.as_view(), name='user_detail'),
 
-    path('delete-post', DeletePost.as_view(), name='delete_post'),    #todo add auth required
-    path('restore-post', RestorePost.as_view(), name='restore_post'),    #todo add auth required
+    path('delete-post', login_required(DeletePost.as_view()), name='delete_post'),
+    path('restore-post', login_required(RestorePost.as_view()), name='restore_post'),
     path('create-post', login_required(CreatePost.as_view()),name='create_post'),
     path('reply', login_required(CreateReply.as_view()), name='create_reply'),
     path('logout', login_required(Logout.as_view()), name='logout'),

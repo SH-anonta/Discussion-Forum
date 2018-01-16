@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.urls import reverse
@@ -80,10 +80,10 @@ class Register(View):
 
 class BoardPosts(View):
     def get(self, request, board_id):
-        """View list of posts of a page"""
-        # todo use get or 404 shortcut
-        board = Board.objects.get(pk=board_id)
-        posts = board.post_set.all().order_by('-creation_date')
+        """View list of (not deleted) posts of a page"""
+
+        board = get_object_or_404(Board, pk=board_id)
+        posts = board.post_set.filter(deleted=False).order_by('-creation_date')
 
         context= {
             'board' : board,

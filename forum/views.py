@@ -78,7 +78,6 @@ class Register(View):
 
         return redirect('forum:loginpage')
 
-
 class BoardPosts(View):
     def get(self, request, board_id):
         """View list of posts of a page"""
@@ -148,3 +147,12 @@ class CreatePost(View):
         post = Post.objects.create(title= title, content=content, board=board, creator=user.userprofile)
         
         return redirect(reverse('forum:post_detail', args=[post.pk]))
+
+class DeletePost(View):
+    def post(self, request):
+        # todo add authorizaton code
+
+        post_id  = int(request.POST.get('post_id', '-1'))
+        post = get_object_or_404(Post, pk= post_id)
+
+        return HttpResponse('Post deleted')

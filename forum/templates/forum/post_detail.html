@@ -36,7 +36,7 @@
                                 <button id="EditPostBTN" class="btn btn-sm">Edit</button>
                             </form>
 
-                            <form class="d-inline" action="" method="POST">
+                            <form id="DeleteThreadForm" class="d-inline" action="{%url 'forum:delete_post'%}" method="POST">
                                 {%csrf_token%}
                                 <input name="post_id" value="{{post.pk}}" type="hidden">
                                 <button id="DeletePostBTN" class="btn btn-sm" >Delete</button>
@@ -162,8 +162,12 @@
 
 {%block PageScripts%}
     <script>
+        function confirmDeleteThread(){
+            return $('#DeleteThreadForm').confirm();
+        }
+
         $(function(){
-            
+            $('#DeleteThreadForm').submit(confirmDeleteThread);
         });
 
     </script>

@@ -78,12 +78,32 @@
     <div class="col-sm-12">
         {%for reply in post.reply_set.all%}
         <div class="ReplyContainer container">
+            
+            <div class="row ReplyHeader">
+                <div class="col-sm-12  text-right">
+                    Posted {{reply.creation_date|timesince}} ago
+                    {%if user.is_staff or user == post.creator.user %}
+                        <form class="d-inline EditReplyForm" action="" method="POST">
+                            {%csrf_token%}
+                            <input name="post_id" value="{{post.pk}}" type="hidden">
+                            <button class="btn btn-sm EditReplyBTN">Edit</button>
+                        </form>
+
+                        <form class="d-inline DeleteReplyForm" action="" method="POST">
+                            {%csrf_token%}
+                            <input name="post_id" value="{{post.pk}}" type="hidden">
+                            <button class="btn btn-sm DeleteReplyBTN" >Delete</button>
+                        </form>
+                    {%endif%}
+                </div>
+            </div>
+            
             <div class="row">
                 <div class="col-sm-3 col-md-2 AvatarContainer text-center">
                     <img class="AvatarIMG" src="{%static 'forum/images/placeholder_icon.png' %}"/>
                     <a class="d-block" href="{%url 'forum:user_detail' reply.creator.user.pk %}">{{reply.creator.user.username}}</a>
                 </div>
-
+                
                 <div class="col-sm-9 col-md-10 ReplyBodyContainer">
                     <pre>{{reply.content}}</pre>
                 </div>
@@ -137,13 +157,16 @@
 
     #PostBodyContainer,
     .ReplyBodyContainer{
+        padding-top: 10px;
+        
         background-color: #F2F6F3;
         border-style: solid;
         border-width: thin;
         border-color: #001A23;
     }
     
-    #PostHeader{
+    #PostHeader,
+    .ReplyHeader{
         background-color: #C3D0CA;
         padding-top: 5px;
         padding-bottom: 5px;

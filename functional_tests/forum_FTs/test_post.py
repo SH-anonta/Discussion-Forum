@@ -98,7 +98,7 @@ class DeletePostTest(BaseTestCase):
         u = User.objects.create_user(username= uname, password= pw)
         UserProfile.objects.create(user=u)
 
-        PostFactory.createPosts(1, user= u)
+        PostFactory.createPosts(1, author= u)
 
     def test_DeleteButtonUnavailableWhenNotLoggedIn(self):
         browser = self.browser

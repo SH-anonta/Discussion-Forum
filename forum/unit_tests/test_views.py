@@ -1,11 +1,23 @@
 from unittest import skip
 
+from django.contrib.auth import login
 from django.http import HttpRequest
 from django.test import TestCase
+from django.urls import reverse
 
 from forum.models import Post
 from forum.unit_tests.modelFactory import PostFactory, UserFactory
 from forum.views import HomePage, Login, Register, AboutPage, PostDetail, DeletePost, RestorePost, EditPost
+
+
+class UrlContainer:
+    @classmethod
+    def getDeletePostUrl(cls):
+        return reverse('forum:delete_post')
+
+    @classmethod
+    def getLoginPageUrl(self):
+        return reverse('forum:loginpage')
 
 
 class HomePageTest(TestCase):
@@ -45,27 +57,35 @@ class UserDetailTest(TestCase):
         pass
     #todo implement
 
-
 class DeletePostTest(TestCase):
-    def test_view(self):
-        """
-            Test that by sending a valid post id
-            the post with said id gets deleted
-        """
-        #todo fix test
-        # posts = PostFactory.createPosts(1)
-        #
-        # view = DeletePost()
-        #
-        # req = HttpRequest()
-        # req.POST['post_id']= 1  # delete the post with id= 1
-        # req.method = 'POST'
-        #
-        # view.post(req)
-        #
-        # p= Post.objects.get(pk= 1)
-        # self.assertTrue(p.deleted)
+    delete_post_url = url = reverse('forum:delete_post')
 
+    def setUp(self):
+        self.post_author = UserFactory.createUser('Author', 'password')
+        self.admin = UserFactory.createUser('Admin', 'password', staff=True)
+        self.post = PostFactory.createPosts(1, author=self.post_author)[0]
+
+    def assertDeletedPostCount(self, n):
+        deleted_posts = Post.objects.filter(deleted=True).count()
+        self.assertEqual(deleted_posts, n)
+
+    def test_postAuthorCanDeletePost(self):
+        """
+            A user should be able to delete their own post
+        """
+        client = self.client
+
+        # login as author
+        self.client.login(username='Author', password= 'password')
+        post = self.post
+        data = {'post_id': post.pk}
+
+        response = client.post(self.delete_post_url , data)
+
+        # delete successful and user is redirected to the post's board's board posts page
+        self.assertRedirects(response, reverse('forum:board_posts', args=[post.board.pk]))
+
+        #1 post was created then deleted
 
 class RestorePostTest(TestCase):
     def test_view(self):
@@ -93,7 +113,7 @@ class EditPostTest(TestCase):
         self.author = UserFactory.createUsers(1)[0]
         self.admin = UserFactory.createUsers(1, staff=True)[0]
 
-        self.post = PostFactory.createPosts(1, user= self.author)
+        self.post = PostFactory.createPosts(1, author= self.author)
 
     def test_pageLoadsForPostAuthor(self):
         post= self.post

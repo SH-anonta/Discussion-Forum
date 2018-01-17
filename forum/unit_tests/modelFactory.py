@@ -1,4 +1,5 @@
-from forum.models import User, Board, Post, Reply, UserProfile
+from django.contrib.auth.models import User
+from forum.models import Board, Post, Reply, UserProfile
 
 # count of each model objects created
 #these are used to make sure two function calls don't create objects with the same values for unique fields
@@ -32,6 +33,16 @@ class UserFactory:
 
         return users
 
+    @classmethod
+
+    def createUser(cls, uname, pw, staff=False):
+        u = User.objects.create_user(username= uname, password= pw)
+        UserProfile.objects.create(user= u)
+        u.is_staff = staff
+        u.save()
+
+        return u
+
 class BoardFactory:
     # This number is appended to unique field values
     obj_count = 0
@@ -63,19 +74,19 @@ class PostFactory:
         return cls.obj_count
 
     @classmethod
-    def createPosts(cls, n, user=None, board= None):
+    def createPosts(cls, n, author=None, board= None):
         title = 'PostTitle'
         content = 'PostContent'
 
-        if user is None:
-            user = UserFactory.createUsers(1)[0]
+        if author is None:
+            author = UserFactory.createUsers(1)[0]
         if board is None:
             board = BoardFactory.createBoards(1)[0]
 
         posts= []
         for x in range(n):
             t = title + str(cls.nextid())
-            p = Post.objects.create(title=t, content=content, board= board, creator=user.userprofile)
+            p = Post.objects.create(title=t, content=content, board= board, creator=author.userprofile)
             posts.append(p)
 
         return posts

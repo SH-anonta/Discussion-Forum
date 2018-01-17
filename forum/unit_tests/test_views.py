@@ -20,8 +20,20 @@ class UrlContainer:
         return reverse('forum:loginpage')
 
     @classmethod
-    def getPostUrl(self, post_id):
+    def getPostDetailUrl(self, post_id):
         return  reverse('forum:post_detail', args=[post_id])
+
+    @classmethod
+    def getAboutPage(cls):
+        return reverse('forum:about_page')
+
+    @classmethod
+    def getRegisterPage(cls):
+        return reverse('forum:registration_page')
+
+    @classmethod
+    def getUserDetailUrl(cls, user_id):
+        return reverse('forum:user_detail', args=[user_id])
 
 
 class HomePageTest(TestCase):
@@ -30,11 +42,10 @@ class HomePageTest(TestCase):
         resp = homepage.get(HttpRequest())
         self.assertEqual(resp.status_code, 200)
 
-@skip   #todo fix this test
 class LoginTest(TestCase):
     def test_pageLoads(self):
-        login = Login()
-        resp = login.get(HttpRequest())
+        url = UrlContainer.getLoginPageUrl()
+        resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
 # class RegisterTest(TestCase):
@@ -43,12 +54,12 @@ class LoginTest(TestCase):
 #         resp = reg.get(HttpRequest())
 #         self.assertEqual(resp.status_code, 200)
 
-# todo, test of views that require login are not working, fix
+
 class AboutPageTest(TestCase):
     def test_pageLoads(self):
-        view = AboutPage()
+        url = UrlContainer.getAboutPage()
 
-        resp = view.get(HttpRequest())
+        resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
 class PostDetailTest(TestCase):
@@ -56,14 +67,19 @@ class PostDetailTest(TestCase):
         posts= PostFactory.createPosts(5)
 
         #url to first post
-        url = UrlContainer.getPostUrl(posts[0].pk)
+        url = UrlContainer.getPostDetailUrl(posts[0].pk)
         resp= self.client.get(url)
 
         self.assertEqual(resp.status_code, 200)
 
 class UserDetailTest(TestCase):
     def test_pageLoads(self):
-        pass
+        user = UserFactory.createUsers(1)[0]
+
+        url = UrlContainer.getUserDetailUrl(user.pk)
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
     #todo implement
 
 class DeletePostTest(TestCase):
@@ -95,6 +111,25 @@ class DeletePostTest(TestCase):
         self.assertRedirects(response, reverse('forum:board_posts', args=[post.board.pk]))
 
         #1 post was created then deleted
+        self.assertDeletedPostCount(1)
+
+    def test_adminsCanDeleteOtherUsersPost(self):
+        """Admins can delete any user's post"""
+        client = self.client
+
+        # login as author
+        self.client.login(username='Admin', password='password')
+        post = self.post
+        data = {'post_id': post.pk}
+
+        response = client.post(self.delete_post_url, data)
+
+        # delete successful and admin is redirected to the post's board's board posts page
+        self.assertRedirects(response, reverse('forum:board_posts', args=[post.board.pk]))
+
+        # 1 post was created then deleted
+        self.assertDeletedPostCount(1)
+
 
 class RestorePostTest(TestCase):
     def test_view(self):
@@ -136,3 +171,14 @@ class EditPostTest(TestCase):
         # view.get()
 
         # todo fix tests
+
+class RegisterTest(TestCase):
+    def test_RegisterPageLoads(self):
+        url = UrlContainer.getLoginPageUrl()
+
+        resp= self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_RegisterPostValidData(self):
+        pass
+        #todo implement

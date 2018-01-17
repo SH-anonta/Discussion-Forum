@@ -170,11 +170,12 @@ class DeletePost(View):
             'msg_text' : 'Post deleted successfully',
         }
 
-        return render(request, 'forum/success_message.html', context)
+        return render(request, 'forum/show_message.html', context)
 
 class RestorePost(View):
     def post(self, request):
-        # todo add authorizaton code
+        if not request.user.is_staff:
+            return self.showAuthorizationError(request)
 
         post_id  = int(request.POST.get('post_id', '-1'))
         post = get_object_or_404(Post, pk= post_id)
@@ -184,12 +185,21 @@ class RestorePost(View):
 
         return redirect(reverse('forum:post_detail', args=[post.pk]))
 
+    def showAuthorizationError(self, request):
+        context= {
+            'msg_text': 'You are not authorized to restore this post.'
+        }
+
+        return render(request, 'forum/show_message.html', context)
+
+
+
 class DeletedPosts(View):
     def get(self, request):
         # do authorization
 
         context = {
-            'post_list' : Post.objects.filter(deleted=True)
+            'post_list' : Post.objects.filter(deleted=True).order_by('-creation_date')
         }
 
         return render(request, 'forum/deleted_posts.html', context)

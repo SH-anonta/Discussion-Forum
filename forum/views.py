@@ -156,7 +156,10 @@ class DeletePost(View):
 
         post_id  = int(request.POST.get('post_id', '-1'))
         post = get_object_or_404(Post, pk= post_id)
-
+        
+        if not post.userIsAuthorizedToDeletePost(request.user):
+            return HttpResponse('you are not allowed to delete this post')
+        
         post.deleted= True
         post.save()
 
@@ -190,7 +193,7 @@ class EditPost(View):
         post = get_object_or_404(Post, pk=post_id)
         user = request.user
 
-        if not self.userIsAuthorizedToEditPost(user, post):
+        if not post.userIsAuthorizedToEditPost(user):
             # todo redirect to a template with this message
             return HttpResponse('You are not authorized to edit this post.')
 
@@ -210,7 +213,7 @@ class EditPost(View):
         post = get_object_or_404(Post, pk=post_id)
         user = request.user
 
-        if not self.userIsAuthorizedToEditPost(user, post):
+        if not post.userIsAuthorizedToEditPost(user):
             # todo redirect to a template with this message
             return HttpResponse('You are not authorized to edit this post.')
 
@@ -224,6 +227,3 @@ class EditPost(View):
         post.save()
 
         return redirect(reverse('forum:post_detail', args=[post.pk]))
-
-    def userIsAuthorizedToEditPost(self, user, post):
-        return user.is_staff or post.creator == user.userprofile

@@ -36,6 +36,14 @@ class Post(models.Model):
     def older_than_one_day(self):
         return timezone.now() - self.creation_date > timedelta(days=1)
 
+    def userIsAuthorizedToEditPost(self, user):
+        """Only admins and the post's author can delete posts"""
+        return user.is_staff or self.creator == user.userprofile
+
+    def userIsAuthorizedToDeletePost(self, user):
+        """Only admins and the post's author can delete posts"""
+        return user.is_staff or self.creator == user.userprofile
+
 class Reply(models.Model):
     content = models.TextField(max_length=REPLY_CONTENT_MAX_LEN)
     creation_date= models.DateTimeField(auto_now_add= True, blank= True)

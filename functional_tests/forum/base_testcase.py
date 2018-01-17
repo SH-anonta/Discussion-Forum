@@ -6,7 +6,7 @@ from selenium import webdriver
 import re
 
 # This class is to be inherited, don't put test code in here
-from functional_tests.forum_FTs.page_objects import BoardPostsPage, PostDetailPage, HomePage, PostEditorPage
+from functional_tests.forum.page_objects import BoardPostsPage, PostDetailPage, HomePage, PostEditorPage
 
 
 class BaseTestCase(StaticLiveServerTestCase):

@@ -1,9 +1,9 @@
-from functional_tests.forum_FTs.base_testcase import BaseTestCase
+from functional_tests.forum.base_testcase import BaseTestCase
 from unittest import skip
 from time import sleep
 
 from forum.models import User
-from functional_tests.forum_FTs.page_objects import RegistrationPage
+from functional_tests.forum.page_objects import RegistrationPage
 
 class RegistrationTest(BaseTestCase):
     def loadData(self):

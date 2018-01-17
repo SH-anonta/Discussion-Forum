@@ -152,7 +152,6 @@ class CreatePost(View):
 class DeletePost(View):
     def post(self, request):
         # todo add authorizaton code
-        # todo show post deleted message after operation
 
         post_id  = int(request.POST.get('post_id', '-1'))
         post = get_object_or_404(Post, pk= post_id)

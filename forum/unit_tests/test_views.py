@@ -16,6 +16,10 @@ class UrlContainer:
         return reverse('forum:delete_post')
 
     @classmethod
+    def getRestorePostUrl(cls):
+        return reverse('forum:restore_post')
+
+    @classmethod
     def getLoginPageUrl(self):
         return reverse('forum:loginpage')
 
@@ -82,7 +86,7 @@ class UserDetailTest(TestCase):
 
     #todo implement
 
-class DeletePostTest(TestCase):
+class DeleteRestorePostTest(TestCase):
     delete_post_url = url = reverse('forum:delete_post')
 
     def setUp(self):
@@ -108,7 +112,7 @@ class DeletePostTest(TestCase):
         response = client.post(self.delete_post_url , data)
 
         # delete successful and user is redirected to the post's board's board posts page
-        self.assertRedirects(response, reverse('forum:board_posts', args=[post.board.pk]))
+        self.assertContains(response, 'Post deleted successfully')
 
         #1 post was created then deleted
         self.assertDeletedPostCount(1)
@@ -125,31 +129,30 @@ class DeletePostTest(TestCase):
         response = client.post(self.delete_post_url, data)
 
         # delete successful and admin is redirected to the post's board's board posts page
-        self.assertRedirects(response, reverse('forum:board_posts', args=[post.board.pk]))
+        self.assertContains(response, 'Post deleted successfully')
 
         # 1 post was created then deleted
         self.assertDeletedPostCount(1)
 
+    def test_nonAdminUserCanNotRestorePost(self):
 
-class RestorePostTest(TestCase):
-    def test_view(self):
-        """
-            Test that by sending a valid post id
-            the post with said id gets deleted
-        """
+        #deleting the post initially
+        self.post.deleted= True
+        self.post.save()
 
-        PostFactory.createPosts(1)
+        url = UrlContainer.getRestorePostUrl()
 
-        view = RestorePost()
+        data= {
+            'post_id' : self.post.pk
+        }
 
-        req = HttpRequest()
-        req.POST['post_id']= 1  # delete the post with id= 1
-        req.method = 'POST'
+        resp = self.client.post(url, data)
 
-        view.post(req)
+        # self.assertContains(resp, 'You are not authorized to restore this post')
 
-        p= Post.objects.get(pk= 1)
-        self.assertFalse(p.deleted)
+        # initially 1 post was deleted and the delete attempt has failed
+        self.assertDeletedPostCount(1)
+
 
 class EditPostTest(TestCase):
 

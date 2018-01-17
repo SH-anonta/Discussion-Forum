@@ -19,6 +19,10 @@ class UrlContainer:
     def getLoginPageUrl(self):
         return reverse('forum:loginpage')
 
+    @classmethod
+    def getPostUrl(self, post_id):
+        return  reverse('forum:post_detail', args=[post_id])
+
 
 class HomePageTest(TestCase):
     def test_pageLoads(self):
@@ -49,8 +53,13 @@ class AboutPageTest(TestCase):
 
 class PostDetailTest(TestCase):
     def test_pageLoads(self):
-        view = PostDetail()
-        # todo implement
+        posts= PostFactory.createPosts(5)
+
+        #url to first post
+        url = UrlContainer.getPostUrl(posts[0].pk)
+        resp= self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
 
 class UserDetailTest(TestCase):
     def test_pageLoads(self):

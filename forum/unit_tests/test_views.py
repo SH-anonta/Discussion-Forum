@@ -12,6 +12,10 @@ from forum.views import HomePage, Login, Register, AboutPage, PostDetail, Delete
 
 class UrlContainer:
     @classmethod
+    def getHomePageUrl(cls):
+        return reverse('forum:homepage')
+
+    @classmethod
     def getDeletePostUrl(cls):
         return reverse('forum:delete_post')
 
@@ -52,6 +56,48 @@ class LoginTest(TestCase):
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
+    def loginValidData(self):
+        uname = 'User'
+        pw = 'password'
+
+        UserFactory.createUser(uname, pw)
+
+        data= {
+            'username': uname,
+            'password': pw,
+        }
+
+        url = UrlContainer.getLoginPageUrl()
+
+        resp = self.client.post(url, data)
+
+        homepage_url = UrlContainer.getHomePageUrl()
+
+        self.assertRedirects(resp, homepage_url)
+        self.assertTemplateUsed(resp,'forum/home_page.html')
+
+    def loginInvalidData(self):
+        """
+            login with invalid data, should fail and user will be redirected to login page again
+        """
+        uname = 'User'
+        pw = 'password'
+
+        UserFactory.createUser(uname, pw)
+
+        # intentionally invalid data
+        data= {
+            'username': uname,
+            'password': 'wrong password',
+        }
+
+        login_url= UrlContainer.getLoginPageUrl()
+
+        resp = self.client.post(login_url, data)
+
+        #login fails and the user is redirected to the login page
+        self.assertRedirects(resp, login_url)
+        self.assertTemplateUsed(resp,'forum/login_page.html')
 # class RegisterTest(TestCase):
 #     def test_pageLoads(self):
 #         reg = Register()
@@ -152,7 +198,6 @@ class DeleteRestorePostTest(TestCase):
 
         # initially 1 post was deleted and the delete attempt has failed
         self.assertDeletedPostCount(1)
-
 
 class EditPostTest(TestCase):
 

@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 
-from forum.views import HomePage, Login, Logout, Register, AboutPage, DeletePost, RestorePost, DeletedPosts
+from forum.views import HomePage, Login, Logout, Register, AboutPage, DeletePost, RestorePost, DeletedPosts, EditPost
 from forum.views import CreatePost, BoardPosts, PostDetail, UserDetail, CreateReply
 
 app_name= 'forum'
@@ -24,4 +24,5 @@ urlpatterns = [
     # get and post
     path('login', Login.as_view(), name='loginpage'),
     path('register', Register.as_view(), name='registration_page'),
+    path('edit-post', login_required(EditPost.as_view()), name='edit_post'),
 ]

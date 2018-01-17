@@ -183,3 +183,47 @@ class DeletedPosts(View):
         }
 
         return render(request, 'forum/deleted_posts.html', context)
+
+class EditPost(View):
+    def get(self, request):
+        post_id = request.GET['post_id']
+        post = get_object_or_404(Post, pk=post_id)
+        user = request.user
+
+        if not self.userIsAuthorizedToEditPost(user, post):
+            # todo redirect to a template with this message
+            return HttpResponse('You are not authorized to edit this post.')
+
+        boards= Board.objects.all()
+
+        context = {
+            'post' : post,
+            'boards' : boards,
+        }
+
+        return render(request, 'forum/edit_post_editor.html', context)
+
+    def post(self, request):
+        POST= request.POST
+
+        post_id = int(POST['post_id'])
+        post = get_object_or_404(Post, pk=post_id)
+        user = request.user
+
+        if not self.userIsAuthorizedToEditPost(user, post):
+            # todo redirect to a template with this message
+            return HttpResponse('You are not authorized to edit this post.')
+
+        # todo do data validation
+        post.title = POST['post_title']
+        post.content = POST['post_content']
+        post_to_board_id = int(POST['post_to_board_id'])
+
+        board= get_object_or_404(Board, pk= post_to_board_id)
+        post.board = board
+        post.save()
+
+        return redirect(reverse('forum:post_detail', args=[post.pk]))
+
+    def userIsAuthorizedToEditPost(self, user, post):
+        return user.is_staff or post.creator == user.userprofile

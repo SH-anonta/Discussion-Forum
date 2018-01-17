@@ -16,7 +16,7 @@ class UserFactory:
         return cls.obj_count
 
     @classmethod
-    def createUsers(cls,n):
+    def createUsers(cls,n, staff= False):
         uname= 'username'
         pw= 'password'
 
@@ -24,6 +24,9 @@ class UserFactory:
         for x in range(n):
             name = uname + str(cls.nextid())
             u = User.objects.create_user(username=name, password=pw)
+            u.is_staff = staff
+            u.save()
+
             up = UserProfile.objects.create(user= u)
             users.append(u)
 

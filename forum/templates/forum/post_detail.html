@@ -30,11 +30,8 @@
                     <div class="col-sm-12">
                         <b>Posted {{post.creation_date|timesince}} ago</b>
                         {%if user.is_staff or user == post.creator.user %}
-                            <form class="d-inline" action="" method="POST">
-                                {%csrf_token%}
-                                <input name="post_id" value="{{post.pk}}" type="hidden">
-                                <button id="EditPostBTN" class="btn btn-sm">Edit</button>
-                            </form>
+
+                            <a class="btn btn-sm" href="{%url 'forum:edit_post'%}?post_id={{post.pk}}" >Edit</a>
 
                             {%if post.deleted%}
                                 <form id="RestorePostForm" class="d-inline" action="{%url 'forum:restore_post'%}" method="POST">

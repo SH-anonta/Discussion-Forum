@@ -4,8 +4,8 @@ from django.http import HttpRequest
 from django.test import TestCase
 
 from forum.models import Post
-from forum.unit_tests.modelFactory import PostFactory
-from forum.views import HomePage, Login, Register, AboutPage, PostDetail, DeletePost, RestorePost
+from forum.unit_tests.modelFactory import PostFactory, UserFactory
+from forum.views import HomePage, Login, Register, AboutPage, PostDetail, DeletePost, RestorePost, EditPost
 
 
 class HomePageTest(TestCase):
@@ -86,3 +86,24 @@ class RestorePostTest(TestCase):
 
         p= Post.objects.get(pk= 1)
         self.assertFalse(p.deleted)
+
+class EditPostTest(TestCase):
+
+    def setUp(self):
+        self.author = UserFactory.createUsers(1)[0]
+        self.admin = UserFactory.createUsers(1, staff=True)[0]
+
+        self.post = PostFactory.createPosts(1, user= self.author)
+
+    def test_pageLoadsForPostAuthor(self):
+        post= self.post
+        # author = self.author
+        # admin = self.admin
+        #
+        # view = EditPost()
+        # req = HttpRequest()
+        # req.GET['post_id']= post.pk
+        #
+        # view.get()
+
+        # todo fix tests

@@ -163,7 +163,14 @@ class DeletePost(View):
         post.deleted= True
         post.save()
 
-        return redirect(reverse('forum:board_posts', args=[post.board.pk]))
+        return self.getSuccessResponse(request)
+
+    def getSuccessResponse(self, request):
+        context = {
+            'msg_text' : 'Post deleted successfully',
+        }
+
+        return render(request, 'forum/success_message.html', context)
 
 class RestorePost(View):
     def post(self, request):
@@ -175,7 +182,7 @@ class RestorePost(View):
         post.deleted= False
         post.save()
 
-        return redirect(reverse('forum:board_posts', args=[post.board.pk]))
+        return redirect(reverse('forum:post_detail', args=[post.pk]))
 
 class DeletedPosts(View):
     def get(self, request):

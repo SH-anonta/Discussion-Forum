@@ -28,7 +28,7 @@
             <div class="container PostContainer">
                 <div id="PostHeader" class="row text-right">
                     <div class="col-sm-12">
-                        Posted {{post.creation_date|timesince}} ago
+                        <b>Posted {{post.creation_date|timesince}} ago</b>
                         {%if user.is_staff or user == post.creator.user %}
                             <form class="d-inline" action="" method="POST">
                                 {%csrf_token%}
@@ -81,7 +81,7 @@
             
             <div class="row ReplyHeader">
                 <div class="col-sm-12  text-right">
-                    Posted {{reply.creation_date|timesince}} ago
+                    <b>Posted {{reply.creation_date|timesince}} ago</b>
                     {%if user.is_staff or user == post.creator.user %}
                         <form class="d-inline EditReplyForm" action="" method="POST">
                             {%csrf_token%}
@@ -203,7 +203,7 @@
         }
 
         $(function(){
-            $('#DeletePostForm').submit(confirmDeletePost);
+            $('#DeletePostForm, .DeleteReplyForm').submit(confirmDeletePost);
             $('#RestorePostForm').submit(confirmRestorePost);
         });
 

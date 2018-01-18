@@ -46,9 +46,12 @@ class UrlContainer:
 
 class HomePageTest(TestCase):
     def test_pageLoads(self):
-        homepage = HomePage()
-        resp = homepage.get(HttpRequest())
+        url = UrlContainer.getHomePageUrl()
+
+        resp = self.client.get(url)
+
         self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'forum/home_page.html')
 
 class LoginTest(TestCase):
     def test_pageLoads(self):
@@ -98,12 +101,6 @@ class LoginTest(TestCase):
         #login fails and the user is redirected to the login page
         self.assertRedirects(resp, login_url)
         self.assertTemplateUsed(resp,'forum/login_page.html')
-# class RegisterTest(TestCase):
-#     def test_pageLoads(self):
-#         reg = Register()
-#         resp = reg.get(HttpRequest())
-#         self.assertEqual(resp.status_code, 200)
-
 
 class AboutPageTest(TestCase):
     def test_pageLoads(self):
@@ -113,14 +110,74 @@ class AboutPageTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
 class PostDetailTest(TestCase):
-    def test_pageLoads(self):
-        posts= PostFactory.createPosts(5)
+
+    def setUp(self):
+        self.author = UserFactory.createUser('Author', 'password')
+        self.admin = UserFactory.createUser('Admin', 'password', staff=True)
+        self.post= PostFactory.createPosts(1, author= self.author)[0]
+
+    def getUrlToPost(self):
+        return UrlContainer.getPostDetailUrl(self.post.pk)
+
+    def assertPostWasLoaded(self, response):
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'forum/post_detail.html')
+
+    def loginAsNonAdminAuthorOfPost(self):
+        self.client.login(username='Author', password='password')
+
+    def loginAsAdmin(self):
+        self.client.login(username='Admin', password='password')
+
+    def test_pageLoadsForNotLoggedInUser(self):
 
         #url to first post
-        url = UrlContainer.getPostDetailUrl(posts[0].pk)
+        url = self.getUrlToPost()
         resp= self.client.get(url)
 
-        self.assertEqual(resp.status_code, 200)
+        self.assertPostWasLoaded(resp)
+
+    def test_pageLoadsForLoggedInUser(self):
+        url = self.getUrlToPost()
+
+        # login as regular user
+        self.loginAsNonAdminAuthorOfPost()
+
+        resp= self.client.get(url)
+        self.assertPostWasLoaded(resp)
+
+    def test_deletedPostIsNotLoadedForNonAdmin(self):
+        url = self.getUrlToPost()
+
+        # delete the post to be loaded
+        self.post.deleted= True
+        self.post.save()
+
+        # login as non admin user
+        self.loginAsNonAdminAuthorOfPost()
+
+        resp = self.client.get(url)
+
+        self.assertContains(resp, 'Error: This post has been deleted.')
+        self.assertTemplateUsed(resp, 'forum/show_message.html')
+
+    def test_deletedPostIsLoadedForAdmin(self):
+        """Admins should be able to view deleted posts"""
+
+        url = self.getUrlToPost()
+
+        # delete the post to be loaded
+        self.post.deleted = True
+        self.post.save()
+
+        # login as non admin user
+        self.loginAsAdmin()
+
+        resp = self.client.get(url)
+
+        self.assertContains(resp, self.post.content)
+        self.assertTemplateUsed(resp, 'forum/post_detail.html')
+
 
 class UserDetailTest(TestCase):
     def test_pageLoads(self):
@@ -230,3 +287,8 @@ class RegisterTest(TestCase):
     def test_RegisterPostValidData(self):
         pass
         #todo implement
+
+class DeletedPostsTest(TestCase):
+    def test_onlyAdminsCanViewPage(self):
+        pass
+        # todo complete

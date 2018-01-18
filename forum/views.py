@@ -8,7 +8,7 @@ from django.views import View
 
 from forum.models import Board, Post, Reply, UserProfile
 
-
+# get only
 class HomePage(View):
     def get(self, request):
         context = {
@@ -20,35 +20,146 @@ class AboutPage(View):
     def get(self, request):
         return render(request, 'forum/about_page.html')
 
-class Login(LoginView):
-    template_name= 'forum/login_page.html'
-    extra_context = {}
+class BoardPosts(View):
+    def get(self, request, board_id):
+        """View list of (not deleted) posts of a page"""
 
-    context_var_print_login_fail_msg= 'print_login_fail_msg'
+        board = get_object_or_404(Board, pk=board_id)
+        posts = board.post_set.filter(deleted=False).order_by('-creation_date')
 
-    def get(self, request, *args, **kwargs):
-        # If the user is already logged in, send them to homepage 
-        if request.user.is_authenticated:
-            return redirect('forum:homepage')
+        context= {
+            'board' : board,
+            'post_list' : posts
+        }
 
-        self.extra_context[self.context_var_print_login_fail_msg]= False
+        return render(request, 'forum/board_posts.html', context)
 
-        return super().get(request, args, kwargs)
+class PostDetail(View):
+    """
+        show the post's content and replies
+    """
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, pk=post_id)
+
+        if not post.userIsAuthorizedToViewPost(request.user):
+            return self.unauthenticatedUserResponse(request)
+
+        context = {
+            'post': post
+        }
+
+        return render(request, 'forum/post_detail.html', context)
+
+    def unauthenticatedUserResponse(self, request):
+        context={
+            'msg_text' : 'Error: This post has been deleted.',
+        }
+        return render(request, 'forum/show_message.html', context)
 
 
-    
-    def post(self, request, *args, **kwargs):
-        uname = request.POST['username']
-        pw    = request.POST['password']
-        user = authenticate(request, username= uname, password= pw)
+class UserDetail(View):
+    def get(self, request, user_id):
+        user = get_object_or_404(User, pk=user_id)
+        context={
+            'user_profile' : user,
+        }
 
-        # If login fails, print login failed message in template
-        self.extra_context[self.context_var_print_login_fail_msg]= user is None
+        return render(request, 'forum/user_detail.html', context)
 
-        return super().post(request, args, kwargs)
+class DeletedPosts(View):
+    def get(self, request):
+        # do authorization
+
+        context = {
+            'post_list' : Post.objects.filter(deleted=True).order_by('-creation_date')
+        }
+
+        return render(request, 'forum/deleted_posts.html', context)
+
+# post only
+
+class CreateReply(View):
+    def post(self, request):
+        reply_to_post_id= request.POST['reply_to_post_pk']
+        reply_to= get_object_or_404(Post, pk=reply_to_post_id)
+        user = request.user
+        content = request.POST['content']
+
+        Reply.objects.create(reply_to= reply_to, creator= user.userprofile, content= content)
+        return redirect(reverse('forum:post_detail', args= [reply_to_post_id]) )
+
+class DeletePost(View):
+    def post(self, request):
+        # todo add authorizaton code
+
+        post_id = int(request.POST.get('post_id', '-1'))
+        post = get_object_or_404(Post, pk=post_id)
+
+        if not post.userIsAuthorizedToDeletePost(request.user):
+            return HttpResponse('you are not allowed to delete this post')
+
+        post.deleted = True
+        post.save()
+
+        return self.getSuccessResponse(request)
+
+    def getSuccessResponse(self, request):
+        context = {
+            'msg_text': 'Post deleted successfully',
+        }
+
+        return render(request, 'forum/show_message.html', context)
 
 class Logout(LogoutView):
     pass
+
+class RestorePost(View):
+    def post(self, request):
+        if not request.user.is_staff:
+            return self.showAuthorizationError(request)
+
+        post_id  = int(request.POST.get('post_id', '-1'))
+        post = get_object_or_404(Post, pk= post_id)
+
+        post.deleted= False
+        post.save()
+
+        return redirect(reverse('forum:post_detail', args=[post.pk]))
+
+    def showAuthorizationError(self, request):
+        context= {
+            'msg_text': 'You are not authorized to restore this post.'
+        }
+
+        return render(request, 'forum/show_message.html', context)
+
+
+# get and post
+
+class Login(LoginView):
+    template_name = 'forum/login_page.html'
+    extra_context = {}
+
+    context_var_print_login_fail_msg = 'print_login_fail_msg'
+
+    def get(self, request, *args, **kwargs):
+        # If the user is already logged in, send them to homepage
+        if request.user.is_authenticated:
+            return redirect('forum:homepage')
+
+        self.extra_context[self.context_var_print_login_fail_msg] = False
+
+        return super().get(request, args, kwargs)
+
+    def post(self, request, *args, **kwargs):
+        uname = request.POST['username']
+        pw = request.POST['password']
+        user = authenticate(request, username=uname, password=pw)
+
+        # If login fails, print login failed message in template
+        self.extra_context[self.context_var_print_login_fail_msg] = user is None
+
+        return super().post(request, args, kwargs)
 
 class Register(View):
     def get(self, request):
@@ -78,130 +189,31 @@ class Register(View):
 
         return redirect('forum:loginpage')
 
-class BoardPosts(View):
-    def get(self, request, board_id):
-        """View list of (not deleted) posts of a page"""
-
-        board = get_object_or_404(Board, pk=board_id)
-        posts = board.post_set.filter(deleted=False).order_by('-creation_date')
-
-        context= {
-            'board' : board,
-            'post_list' : posts
-        }
-
-        return render(request, 'forum/board_posts.html', context)
-
-class PostDetail(View):
-    """
-        show the post's content and replies
-    """
-    def get(self, request, post_id):
-        #todo check if post is deleted, if so check if user is authorized
-        context = {
-            'post': get_object_or_404(Post, pk=post_id)
-        }
-
-        return render(request, 'forum/post_detail.html', context)
-
-class UserDetail(View):
-    def get(self, request, user_id):
-        user = get_object_or_404(User, pk=user_id)
-        context={
-            'user_profile' : user,
-        }
-
-        return render(request, 'forum/user_detail.html', context)
-
-class CreateReply(View):
-    def post(self, request):
-        reply_to_post_id= request.POST['reply_to_post_pk']
-        reply_to= get_object_or_404(Post, pk=reply_to_post_id)
-        user = request.user
-        content = request.POST['content']
-
-        Reply.objects.create(reply_to= reply_to, creator= user.userprofile, content= content)
-        return redirect(reverse('forum:post_detail', args= [reply_to_post_id]) )
-
 class CreatePost(View):
     def get(self, request):
         """get the form page for creating a new post"""
 
         default_board = int(request.GET.get('board_id', '-1'))
-        
-        context= {
-            'default_post_to' : default_board, 
-            'boards' : Board.objects.all()
+
+        context = {
+            'default_post_to': default_board,
+            'boards': Board.objects.all()
         }
 
         return render(request, 'forum/create_post_editor.html', context)
-    
+
     def post(self, request):
         user = request.user
 
-        board= get_object_or_404(Board, pk=request.POST['post_to_board_id'])
-        
+        board = get_object_or_404(Board, pk=request.POST['post_to_board_id'])
+
         # todo add validation using forms
         title = request.POST['post_title'].strip()
         content = request.POST['post_content'].strip()
-        
-        post = Post.objects.create(title= title, content=content, board=board, creator=user.userprofile)
-        
-        return redirect(reverse('forum:post_detail', args=[post.pk]))
 
-class DeletePost(View):
-    def post(self, request):
-        # todo add authorizaton code
-
-        post_id  = int(request.POST.get('post_id', '-1'))
-        post = get_object_or_404(Post, pk= post_id)
-        
-        if not post.userIsAuthorizedToDeletePost(request.user):
-            return HttpResponse('you are not allowed to delete this post')
-        
-        post.deleted= True
-        post.save()
-
-        return self.getSuccessResponse(request)
-
-    def getSuccessResponse(self, request):
-        context = {
-            'msg_text' : 'Post deleted successfully',
-        }
-
-        return render(request, 'forum/show_message.html', context)
-
-class RestorePost(View):
-    def post(self, request):
-        if not request.user.is_staff:
-            return self.showAuthorizationError(request)
-
-        post_id  = int(request.POST.get('post_id', '-1'))
-        post = get_object_or_404(Post, pk= post_id)
-
-        post.deleted= False
-        post.save()
+        post = Post.objects.create(title=title, content=content, board=board, creator=user.userprofile)
 
         return redirect(reverse('forum:post_detail', args=[post.pk]))
-
-    def showAuthorizationError(self, request):
-        context= {
-            'msg_text': 'You are not authorized to restore this post.'
-        }
-
-        return render(request, 'forum/show_message.html', context)
-
-
-
-class DeletedPosts(View):
-    def get(self, request):
-        # do authorization
-
-        context = {
-            'post_list' : Post.objects.filter(deleted=True).order_by('-creation_date')
-        }
-
-        return render(request, 'forum/deleted_posts.html', context)
 
 class EditPost(View):
     def get(self, request):

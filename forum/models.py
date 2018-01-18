@@ -44,6 +44,11 @@ class Post(models.Model):
         """Only admins and the post's author can delete posts"""
         return user.is_staff or self.creator == user.userprofile
 
+    def userIsAuthorizedToViewPost(self, user):
+        deleted= self.deleted
+        # if the post is deleted, only Admins can view it
+        return not deleted or deleted and user.is_staff
+
 class Reply(models.Model):
     content = models.TextField(max_length=REPLY_CONTENT_MAX_LEN)
     creation_date= models.DateTimeField(auto_now_add= True, blank= True)

@@ -79,16 +79,16 @@
             <div class="row ReplyHeader">
                 <div class="col-sm-12  text-right">
                     <b>Posted {{reply.creation_date|timesince}} ago</b>
-                    {%if user.is_staff or user == post.creator.user %}
+                    {%if user.is_staff or user == reply.creator.user %}
                         <form class="d-inline EditReplyForm" action="" method="POST">
                             {%csrf_token%}
-                            <input name="post_id" value="{{post.pk}}" type="hidden">
+                            <input name="reply_id" value="{{reply.pk}}" type="hidden">
                             <button class="btn btn-sm EditReplyBTN">Edit</button>
                         </form>
 
-                        <form class="d-inline DeleteReplyForm" action="" method="POST">
+                        <form class="d-inline DeleteReplyForm" action="{%url 'forum:delete_reply'%}" method="POST">
                             {%csrf_token%}
-                            <input name="post_id" value="{{post.pk}}" type="hidden">
+                            <input name="reply_id" value="{{reply.pk}}" type="hidden">
                             <button class="btn btn-sm DeleteReplyBTN" >Delete</button>
                         </form>
                     {%endif%}

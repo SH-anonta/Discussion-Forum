@@ -38,11 +38,11 @@ class Post(models.Model):
 
     def userIsAuthorizedToEditPost(self, user):
         """Only admins and the post's author can delete posts"""
-        return user.is_staff or self.creator == user.userprofile
+        return user.is_staff or self.creator.user == user
 
     def userIsAuthorizedToDeletePost(self, user):
         """Only admins and the post's author can delete posts"""
-        return user.is_staff or self.creator == user.userprofile
+        return user.is_staff or self.creator.user == user
 
     def userIsAuthorizedToViewPost(self, user):
         deleted= self.deleted
@@ -54,3 +54,6 @@ class Reply(models.Model):
     creation_date= models.DateTimeField(auto_now_add= True, blank= True)
     reply_to = models.ForeignKey(Post, on_delete=models.CASCADE)
     creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    def userAuthorizedToDeleteReply(self, user):
+        return user.is_staff or self.creator.user == user

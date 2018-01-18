@@ -103,8 +103,6 @@ class CreateReply(View):
 
 class DeletePost(View):
     def post(self, request):
-        # todo add authorizaton code
-
         post_id = int(request.POST.get('post_id', '-1'))
         post = get_object_or_404(Post, pk=post_id)
 
@@ -142,6 +140,27 @@ class RestorePost(View):
     def showAuthorizationError(self, request):
         context= {
             'msg_text': 'You are not authorized to restore this post.'
+        }
+
+        return render(request, 'forum/show_message.html', context)
+
+class DeleteReply(View):
+    def post(self, request):
+        reply_id= int(request.POST.get('reply_id', -1))
+        reply= get_object_or_404(Reply, pk= reply_id)
+
+        container_post_id = reply.reply_to.pk
+
+        if not reply.userAuthorizedToDeleteReply(request.user):
+            return self.unAuthorizedUserResponse(request)
+
+        reply.delete()
+
+        return redirect(reverse('forum:post_detail', args=[container_post_id]))
+
+    def unAuthorizedUserResponse(self, request):
+        context={
+            'msg_text' : 'You do not have permission to delete this post.'
         }
 
         return render(request, 'forum/show_message.html', context)
@@ -268,3 +287,5 @@ class EditPost(View):
         post.save()
 
         return redirect(reverse('forum:post_detail', args=[post.pk]))
+
+

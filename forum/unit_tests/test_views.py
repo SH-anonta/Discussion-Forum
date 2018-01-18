@@ -5,8 +5,8 @@ from django.http import HttpRequest
 from django.test import TestCase
 from django.urls import reverse
 
-from forum.models import Post
-from forum.unit_tests.modelFactory import PostFactory, UserFactory
+from forum.models import Post, Reply
+from forum.unit_tests.modelFactory import PostFactory, UserFactory, ReplyFactory
 from forum.views import HomePage, Login, Register, AboutPage, PostDetail, DeletePost, RestorePost, EditPost
 
 
@@ -46,6 +46,11 @@ class UrlContainer:
     @classmethod
     def getDeletedPostsUrl(cls):
         return reverse('forum:deleted_posts')
+
+    @classmethod
+    def getDeleteReplyUrl(cls):
+        return reverse('forum:delete_reply')
+
 
 class TemplateNames:
     home_page= 'forum/home_page.html'
@@ -196,7 +201,6 @@ class PostDetailTest(TestCase):
         self.assertContains(resp, self.post.content)
         self.assertTemplateUsed(resp, 'forum/post_detail.html')
 
-
 class UserDetailTest(TestCase):
     def test_pageLoads(self):
         user = UserFactory.createUsers(1)[0]
@@ -212,6 +216,7 @@ class DeleteRestorePostTest(TestCase):
 
     def setUp(self):
         self.post_author = UserFactory.createUser('Author', 'password')
+        self.user = UserFactory.createUser('User', 'password')
         self.admin = UserFactory.createUser('Admin', 'password', staff=True)
         self.post = PostFactory.createPosts(1, author=self.post_author)[0]
 
@@ -267,33 +272,31 @@ class DeleteRestorePostTest(TestCase):
             'post_id' : self.post.pk
         }
 
+        # login as the non admin non author of the post
+        self.client.login(username= 'NonAuthor', password='password')
         resp = self.client.post(url, data)
-
-        # self.assertContains(resp, 'You are not authorized to restore this post')
 
         # initially 1 post was deleted and the delete attempt has failed
         self.assertDeletedPostCount(1)
 
-class EditPostTest(TestCase):
+    def test_nonAuthorNonAdminCanNotDeletePost(self):
+        """
+            Non Admin users should not be able to delete other user's posts
+        """
+        data= {
+            'post_id' : self.post.pk
+        }
 
-    def setUp(self):
-        self.author = UserFactory.createUsers(1)[0]
-        self.admin = UserFactory.createUsers(1, staff=True)[0]
+        self.client.login(username= 'User', password= 'password')
+        url = UrlContainer.getDeletePostUrl()
+        resp = self.client.post(url, data)
 
-        self.post = PostFactory.createPosts(1, author= self.author)
+        # initially there was 1 post, one post delete attempt should fail have
+        self.assertDeletedPostCount(0)
 
-    def test_pageLoadsForPostAuthor(self):
-        post= self.post
-        # author = self.author
-        # admin = self.admin
-        #
-        # view = EditPost()
-        # req = HttpRequest()
-        # req.GET['post_id']= post.pk
-        #
-        # view.get()
-
-        # todo fix tests
+class CreatePostTest(TestCase):
+    pass
+    # todo implement
 
 class RegisterTest(TestCase):
     def test_RegisterPageLoads(self):
@@ -341,3 +344,57 @@ class DeletedPostsTest(TestCase):
         resp = self.client.get(url)
         self.assertTemplateUsed(resp, TemplateNames.show_message)
         self.assertContains(resp, 'You do not have permission to view this page.')
+
+class EditPostTest(TestCase):
+    pass
+    # todo implement
+
+class DeleteReplyTest(TestCase):
+
+    def setUp(self):
+        self.author= UserFactory.createUser('Author', 'password')
+        self.user= UserFactory.createUser('User', 'password')
+        self.admin= UserFactory.createUser('Admin', 'password', staff=True)
+
+        self.reply = ReplyFactory.createReplies(1, user= self.author)[0]
+
+    @property
+    def request_data(self):
+        data = {'reply_id' : 1}
+        return data
+
+    def test_replyAuthorCanDelete(self):
+        self.client.login(username= 'Author', password= 'password')
+        url= UrlContainer.getDeleteReplyUrl()
+        
+        resp = self.client.post(url, self.request_data)
+
+        # one reply was created and it's author deleted it
+        self.assertEqual(Reply.objects.count(), 0)
+
+        # after successful delete, user should be redirected to the post(that contained the reply)
+        self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.reply.reply_to.pk))
+
+    def test_adminCanDeleteAnyReply(self):
+        self.client.login(username='Admin', password='password')
+        url = UrlContainer.getDeleteReplyUrl()
+
+        resp = self.client.post(url, self.request_data)
+
+        # one reply was created and the admin deleted it
+        self.assertEqual(Reply.objects.count(), 0)
+
+        # after successful delete, the admin should be redirected to the post(that contained the reply)
+        self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.reply.reply_to.pk))
+
+    def test_nonAuthorNonAdminCanNotDelete(self):
+        self.client.login(username='User', password='password')
+        url = UrlContainer.getDeleteReplyUrl()
+
+        resp = self.client.post(url, self.request_data)
+
+        # one reply was created and non author, non admin tried to delete it but failed
+        self.assertEqual(Reply.objects.count(), 1)
+
+        # after unsuccessful delete, user should be shown an "you dont have permission message"
+        self.assertTemplateUsed(resp, TemplateNames.show_message)

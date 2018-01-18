@@ -70,11 +70,24 @@ class DeletedPosts(View):
     def get(self, request):
         # do authorization
 
+        if not self.userIsAuthorizedToViewPage(request.user):
+            return self.unAuthorizedViewerResponse(request)
+
         context = {
             'post_list' : Post.objects.filter(deleted=True).order_by('-creation_date')
         }
 
         return render(request, 'forum/deleted_posts.html', context)
+
+    def userIsAuthorizedToViewPage(self, user):
+        return user.is_staff
+
+    def unAuthorizedViewerResponse(self, request):
+        context = {
+            'msg_text' : 'You do not have permission to view this page.'
+        }
+
+        return render(request, 'forum/show_message.html', context)
 
 # post only
 

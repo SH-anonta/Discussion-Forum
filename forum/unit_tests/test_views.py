@@ -43,6 +43,24 @@ class UrlContainer:
     def getUserDetailUrl(cls, user_id):
         return reverse('forum:user_detail', args=[user_id])
 
+    @classmethod
+    def getDeletedPostsUrl(cls):
+        return reverse('forum:deleted_posts')
+
+class TemplateNames:
+    home_page= 'forum/home_page.html'
+    about_page= 'forum/about_page.html'
+    login_page = 'forum/login_page.html'
+    board_posts= 'forum/board_posts.html'
+    user_detail = 'forum/user_detail.html'
+    post_detail = 'forum/post_detail.html'
+    show_message = 'forum/show_message.html'
+    deleted_posts= 'forum/deleted_posts.html'
+    edit_post_editor= 'forum/edit_post_editor.html'
+    registration_page = 'forum/registration_page.html'
+    create_post_editor= 'forum/create_post_editor.html'
+    global_base_template= 'forum/global_base_template.html'
+    layout_base_template= 'forum/layout_base_template.html'
 
 class HomePageTest(TestCase):
     def test_pageLoads(self):
@@ -289,6 +307,37 @@ class RegisterTest(TestCase):
         #todo implement
 
 class DeletedPostsTest(TestCase):
-    def test_onlyAdminsCanViewPage(self):
-        pass
-        # todo complete
+    
+    def setUp(self):
+        self.author = UserFactory.createUser('Author', 'password')
+        self.admin = UserFactory.createUser('Admin', 'password', staff=True)
+
+    def getUrlToPost(self):
+        return UrlContainer.getPostDetailUrl(self.post.pk)
+
+    def assertPostWasLoaded(self, response):
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'forum/post_detail.html')
+
+    def loginAsNonAdminAuthorOfPost(self):
+        self.client.login(username='Author', password='password')
+
+    def loginAsAdmin(self):
+        self.client.login(username='Admin', password='password')
+
+    def test_adminsCanViewPage(self):
+        self.loginAsAdmin()
+        
+        url = UrlContainer.getDeletedPostsUrl()
+
+        resp = self.client.get(url)
+        self.assertTemplateUsed(resp, TemplateNames.deleted_posts)
+
+    def test_UsersCanNotLoadPage(self):
+        self.loginAsNonAdminAuthorOfPost()
+
+        url = UrlContainer.getDeletedPostsUrl()
+
+        resp = self.client.get(url)
+        self.assertTemplateUsed(resp, TemplateNames.show_message)
+        self.assertContains(resp, 'You do not have permission to view this page.')

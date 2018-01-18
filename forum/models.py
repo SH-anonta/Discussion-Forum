@@ -57,3 +57,6 @@ class Reply(models.Model):
 
     def userAuthorizedToDeleteReply(self, user):
         return user.is_staff or self.creator.user == user
+
+    def userAuthorizedToEditReply(self, user):
+        return user.is_staff or self.creator.user == user

@@ -93,6 +93,7 @@ class DeletedPosts(View):
 
 class CreateReply(View):
     def post(self, request):
+        #todo add authorization
         reply_to_post_id= request.POST['reply_to_post_pk']
         reply_to= get_object_or_404(Post, pk=reply_to_post_id)
         user = request.user
@@ -164,32 +165,6 @@ class DeleteReply(View):
         }
 
         return render(request, 'forum/show_message.html', context)
-
-class EditReply(View):
-
-    def get(self, request):
-        # todo add authorization
-        reply_id = request.GET.get('reply_id', )
-        reply = get_object_or_404(Reply, pk=reply_id)
-        context= {
-            'reply' : reply
-        }
-
-        return render(request, 'forum/edit_reply_editor.html', context)
-
-    def post(self, request):
-        # todo add authorization
-        # todo do data validation
-
-        POST = request.POST
-        reply_id = POST.get('reply_id', -1)
-        reply = get_object_or_404(Reply, pk=reply_id)
-
-        reply.content = POST['reply_content']
-        reply.save()
-
-        containing_post_id = reply.reply_to.pk
-        return redirect(reverse('forum:post_detail', args=[containing_post_id ]))
 
 # get and post
 
@@ -279,8 +254,7 @@ class EditPost(View):
         user = request.user
 
         if not post.userIsAuthorizedToEditPost(user):
-            # todo redirect to a template with this message
-            return HttpResponse('You are not authorized to edit this post.')
+            return self.unAuthorizedUserResponse(request)
 
         boards= Board.objects.all()
 
@@ -299,8 +273,7 @@ class EditPost(View):
         user = request.user
 
         if not post.userIsAuthorizedToEditPost(user):
-            # todo redirect to a template with this message
-            return HttpResponse('You are not authorized to edit this post.')
+            return self.unAuthorizedUserResponse(request)
 
         # todo do data validation
         post.title = POST['post_title']
@@ -313,4 +286,48 @@ class EditPost(View):
 
         return redirect(reverse('forum:post_detail', args=[post.pk]))
 
+    def unAuthorizedUserResponse(self, request):
+        context={
+            'msg_text' : 'You do not have permission to edit this post.'
+        }
+
+        return render(request, 'forum/show_message.html', context)
+
+class EditReply(View):
+
+    def get(self, request):
+        reply_id = request.GET.get('reply_id', )
+        reply = get_object_or_404(Reply, pk=reply_id)
+
+        if not reply.userAuthorizedToEditReply(request.user):
+            return self.unAuthorizedUserResponse(request)
+
+        context= {
+            'reply' : reply
+        }
+
+        return render(request, 'forum/edit_reply_editor.html', context)
+
+    def post(self, request):
+        # todo do data validation
+
+        POST = request.POST
+        reply_id = POST.get('reply_id', -1)
+        reply = get_object_or_404(Reply, pk=reply_id)
+
+        if not reply.userAuthorizedToEditReply(request.user):
+            return self.unAuthorizedUserResponse(request)
+
+        reply.content = POST['reply_content']
+        reply.save()
+
+        containing_post_id = reply.reply_to.pk
+        return redirect(reverse('forum:post_detail', args=[containing_post_id ]))
+
+    def unAuthorizedUserResponse(self, request):
+        context={
+            'msg_text' : 'You do not have permission to edit this reply.'
+        }
+
+        return render(request, 'forum/show_message.html', context)
 

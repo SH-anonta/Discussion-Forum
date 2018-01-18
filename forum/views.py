@@ -165,6 +165,18 @@ class DeleteReply(View):
 
         return render(request, 'forum/show_message.html', context)
 
+class EditReply(View):
+
+    def get(self, request):
+
+        # todo add authorization
+        reply_id = request.GET.get('reply_id', )
+        reply = get_object_or_404(Reply, pk=reply_id)
+        context= {
+            'reply' : reply
+        }
+
+        return render(request, 'forum/edit_reply_editor.html', context)
 
 # get and post
 

@@ -168,7 +168,6 @@ class DeleteReply(View):
 class EditReply(View):
 
     def get(self, request):
-
         # todo add authorization
         reply_id = request.GET.get('reply_id', )
         reply = get_object_or_404(Reply, pk=reply_id)
@@ -177,6 +176,20 @@ class EditReply(View):
         }
 
         return render(request, 'forum/edit_reply_editor.html', context)
+
+    def post(self, request):
+        # todo add authorization
+        # todo do data validation
+
+        POST = request.POST
+        reply_id = POST.get('reply_id', -1)
+        reply = get_object_or_404(Reply, pk=reply_id)
+
+        reply.content = POST['reply_content']
+        reply.save()
+
+        containing_post_id = reply.reply_to.pk
+        return redirect(reverse('forum:post_detail', args=[containing_post_id ]))
 
 # get and post
 

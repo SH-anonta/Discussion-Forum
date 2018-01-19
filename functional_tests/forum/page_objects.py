@@ -85,7 +85,7 @@ class PostDetailPage:
         return self.browser.find_element_by_id('PostTitle').text
 
     def getPostContent(self):
-        return self.browser.find_element_by_id('PostContent').text
+        return self.browser.find_element_by_id('PostContentDIV').text
 
     def quickReplyFormIsAvailable(self):
         reply_text_areas= self.browser.find_elements_by_id('QuickReplyTA')

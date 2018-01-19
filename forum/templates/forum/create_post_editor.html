@@ -1,4 +1,5 @@
 {%extends 'forum/layout_base_template.html'%}
+{%load static%}
 
 {%block HeadContent%}
     <title>New post</title>
@@ -27,6 +28,7 @@
                 </select>
                 <input id="PostTitleTB" type="text" name="post_title" class="form-control" placeholder="Post title">
                 <textarea id="PostContentTA" name="post_content" class="form-control" placeholder="Markdown is supported"></textarea>
+                <a class="btn" href="https://daringfireball.net/projects/markdown/syntax">Help</a>
                 <button id="PreviewID" class="btn" type="button">Preview</button>
                 <button id="PostFormSubmitBTN" type="submit" class="btn">Post</button>
             </form>
@@ -42,13 +44,18 @@
         
     </div>
     
-    <div class="row">
-        <div class="col-sm-12">
-            <h4 id="PreviewTitleH4" class="h4"></h4>
+    <div class="row mb-3">
+        <div class="col-sm-3 col-md-2 AvatarContainer text-center">
+            <img class="AvatarIMG" src="{%static 'forum/images/placeholder_icon.png' %}"/>
+            <a class="d-block" href="{%url 'forum:user_detail' user.pk %}">{{user.username}}</a>
+        </div>
+
+        <div id="PostBodyContainer" class="col-sm-9 col-md-10">
+            <h5 id="PreviewTitleH4" class="h5"></h5>
             <div id="PreviewContentPRE"></div>
         </div>
-        
     </div>
+        
 </div>
 {%endblock%}
 

@@ -17,83 +17,7 @@
     {# Styles... #}
     <link rel="stylesheet" href="{%static 'forum/libs/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{%static 'forum/libs/jquery-confirm-master/dist/jquery-confirm.min.css' %}">
-
-
-    <style>
-        {#global site styles#}
-        ::-moz-selection { /* Code for Firefox */
-            background: #C3D0CA;
-        }
-        
-        {# tighten the selector to only apply to post and replies #}
-        blockquote{
-            background-color: #CEDBD0;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            padding-left: 20px;
-            padding-right: 20px;
-            text-align: justify;
-        }
-        
-        ::selection {
-            background: #C3D0CA;
-        }
-
-        .global-backgrount-color{
-            background-color: #F6F9FA;
-        }
-
-        p, td, th, form *,
-        h1, h2, h3, h4, h5{
-            color: #001A23;
-        }
-
-        a{
-            color: #245640;
-            font-weight: bold;
-        }
-        
-        a:hover{
-            color: #31493C;
-            font-weight: bold;
-        }
-
-
-        /*make table columns fit to it's content*/
-        .table td.fit,
-        .table th.fit {
-            width: 1%;
-        }
-        
-        th{
-            background-color: #C3D0CA;
-            color: #001A23;
-        }
-        
-        pre{
-            white-space: pre-wrap;
-        }
-        
-        /*Bootstrap overwrites*/
-        .form-control:focus{
-            box-shadow: none;
-            border-color: #001A23;
-        }
-        
-        .btn{
-            color: white;
-            background-color: #293C32;
-            font-weight: bold;
-        }
-        
-        .btn:hover{
-            color: white;
-            background-color: #31493C;
-            font-weight: bold;
-        }
-        
-    </style>
-
+    <link rel="stylesheet" href="{%static 'forum/styles/global.css' %}">
 
     {%block PageStyles%}
         {# It's important this block is bellow all styles of this page, so styles in derived templates cn overwrite them #}
@@ -111,7 +35,7 @@
     <script src="{%static 'forum/libs/jquery/jquery-3.2.1.min.js' %}" type="text/javascript" ></script>
     <script src="{%static 'forum/libs/bootstrap/js/bootstrap.min.js' %}" type="text/javascript" ></script>
     <script src="{%static 'forum/libs/jquery-confirm-master/dist/jquery-confirm.min.js' %}" type="text/javascript" ></script>
-
+    
     {%block PageScripts%}
         {# It's important this block is bellow all scripts of this page, so scripts of derived classes can run after all libraries are loaded #}
     {%endblock%}

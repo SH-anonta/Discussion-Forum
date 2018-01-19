@@ -1,0 +1,105 @@
+::-moz-selection { /* Code for Firefox */
+    background: #C3D0CA;
+}
+
+#PostContentDIV img,
+.ReplyBodyContainer img{
+    /*prevent image overflow*/
+    max-width:100%;
+    max-height:100%;
+}
+
+#PostBodyContainer,
+.ReplyBodyContainer{
+    min-height: 200px;
+    padding-top: 10px;
+
+    border-style: solid;
+    background-color: #F2F6F3;
+    border-width: thin;
+    border-color: #001A23;
+    border-left-style: none;
+}
+
+{# tighten the selector to only apply to post and replies #}
+blockquote{
+    background-color: #CEDBD0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: justify;
+}
+
+::selection {
+    background: #C3D0CA;
+}
+
+.global-backgrount-color{
+    background-color: #F6F9FA;
+}
+
+p, td, th, form *,
+h1, h2, h3, h4, h5{
+    color: #001A23;
+}
+
+a{
+    color: #245640;
+    font-weight: bold;
+}
+
+a:hover{
+    color: #31493C;
+    font-weight: bold;
+}
+
+
+/*make table columns fit to it's content*/
+.table td.fit,
+.table th.fit {
+    width: 1%;
+}
+
+th{
+    background-color: #C3D0CA;
+    color: #001A23;
+}
+
+pre{
+    white-space: pre-wrap;
+}
+
+/*Bootstrap overwrites*/
+.form-control:focus{
+    box-shadow: none;
+    border-color: #001A23;
+}
+
+.btn{
+    color: white;
+    background-color: #293C32;
+    font-weight: bold;
+}
+
+.btn:hover{
+    color: white;
+    background-color: #31493C;
+    font-weight: bold;
+}
+
+
+.AvatarContainer{
+    background-color: #31493C;
+}
+
+.AvatarContainer *,
+.AvatarContainer *:hover{
+    color: white;
+}
+
+.AvatarIMG{
+    margin-top: 10px;
+    height: 80px;
+    width:80px;
+}

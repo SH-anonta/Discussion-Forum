@@ -59,7 +59,7 @@
 
                     <div id="PostBodyContainer" class="col-sm-9 col-md-10">
                         <h5 id="PostTitle" class="h5">{{post.title}}</h5>
-                        <div id="PostContent">{{post.content_processed|safe}}</div>
+                        <div id="PostContentDIV">{{post.content_processed|safe}}</div>
                     </div>
                 </div>
 
@@ -133,39 +133,13 @@
 {%block PageStyles%}
 
 <style>
-    .AvatarContainer{
-/*        border-style: solid;*/
-        background-color: #31493C;
-    }
 
-    .AvatarContainer *,
-    .AvatarContainer *:hover{
-        color: white;
-    }
-
-    #PostBodyContainer,
-    .ReplyBodyContainer{
-        min-height: 200px;
-        padding-top: 10px;
-        
-        border-style: solid;
-        background-color: #F2F6F3;
-        border-width: thin;
-        border-color: #001A23;
-        border-left-style: none;
-    }
     
     #PostHeader,
     .ReplyHeader{
         background-color: #C3D0CA;
         padding-top: 5px;
         padding-bottom: 5px;
-    }
-    
-    .AvatarIMG{
-        margin-top: 10px;
-        height: 80px;
-        width:80px;
     }
 
     .ReplyContainer,

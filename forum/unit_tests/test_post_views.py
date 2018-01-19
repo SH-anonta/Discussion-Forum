@@ -5,7 +5,8 @@ from django.urls import reverse
 
 from forum.models import Post
 from forum.unit_tests.utility import UrlContainer, TemplateNames
-from forum.unit_tests.modelFactory import PostFactory, UserFactory
+from forum.unit_tests.modelFactory import PostFactory, UserFactory, BoardFactory
+from forum.utility import MarkdownToHtmlConverter
 
 
 class PostDetailTest(TestCase):
@@ -79,8 +80,75 @@ class PostDetailTest(TestCase):
 
 # todo test content_processed is saved correctly
 class CreatePostTest(TestCase):
-    pass
-    # todo implement
+    def setUp(self):
+        self.author= UserFactory.createUser('Author', 'password')
+        self.board= BoardFactory.createBoards(1)[0]
+
+    def loginAsAuthor(self):
+        success = self.client.login(username= 'Author', password= 'password')
+        self.assertTrue(success)
+
+    def sendPostRequest(self, data):
+        """send request and return response"""
+        url = UrlContainer.getCreatePostUrl()
+        return self.client.post(url, data)
+
+    def sendGetRequest(self):
+        url = UrlContainer.getCreatePostUrl()
+        data = {
+            'board_id': self.board.pk,
+        }
+
+        return self.client.get(url, data)
+
+    def getValidData(self):
+        title = 'Post Title'
+        content = '**Post content**'
+
+        data = {
+            'post_title' : title,
+            'post_content' : content,
+            'post_to_board_id' : self.board.pk,
+        }
+
+        return data
+
+    def test_editorPageLoadsForUsers(self):
+        self.loginAsAuthor()
+        resp = self.sendGetRequest()
+        self.assertTemplateUsed(resp, TemplateNames.create_post_editor)
+
+    def verifyPostData(self, post, data):
+        self.assertEqual(post.title, data['post_title'])
+        self.assertEqual(post.content, data['post_content'])
+
+        converted_data = MarkdownToHtmlConverter.convert(data['post_content'])
+        self.assertEqual(post.content_processed, converted_data)
+
+
+    def test_validData(self):
+        self.loginAsAuthor()
+
+        data = self.getValidData()
+        resp = self.sendPostRequest(data)
+
+        #1 post should be created
+        post_count = Post.objects.all().count()
+        self.assertEqual(post_count, 1)
+
+        post = Post.objects.get(pk= 1)
+
+        # validate author of the post
+        self.assertEqual(post.creator, self.author.userprofile)
+
+        self.verifyPostData(post, data)
+
+        # after successful post creation user should be redirected to
+        # the post's detail page
+        self.assertRedirects(resp, UrlContainer.getPostDetailUrl(post.pk))
+
+    # todo test for invalid data
+
 
 # todo test content_processed is saved correctly
 class EditPostTest(TestCase):

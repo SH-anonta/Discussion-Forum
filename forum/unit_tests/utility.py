@@ -45,6 +45,11 @@ class UrlContainer:
     def getEditPostUrl(cls):
         return reverse('forum:edit_post')
 
+    @classmethod
+    def getCreatePostUrl(cls):
+        return reverse('forum:create_post')
+
+
 class TemplateNames:
     home_page= 'forum/home_page.html'
     about_page= 'forum/about_page.html'

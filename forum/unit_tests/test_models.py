@@ -4,7 +4,8 @@ from django.contrib.auth import get_user_model
 
 from forum.models import User, Board, Post, Reply
 from forum.unit_tests import modelFactory
-from forum.unit_tests.modelFactory import BoardFactory, PostFactory
+from forum.unit_tests.modelFactory import BoardFactory, PostFactory, ReplyFactory
+from forum.utility import MarkdownToHtmlConverter
 
 
 class UserTest(TestCase):
@@ -50,11 +51,40 @@ class PostTest(TestCase):
         self.assertEqual(Post.objects.count(), 5)
 
     def test_MarkDownIsRenderedCorrectly(self):
-        pass
-        #todo implement test
+        post = PostFactory.createPosts(1)[0]
+
+        content = """
+        #header h1 **strong text**
+        [hyper link](http://google.com)
+        ![img alternate text](http://google.com/img.png)
+        """
+        post.updateContent(content)
+        post.save()
+
+        converted_content = MarkdownToHtmlConverter.convert(content)
+
+        updated = Post.objects.get(pk = post.pk)
+        self.assertEqual(content, updated.content)
+        self.assertEqual(converted_content, updated.content_processed)
 
 class ReplyTest(TestCase):
     def test_creation(self):
         modelFactory.ReplyFactory.createReplies(3)
         self.assertEqual(Reply.objects.count(), 3)
 
+    def test_MarkDownIsRenderedCorrectly(self):
+        reply = ReplyFactory.createReplies(1)[0]
+
+        content = """
+        #header h1 **strong text**
+        [hyper link](http://google.com)
+        ![img alternate text](http://google.com/img.png)
+        """
+        reply.updateContent(content)
+        reply.save()
+
+        converted_content = MarkdownToHtmlConverter.convert(content)
+
+        updated = Reply.objects.get(pk = reply.pk)
+        self.assertEqual(content, updated.content)
+        self.assertEqual(converted_content, updated.content_processed)

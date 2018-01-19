@@ -1,6 +1,8 @@
 from unittest import skip
 
 from django.test import TestCase
+from django.urls import reverse
+
 from forum.unit_tests.modelFactory import UserFactory
 from forum.unit_tests.utility import UrlContainer, TemplateNames
 

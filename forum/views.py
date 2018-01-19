@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.views import View
 
 from forum.models import Board, Post, Reply, UserProfile
+import markdown2
 
 # get only
 class HomePage(View):
@@ -331,3 +332,9 @@ class EditReply(View):
 
         return render(request, 'forum/show_message.html', context)
 
+class MarkDownToHtml(View):
+    def post(self, request):
+        md = request.POST['md_text']
+        html= markdown2.markdown(md)
+
+        return HttpResponse(html)

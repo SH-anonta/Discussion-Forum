@@ -10,14 +10,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    {%block HeadContent%}
-        <title>To be replaced </title>
-    {%endblock%}
-
     {# Styles... #}
     <link rel="stylesheet" href="{%static 'forum/libs/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{%static 'forum/libs/jquery-confirm-master/dist/jquery-confirm.min.css' %}">
     <link rel="stylesheet" href="{%static 'forum/styles/global.css' %}">
+
+    {%block HeadContent%}
+        <title>To be replaced </title>
+    {%endblock%}
 
     {%block PageStyles%}
         {# It's important this block is bellow all styles of this page, so styles in derived templates cn overwrite them #}

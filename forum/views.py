@@ -94,7 +94,7 @@ class DeletedPosts(View):
 
 class CreateReply(View):
     def post(self, request):
-        #todo add authorization
+        #todo add authorization, only admins should be able to create replies on deleted posts
         reply_to_post_id= request.POST['reply_to_post_pk']
         reply_to= get_object_or_404(Post, pk=reply_to_post_id)
         user = request.user

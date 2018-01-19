@@ -59,6 +59,7 @@
 
                     <div id="PostBodyContainer" class="col-sm-9 col-md-10">
                         <h5 id="PostTitle" class="h5">{{post.title}}</h5>
+                        <hr>
                         <div id="PostContentDIV">{{post.content_processed|safe}}</div>
                     </div>
                 </div>
@@ -133,8 +134,6 @@
 {%block PageStyles%}
 
 <style>
-
-    
     #PostHeader,
     .ReplyHeader{
         background-color: #C3D0CA;

@@ -472,3 +472,27 @@ class DeleteReplyTest(TestCase):
 
         # after unsuccessful delete, user should be shown an "you dont have permission message"
         self.assertTemplateUsed(resp, TemplateNames.show_message)
+
+class EditReplyTest(TestCase):
+    def setUp(self):
+        self.author = UserFactory.createUser('Author', 'password')
+        self.user = UserFactory.createUser('User', 'password')
+        self.admin = UserFactory.createUser('Admin', 'password', staff=True)
+
+        self.reply = ReplyFactory.createReplies(1, user=self.author)[0]
+
+    #todo implement
+    @property
+    def request_data(self):
+        data = {'reply_id': 1}
+        return data
+
+    def test_replyAuthorCanDelete(self):
+        pass
+
+    def test_adminCanDeleteAnyReply(self):
+        self.client.login(username='Admin', password='password')
+        pass
+
+    def test_nonAuthorNonAdminCanNotDelete(self):
+        pass

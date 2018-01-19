@@ -45,7 +45,7 @@
     <div class="row">
         <div class="col-sm-12">
             <h4 id="PreviewTitleH4" class="h4"></h4>
-            <pre id="PreviewContentPRE"></pre>
+            <div id="PreviewContentPRE"></div>
         </div>
         
     </div>
@@ -74,12 +74,27 @@
         var preview_content = $('#PreviewContentPRE');
         var post_title = $('#PostTitleTB');
         var post_content = $('#PostContentTA')
-        function previewTitleUpdater(){
+
+        function loadPreviewContent(data){
+            preview_content.html(data);
+//            preview_content.text(data);
+        }
+        
+        function previewUpdater(){
             preview_title.text(post_title.val());
-            preview_content.text(post_content.val());
+            
+            var data = {
+                csrfmiddlewaretoken : "{{csrf_token}}",
+                md_text : post_content.val(),
+            };
+            
+            var url = "{%url 'forum:markdown_to_html'%}";
+            
+            $.post(url, data, loadPreviewContent);
+            
         }
 
-        $('#PreviewID').click(previewTitleUpdater);
+        $('#PreviewID').click(previewUpdater);
     });
 
 </script>

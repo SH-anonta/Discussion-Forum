@@ -51,6 +51,10 @@ class UrlContainer:
     def getDeleteReplyUrl(cls):
         return reverse('forum:delete_reply')
 
+    @classmethod
+    def getEditPostUrl(cls):
+        return reverse('forum:edit_post')
+
 
 class TemplateNames:
     home_page= 'forum/home_page.html'
@@ -346,8 +350,78 @@ class DeletedPostsTest(TestCase):
         self.assertContains(resp, 'You do not have permission to view this page.')
 
 class EditPostTest(TestCase):
-    pass
-    # todo implement
+
+    def setUp(self):
+        self.author = UserFactory.createUser('Author', 'password')
+        self.user = UserFactory.createUser('User', 'password')
+        self.admin = UserFactory.createUser('Admin', 'password', staff=True)
+
+        self.post = PostFactory.createPosts(1, author=self.author)[0]
+
+        self.new_title = 'New title of post'
+        self.new_content = 'New content of post'
+
+    def getRequestData(self):
+        data = {
+            'post_id': self.post.pk,
+            'post_title' : self.new_title,
+            'post_content' : self.new_content,
+            'post_to_board_id': self.post.pk,      # this is not being changed
+        }
+
+        return data
+
+    def sendPostEditRequest(self):
+        """Helper class, sends a post request to url"""
+
+        data = self.getRequestData()
+        resp = self.client.post(UrlContainer.getEditPostUrl(), data)
+        return resp
+
+    def editWasSuccessful(self):
+        #IMPORTANT: get updated post object from db
+        post = Post.objects.get(pk=self.post.pk)
+
+        return post.title == self.new_title and post.content == self.new_content
+
+    def loginAsAuthor(self):
+        loggen_in= self.client.login(username= 'Author', password='password')
+        if not loggen_in:
+            raise ValueError('Login failed')
+
+
+    def loginAsUser(self):
+        self.client.login(username= 'User', password='password')
+
+    def loginAsAdmin(self):
+        self.client.login(username='Admin', password='password')
+
+    def test_postAuthorCanEdit(self):
+        self.loginAsAuthor()
+
+        resp = self.sendPostEditRequest()
+
+        # edit was successful an uesr was redirected to the post's post detail page
+        self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.post.pk))
+        self.assertTrue(self.editWasSuccessful())
+
+
+    def test_adminCanEditAnyPost(self):
+        self.loginAsAdmin()
+
+        resp = self.sendPostEditRequest()
+
+        # edit was successful an uesr was redirected to the post's post detail page
+        self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.post.pk))
+        self.assertTrue(self.editWasSuccessful())
+
+    def test_nonAuthorNonAdminCanNotEdit(self):
+        self.loginAsUser()
+
+        resp = self.sendPostEditRequest()
+
+        # edit was unsuccessful an user was shown error msg
+        self.assertFalse(self.editWasSuccessful())
 
 class DeleteReplyTest(TestCase):
 

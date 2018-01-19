@@ -49,6 +49,10 @@ class PostTest(TestCase):
         modelFactory.PostFactory.createPosts(5)
         self.assertEqual(Post.objects.count(), 5)
 
+    def test_MarkDownIsRenderedCorrectly(self):
+        pass
+        #todo implement test
+
 class ReplyTest(TestCase):
     def test_creation(self):
         modelFactory.ReplyFactory.createReplies(3)

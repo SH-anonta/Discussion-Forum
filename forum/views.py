@@ -100,7 +100,11 @@ class CreateReply(View):
         user = request.user
         content = request.POST['content']
 
-        Reply.objects.create(reply_to= reply_to, creator= user.userprofile, content= content)
+        # todo replace objects.create, it's causing 2 db hits
+        reply = Reply.objects.create(reply_to= reply_to, creator= user.userprofile)
+        reply.updateContent(content)
+        reply.save()
+
         return redirect(reverse('forum:post_detail', args= [reply_to_post_id]) )
 
 class DeletePost(View):
@@ -244,6 +248,7 @@ class CreatePost(View):
         title = request.POST['post_title'].strip()
         content = request.POST['post_content'].strip()
 
+        # todo replace objects.create, it's causing 2 db hits
         post = Post.objects.create(title=title, board=board, creator=user.userprofile)
         post.updateContent(content)
         post.save()
@@ -322,7 +327,8 @@ class EditReply(View):
         if not reply.userAuthorizedToEditReply(request.user):
             return self.unAuthorizedUserResponse(request)
 
-        reply.content = POST['reply_content']
+        content = POST['reply_content']
+        reply.updateContent(content)
         reply.save()
 
         containing_post_id = reply.reply_to.pk

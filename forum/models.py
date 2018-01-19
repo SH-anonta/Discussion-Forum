@@ -31,6 +31,12 @@ class Post(models.Model):
         content_processed is the markdown converted to html,
         content_processed should be shown in posts
         and content should be served only when editing the post
+
+        Important: Always use updateContent to update the content field
+        pass it the user's data (which should be markdown) and it will
+        update content field and store an html version in content_processed field
+        Never update content and content_processed directly
+
     """
     title = models.CharField(max_length= POST_TITLE_MAX_LEN)
     content = models.TextField(max_length= POST_CONTENT_MAX_LEN)
@@ -57,13 +63,26 @@ class Post(models.Model):
         # if the post is deleted, only Admins can view it
         return not deleted or deleted and user.is_staff
 
-    # todo, see if this method can be replaced by property
+    # todo, see if this method can be replaced by a property
     def updateContent(self, content):
         self.content = content
         self.content_processed = MarkdownToHtmlConverter.convert(content)
 
 class Reply(models.Model):
+    """
+        Important: content is raw data of what users submit, mostly markdown text
+        content_processed is the markdown converted to html,
+        content_processed should be shown in posts
+        and content should be served only when editing the post
+
+        Important: Always use updateContent to update the content field
+        pass it the user's data (which should be markdown) and it will
+        update content field and store an html version in content_processed field
+        Never update content and content_processed directly
+    """
+
     content = models.TextField(max_length=REPLY_CONTENT_MAX_LEN)
+    content_processed= models.TextField(max_length=REPLY_CONTENT_MAX_LEN)
     creation_date= models.DateTimeField(auto_now_add= True, blank= True)
     reply_to = models.ForeignKey(Post, on_delete=models.CASCADE)
     creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -73,3 +92,7 @@ class Reply(models.Model):
 
     def userAuthorizedToEditReply(self, user):
         return user.is_staff or self.creator.user == user
+
+    def updateContent(self, content):
+        self.content = content
+        self.content_processed = MarkdownToHtmlConverter.convert(content)

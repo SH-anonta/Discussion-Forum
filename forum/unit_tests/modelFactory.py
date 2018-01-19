@@ -86,7 +86,9 @@ class PostFactory:
         posts= []
         for x in range(n):
             t = title + str(cls.nextid())
-            p = Post.objects.create(title=t, content=content, board= board, creator=author.userprofile)
+            p = Post.objects.create(title=t, board= board, creator=author.userprofile)
+            p.updateContent(content)
+            p.save()
             posts.append(p)
 
         return posts
@@ -113,7 +115,9 @@ class ReplyFactory:
 
         replies= []
         for x in range(n):
-            r = Reply.objects.create(content= content, reply_to=post, creator= user.userprofile)
+            r = Reply.objects.create(reply_to=post, creator= user.userprofile)
+            r.updateContent(content)
+            r.save()
             replies.append(r)
 
         return replies

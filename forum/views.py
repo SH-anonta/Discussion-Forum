@@ -244,7 +244,9 @@ class CreatePost(View):
         title = request.POST['post_title'].strip()
         content = request.POST['post_content'].strip()
 
-        post = Post.objects.create(title=title, content=content, board=board, creator=user.userprofile)
+        post = Post.objects.create(title=title, board=board, creator=user.userprofile)
+        post.updateContent(content)
+        post.save()
 
         return redirect(reverse('forum:post_detail', args=[post.pk]))
 
@@ -278,7 +280,8 @@ class EditPost(View):
 
         # todo do data validation
         post.title = POST['post_title']
-        post.content = POST['post_content']
+        content = POST['post_content']
+        post.updateContent(content)
         post_to_board_id = int(POST['post_to_board_id'])
 
         board= get_object_or_404(Board, pk= post_to_board_id)

@@ -59,7 +59,7 @@
 
                     <div id="PostBodyContainer" class="col-sm-9 col-md-10">
                         <h5 id="PostTitle" class="h5">{{post.title}}</h5>
-                        <pre id="PostContent">{{post.content}}</pre>
+                        <div id="PostContent">{{post.content_processed|safe}}</div>
                     </div>
                 </div>
 

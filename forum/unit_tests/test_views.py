@@ -298,6 +298,7 @@ class DeleteRestorePostTest(TestCase):
         # initially there was 1 post, one post delete attempt should fail have
         self.assertDeletedPostCount(0)
 
+# todo test content_processed is saved correctly
 class CreatePostTest(TestCase):
     pass
     # todo implement
@@ -349,6 +350,7 @@ class DeletedPostsTest(TestCase):
         self.assertTemplateUsed(resp, TemplateNames.show_message)
         self.assertContains(resp, 'You do not have permission to view this page.')
 
+# todo test content_processed is saved correctly
 class EditPostTest(TestCase):
 
     def setUp(self):
@@ -496,3 +498,7 @@ class EditReplyTest(TestCase):
 
     def test_nonAuthorNonAdminCanNotDelete(self):
         pass
+
+class CreateReplyTest(TestCase):
+    #todo implement
+    pass

@@ -5,6 +5,7 @@ from django.utils import timezone
 from datetime import timedelta, datetime
 
 # models
+from forum.utility import MarkdownToHtmlConverter
 from forum.validators import validate_username, POST_TITLE_MAX_LEN
 from forum.validators import POST_CONTENT_MAX_LEN, REPLY_CONTENT_MAX_LEN, USER_NAME_MAX_LEN
 
@@ -25,8 +26,15 @@ class Board(models.Model):
         return self.post_set.filter(deleted=False).count()
 
 class Post(models.Model):
+    """
+        Important: content is raw data of what users submit, mostly markdown text
+        content_processed is the markdown converted to html,
+        content_processed should be shown in posts
+        and content should be served only when editing the post
+    """
     title = models.CharField(max_length= POST_TITLE_MAX_LEN)
     content = models.TextField(max_length= POST_CONTENT_MAX_LEN)
+    content_processed = models.TextField(max_length= POST_CONTENT_MAX_LEN)
     creation_date= models.DateTimeField(auto_now_add= True, blank= True)
     deleted = models.BooleanField(default= False)
 
@@ -48,6 +56,11 @@ class Post(models.Model):
         deleted= self.deleted
         # if the post is deleted, only Admins can view it
         return not deleted or deleted and user.is_staff
+
+    # todo, see if this method can be replaced by property
+    def updateContent(self, content):
+        self.content = content
+        self.content_processed = MarkdownToHtmlConverter.convert(content)
 
 class Reply(models.Model):
     content = models.TextField(max_length=REPLY_CONTENT_MAX_LEN)

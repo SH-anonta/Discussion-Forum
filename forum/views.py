@@ -100,8 +100,7 @@ class CreateReply(View):
         user = request.user
         content = request.POST['content']
 
-        # todo replace objects.create, it's causing 2 db hits
-        reply = Reply.objects.create(reply_to= reply_to, creator= user.userprofile)
+        reply = Reply(reply_to= reply_to, creator= user.userprofile)
         reply.updateContent(content)
         reply.save()
 
@@ -248,8 +247,7 @@ class CreatePost(View):
         title = request.POST['post_title'].strip()
         content = request.POST['post_content'].strip()
 
-        # todo replace objects.create, it's causing 2 db hits
-        post = Post.objects.create(title=title, board=board, creator=user.userprofile)
+        post = Post(title=title, board=board, creator=user.userprofile)
         post.updateContent(content)
         post.save()
 

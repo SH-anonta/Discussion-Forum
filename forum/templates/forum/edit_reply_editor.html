@@ -1,7 +1,7 @@
 {%extends 'forum/layout_base_template.html'%}
 
 {%block HeadContent%}
-    <title>New post</title>
+    <title>Edit reply</title>
 {%endblock%}
 
 
@@ -9,7 +9,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <h4 class="h4">Edit post</h4>
+            <h4 class="h4">Edit reply</h4>
         </div>
 
     </div>
@@ -19,7 +19,7 @@
             <form id="ReplyForm" class="text-right" action="{%url 'forum:edit_reply'%}" method="POST">
                 {%csrf_token%}
                 <input name="reply_id" type="hidden" value="{{reply.pk}}">
-                <textarea id="ReplyContentTA" name="reply_content" class="form-control" placeholder="Reply text">{{reply.content}}</textarea>
+                <textarea id="ReplyContentTA" name="reply_content" class="form-control" placeholder="Markdown is supported">{{reply.content}}</textarea>
                 <button id="PreviewID" class="btn" type="button">Preview</button>
                 <button id="PostFormSubmitBTN" type="submit" class="btn">Save</button>
             </form>

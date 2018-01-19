@@ -55,7 +55,6 @@ class UrlContainer:
     def getEditPostUrl(cls):
         return reverse('forum:edit_post')
 
-
 class TemplateNames:
     home_page= 'forum/home_page.html'
     about_page= 'forum/about_page.html'
@@ -136,6 +135,30 @@ class AboutPageTest(TestCase):
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
+class UserDetailTest(TestCase):
+    def test_pageLoads(self):
+        user = UserFactory.createUsers(1)[0]
+
+        url = UrlContainer.getUserDetailUrl(user.pk)
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    #todo implement
+
+class RegisterTest(TestCase):
+    def test_RegisterPageLoads(self):
+        url = UrlContainer.getLoginPageUrl()
+
+        resp= self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_RegisterPostValidData(self):
+        pass
+        #todo implement
+
+
+# Post
+
 class PostDetailTest(TestCase):
 
     def setUp(self):
@@ -205,15 +228,121 @@ class PostDetailTest(TestCase):
         self.assertContains(resp, self.post.content)
         self.assertTemplateUsed(resp, 'forum/post_detail.html')
 
-class UserDetailTest(TestCase):
-    def test_pageLoads(self):
-        user = UserFactory.createUsers(1)[0]
+# todo test content_processed is saved correctly
+class CreatePostTest(TestCase):
+    pass
+    # todo implement
 
-        url = UrlContainer.getUserDetailUrl(user.pk)
+# todo test content_processed is saved correctly
+class EditPostTest(TestCase):
+
+    def setUp(self):
+        self.author = UserFactory.createUser('Author', 'password')
+        self.user = UserFactory.createUser('User', 'password')
+        self.admin = UserFactory.createUser('Admin', 'password', staff=True)
+
+        self.post = PostFactory.createPosts(1, author=self.author)[0]
+
+        self.new_title = 'New title of post'
+        self.new_content = 'New content of post'
+
+    def getRequestData(self):
+        data = {
+            'post_id': self.post.pk,
+            'post_title' : self.new_title,
+            'post_content' : self.new_content,
+            'post_to_board_id': self.post.pk,      # this is not being changed
+        }
+
+        return data
+
+    def sendPostEditRequest(self):
+        """Helper class, sends a post request to url"""
+
+        data = self.getRequestData()
+        resp = self.client.post(UrlContainer.getEditPostUrl(), data)
+        return resp
+
+    def editWasSuccessful(self):
+        #IMPORTANT: get updated post object from db
+        post = Post.objects.get(pk=self.post.pk)
+
+        return post.title == self.new_title and post.content == self.new_content
+
+    def loginAsAuthor(self):
+        loggen_in= self.client.login(username= 'Author', password='password')
+        if not loggen_in:
+            raise ValueError('Login failed')
+
+
+    def loginAsUser(self):
+        self.client.login(username= 'User', password='password')
+
+    def loginAsAdmin(self):
+        self.client.login(username='Admin', password='password')
+
+    def test_postAuthorCanEdit(self):
+        self.loginAsAuthor()
+
+        resp = self.sendPostEditRequest()
+
+        # edit was successful an uesr was redirected to the post's post detail page
+        self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.post.pk))
+        self.assertTrue(self.editWasSuccessful())
+
+
+    def test_adminCanEditAnyPost(self):
+        self.loginAsAdmin()
+
+        resp = self.sendPostEditRequest()
+
+        # edit was successful an uesr was redirected to the post's post detail page
+        self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.post.pk))
+        self.assertTrue(self.editWasSuccessful())
+
+    def test_nonAuthorNonAdminCanNotEdit(self):
+        self.loginAsUser()
+
+        resp = self.sendPostEditRequest()
+
+        # edit was unsuccessful an user was shown error msg
+        self.assertFalse(self.editWasSuccessful())
+
+class DeletedPostsTest(TestCase):
+
+    def setUp(self):
+        self.author = UserFactory.createUser('Author', 'password')
+        self.admin = UserFactory.createUser('Admin', 'password', staff=True)
+
+    def getUrlToPost(self):
+        return UrlContainer.getPostDetailUrl(self.post.pk)
+
+    def assertPostWasLoaded(self, response):
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'forum/post_detail.html')
+
+    def loginAsNonAdminAuthorOfPost(self):
+        self.client.login(username='Author', password='password')
+
+    def loginAsAdmin(self):
+        self.client.login(username='Admin', password='password')
+
+    def test_adminsCanViewPage(self):
+        self.loginAsAdmin()
+
+        url = UrlContainer.getDeletedPostsUrl()
+
         resp = self.client.get(url)
-        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, TemplateNames.deleted_posts)
 
-    #todo implement
+    def test_UsersCanNotLoadPage(self):
+        self.loginAsNonAdminAuthorOfPost()
+
+        url = UrlContainer.getDeletedPostsUrl()
+
+        resp = self.client.get(url)
+        self.assertTemplateUsed(resp, TemplateNames.show_message)
+        self.assertContains(resp, 'You do not have permission to view this page.')
 
 class DeleteRestorePostTest(TestCase):
     delete_post_url = url = reverse('forum:delete_post')
@@ -298,151 +427,31 @@ class DeleteRestorePostTest(TestCase):
         # initially there was 1 post, one post delete attempt should fail have
         self.assertDeletedPostCount(0)
 
-# todo test content_processed is saved correctly
-class CreatePostTest(TestCase):
+
+# Reply
+
+class CreateReplyTest(TestCase):
+    #todo implement
     pass
-    # todo implement
 
-class RegisterTest(TestCase):
-    def test_RegisterPageLoads(self):
-        url = UrlContainer.getLoginPageUrl()
-
-        resp= self.client.get(url)
-        self.assertEqual(resp.status_code, 200)
-
-    def test_RegisterPostValidData(self):
-        pass
-        #todo implement
-
-class DeletedPostsTest(TestCase):
-    
-    def setUp(self):
-        self.author = UserFactory.createUser('Author', 'password')
-        self.admin = UserFactory.createUser('Admin', 'password', staff=True)
-
-    def getUrlToPost(self):
-        return UrlContainer.getPostDetailUrl(self.post.pk)
-
-    def assertPostWasLoaded(self, response):
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'forum/post_detail.html')
-
-    def loginAsNonAdminAuthorOfPost(self):
-        self.client.login(username='Author', password='password')
-
-    def loginAsAdmin(self):
-        self.client.login(username='Admin', password='password')
-
-    def test_adminsCanViewPage(self):
-        self.loginAsAdmin()
-        
-        url = UrlContainer.getDeletedPostsUrl()
-
-        resp = self.client.get(url)
-        self.assertTemplateUsed(resp, TemplateNames.deleted_posts)
-
-    def test_UsersCanNotLoadPage(self):
-        self.loginAsNonAdminAuthorOfPost()
-
-        url = UrlContainer.getDeletedPostsUrl()
-
-        resp = self.client.get(url)
-        self.assertTemplateUsed(resp, TemplateNames.show_message)
-        self.assertContains(resp, 'You do not have permission to view this page.')
-
-# todo test content_processed is saved correctly
-class EditPostTest(TestCase):
+class DeleteReplyTest(TestCase):
 
     def setUp(self):
         self.author = UserFactory.createUser('Author', 'password')
         self.user = UserFactory.createUser('User', 'password')
         self.admin = UserFactory.createUser('Admin', 'password', staff=True)
 
-        self.post = PostFactory.createPosts(1, author=self.author)[0]
-
-        self.new_title = 'New title of post'
-        self.new_content = 'New content of post'
-
-    def getRequestData(self):
-        data = {
-            'post_id': self.post.pk,
-            'post_title' : self.new_title,
-            'post_content' : self.new_content,
-            'post_to_board_id': self.post.pk,      # this is not being changed
-        }
-
-        return data
-
-    def sendPostEditRequest(self):
-        """Helper class, sends a post request to url"""
-
-        data = self.getRequestData()
-        resp = self.client.post(UrlContainer.getEditPostUrl(), data)
-        return resp
-
-    def editWasSuccessful(self):
-        #IMPORTANT: get updated post object from db
-        post = Post.objects.get(pk=self.post.pk)
-
-        return post.title == self.new_title and post.content == self.new_content
-
-    def loginAsAuthor(self):
-        loggen_in= self.client.login(username= 'Author', password='password')
-        if not loggen_in:
-            raise ValueError('Login failed')
-
-
-    def loginAsUser(self):
-        self.client.login(username= 'User', password='password')
-
-    def loginAsAdmin(self):
-        self.client.login(username='Admin', password='password')
-
-    def test_postAuthorCanEdit(self):
-        self.loginAsAuthor()
-
-        resp = self.sendPostEditRequest()
-
-        # edit was successful an uesr was redirected to the post's post detail page
-        self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.post.pk))
-        self.assertTrue(self.editWasSuccessful())
-
-
-    def test_adminCanEditAnyPost(self):
-        self.loginAsAdmin()
-
-        resp = self.sendPostEditRequest()
-
-        # edit was successful an uesr was redirected to the post's post detail page
-        self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.post.pk))
-        self.assertTrue(self.editWasSuccessful())
-
-    def test_nonAuthorNonAdminCanNotEdit(self):
-        self.loginAsUser()
-
-        resp = self.sendPostEditRequest()
-
-        # edit was unsuccessful an user was shown error msg
-        self.assertFalse(self.editWasSuccessful())
-
-class DeleteReplyTest(TestCase):
-
-    def setUp(self):
-        self.author= UserFactory.createUser('Author', 'password')
-        self.user= UserFactory.createUser('User', 'password')
-        self.admin= UserFactory.createUser('Admin', 'password', staff=True)
-
-        self.reply = ReplyFactory.createReplies(1, user= self.author)[0]
+        self.reply = ReplyFactory.createReplies(1, user=self.author)[0]
 
     @property
     def request_data(self):
-        data = {'reply_id' : 1}
+        data = {'reply_id': 1}
         return data
 
     def test_replyAuthorCanDelete(self):
-        self.client.login(username= 'Author', password= 'password')
-        url= UrlContainer.getDeleteReplyUrl()
-        
+        self.client.login(username='Author', password='password')
+        url = UrlContainer.getDeleteReplyUrl()
+
         resp = self.client.post(url, self.request_data)
 
         # one reply was created and it's author deleted it
@@ -483,7 +492,7 @@ class EditReplyTest(TestCase):
 
         self.reply = ReplyFactory.createReplies(1, user=self.author)[0]
 
-    #todo implement
+    # todo implement
     @property
     def request_data(self):
         data = {'reply_id': 1}
@@ -498,7 +507,3 @@ class EditReplyTest(TestCase):
 
     def test_nonAuthorNonAdminCanNotDelete(self):
         pass
-
-class CreateReplyTest(TestCase):
-    #todo implement
-    pass

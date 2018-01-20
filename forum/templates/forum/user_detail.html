@@ -10,9 +10,47 @@
     <div class="row">
         <div class="col-sm-12">
             <p>Profile of {{user_profile.username}}</p>
+            
+            <table id="UserDataTable" class="table">
+                <tr>
+                    <td>User Name</td>
+                    <td>{{user_profile.username}}</td>
+                </tr>
+                {%if user.is_staff or user == user_profile%}
+                <tr>
+                    <td>Email</td>
+                    <td>{{user_profile.email}}</td>
+                </tr>
+                {%endif%}
+
+                <tr>
+                    <td>Posts</td>
+                    <td>{{user_profile.userprofile.postCount}}</td>
+                </tr>
+                
+                <tr>
+                    <td>Replies</td>
+                    <td>{{user_profile.userprofile.replyCount}}</td>
+                </tr>
+                
+            </table>
+            
         </div>
     </div>
 
 </div>
 
+{%endblock%}
+
+{%block PageStyles%}
+    <style>
+        #UserDataTable{
+/*            table-layout: fixed;*/
+            max-width: 500px;
+        }
+        
+        #UserDataTable td:first-child{
+            font-weight: bold;
+        }
+    </style>
 {%endblock%}

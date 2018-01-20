@@ -15,7 +15,7 @@
             <a class="PostLink" href="{%url 'forum:post_detail' post.pk%}">{{post.title}}</a>
         </td>
         <td>
-            <a href="{%url 'forum:user_detail' post.creator.pk%}">
+            <a href="{%url 'forum:user_detail' post.creator.user.pk%}">
                 {{post.creator.user.username}}
             </a>
 

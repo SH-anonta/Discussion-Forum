@@ -18,6 +18,15 @@ class UserProfile(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    def postCount(self):
+        """Number of posts of this user (excluding deleted posts)"""
+        return self.post_set.filter(deleted=False).count()
+
+    def replyCount(self):
+        """Number of replies of this user"""
+        return self.reply_set.count()
+
+
 class Board(models.Model):
     title = models.CharField(max_length= POST_TITLE_MAX_LEN, unique= True)
 

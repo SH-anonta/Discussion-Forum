@@ -1,0 +1,43 @@
+
+#header{
+    min-height: 50px;
+}
+
+#header *{
+    margin-top: auto;
+    margin-bottom: 3px;
+}
+
+
+#HeaderLOGO{
+    width: 500px;
+    height: 300px;
+}
+
+#navigation{
+    background-color: #31493C;
+}
+
+#navigation *{
+    color: white;
+}
+
+#navigation a:hover{
+    color: white;
+    text-decoration: underline;
+}
+
+#main_content{
+    min-height: 1000px;
+}
+
+
+#footer{
+    color: white;
+    background-color: #31493C;
+    min-height: 100px
+}
+
+#footer *{
+    color: white;
+}

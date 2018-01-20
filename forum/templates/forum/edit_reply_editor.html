@@ -20,7 +20,7 @@
             <form id="PostForm" class="text-right" action="{%url 'forum:edit_reply'%}" method="POST">
                 {%csrf_token%}
                 <input name="reply_id" type="hidden" value="{{reply.pk}}">
-                <textarea id="PostContentTA" name="reply_content" class="form-control" placeholder="Markdown is supported">{{reply.content}}</textarea>
+                <textarea id="PostContentTA" required name="reply_content" class="form-control" placeholder="Markdown is supported">{{reply.content}}</textarea>
                 {%include 'forum/fragments/markdown_help_link.html'%}
                 <button id="PreviewID" class="btn" type="button">Preview</button>
                 <button id="PostFormSubmitBTN" type="submit" class="btn">Save</button>

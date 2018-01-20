@@ -28,7 +28,7 @@
                     {%endfor%}
                 </select>
                 <input id="PostTitleTB" required  type="text" name="post_title" class="form-control" placeholder="Post title" value="{{post.title}}">
-                <textarea id="PostContentTA" name="post_content" class="form-control" placeholder="Markdown is supported">{{post.content}}</textarea>
+                <textarea id="PostContentTA" required name="post_content" class="form-control" placeholder="Markdown is supported">{{post.content}}</textarea>
                 {%include 'forum/fragments/markdown_help_link.html'%}
                 <button id="PreviewID" class="btn" type="button">Preview</button>
                 <button id="PostFormSubmitBTN" type="submit" class="btn">Save</button>

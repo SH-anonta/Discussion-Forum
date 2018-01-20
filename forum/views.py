@@ -170,6 +170,15 @@ class DeleteReply(View):
 
         return render(request, 'forum/show_message.html', context)
 
+class UserList(View):
+    def get(self, request):
+
+        context= {
+            'members' : User.objects.all().order_by('username')
+        }
+
+        return render(request, 'forum/user_list.html', context)
+
 # get and post
 
 class Login(LoginView):

@@ -1,0 +1,51 @@
+{%extends 'forum/layout_base_template.html'%}
+
+{%block HeadContent%}
+    <title>Members</title>
+{%endblock%}
+
+{%block MainContent%}
+    <div class="container">
+        <div class="row mt-3 mb-3">
+            <div class="col-sm-12">
+                <h5>Members</h5>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="UserListTable" class="table table-striped">
+                    <tr>
+                        <th>User Name</th>
+                        <th>Posts</th>
+                        <th>Replies</th>
+                    </tr>
+                    
+                    {%for member in members%}
+                    <tr>
+                        <td>
+                            <a href="{%url 'forum:user_detail' member.pk%}">{{member.username}}</a>
+                        </td>
+                        <td>{{member.userprofile.postCount}}</td>
+                        <td>{{member.userprofile.replyCount}}</td>
+                    </tr>
+                        
+                    {%endfor%}
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </div>
+{%endblock%}
+
+{%block PageStyles%}
+<style>
+    #UserListTable{
+        max-height: 100%;
+    }
+</style>
+{%endblock%}

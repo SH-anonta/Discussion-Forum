@@ -349,11 +349,12 @@ class MarkDownToHtml(View):
         return HttpResponse(html)
 
 class EditUserProfile(View):
-    # todo add authorization
     def get(self, request):
         user_id = request.GET.get('user_id', -1)
         user = get_object_or_404(User, pk= user_id)
 
+        if not user.userprofile.userAuthorizedToEditUser(request.user):
+            return self.unauthorizedUserResponse(request)
 
         context={
             'user_profile' : user,
@@ -366,12 +367,13 @@ class EditUserProfile(View):
         
         user_id = POST['user_id']
         user = get_object_or_404(User, pk= user_id)
-        
-        # todo do authorization 
+
+        if not user.userprofile.userAuthorizedToEditUser(request.user):
+            return self.unauthorizedUserResponse(request)
+
         # todo do data validation
         
         user.email= POST['email']
-        
         new_pw=  POST['new_password']
         confirm_pw=  POST['confirm_password']
         
@@ -380,6 +382,14 @@ class EditUserProfile(View):
                 return HttpResponse('passwords do not match')
             
             user.set_password(new_pw)
+
         user.save()
         
         return redirect(reverse('forum:user_detail', args=[user.id]))
+
+    def unauthorizedUserResponse(self, request):
+        context={
+            'msg_text' : 'You do not have permission to edit user profiles.'
+        }
+
+        return render(request, 'forum/show_message.html', context)

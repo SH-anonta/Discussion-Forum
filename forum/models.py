@@ -26,6 +26,8 @@ class UserProfile(models.Model):
         """Number of replies of this user"""
         return self.reply_set.count()
 
+    def userAuthorizedToEditUser(self, user):
+        return user.is_staff or user == self.user
 
 class Board(models.Model):
     title = models.CharField(max_length= POST_TITLE_MAX_LEN, unique= True)

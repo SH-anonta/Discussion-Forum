@@ -31,8 +31,8 @@ body{
     border-left-style: none;
 }
 
-{# tighten the selector to only apply to post and replies #}
-blockquote{
+#PostBodyContainer blockquote,
+.ReplyBodyContainer blockquote{
     background-color: #CEDBD0;
     padding-top: 5px;
     padding-bottom: 5px;

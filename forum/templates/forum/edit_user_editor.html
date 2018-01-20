@@ -1,0 +1,65 @@
+{%extends 'forum/layout_base_template.html'%}
+
+{%block MainContent%}
+<div class="container">
+    <div id="FormRow" class="row mt-3">
+        <div class="col-lg-8 offset-lg-2 col-sm-10 offset-sm-1">
+            <form method="POST" action="">
+                
+                <table id="UserEditFormTable">
+                    <tr>
+                        <td>User Name</td>
+                        <td>
+                            <input class="form-control" type="text" placeholder="{{user_profile.username}}" readonly>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Email</td>
+                        <td>
+                            <input class="form-control" type="email" name="email" value="{{user_profile.email}}">
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>New Password</td>
+                        <td>
+                            <input class="form-control" type="password" name="new_password" placeholder="Leave blank to keep old password">
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Confirm Password</td>
+                        <td>
+                            <input class="form-control" type="password" name="confirm_password" placeholder="Leave blank to keep old password">
+                        </td>
+                    </tr>
+                    
+                    <tr class="text-right">
+                        <td colspan="2">
+                            <button class="btn" type="submit"> Save</button>
+                        </td>
+                    </tr>
+                </table>
+                
+            </form>
+            
+        </div>
+    </div>
+
+</div>
+{%endblock%}
+
+{%block PageStyles%}
+<style>
+    #UserEditFormTable{
+        min-width: 100%;
+        table-layout: fixed;
+    }
+    
+    #UserEditFormTable input{
+        margin-bottom: 5px;
+    }
+    
+</style>
+{%endblock%}

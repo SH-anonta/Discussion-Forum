@@ -347,3 +347,16 @@ class MarkDownToHtml(View):
         html= MarkdownToHtmlConverter.convert(md)
 
         return HttpResponse(html)
+
+class EditUserProfile(View):
+    # todo add authorization
+    def get(self, request):
+        user_id = request.GET.get('user_id', -1)
+        user = get_object_or_404(User, pk= user_id)
+
+
+        context={
+            'user_profile' : user,
+        }
+
+        return render(request, 'forum/edit_user_editor.html', context)

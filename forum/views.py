@@ -253,6 +253,7 @@ class CreatePost(View):
 
         return redirect(reverse('forum:post_detail', args=[post.pk]))
 
+# todo add authorizations: only admins can change the post's board
 class EditPost(View):
     def get(self, request):
         post_id = request.GET['post_id']

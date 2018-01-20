@@ -78,7 +78,6 @@ class PostDetailTest(TestCase):
         self.assertContains(resp, self.post.content)
         self.assertTemplateUsed(resp, 'forum/post_detail.html')
 
-# todo test content_processed is saved correctly
 class CreatePostTest(TestCase):
     def setUp(self):
         self.author= UserFactory.createUser('Author', 'password')

@@ -63,7 +63,6 @@ class Post(models.Model):
         # if the post is deleted, only Admins can view it
         return not deleted or deleted and user.is_staff
 
-    # todo, see if this method can be replaced by a property
     def updateContent(self, content):
         self.content = content
         self.content_processed = MarkdownToHtmlConverter.convert(content)

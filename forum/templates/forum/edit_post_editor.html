@@ -1,4 +1,5 @@
 {%extends 'forum/layout_base_template.html'%}
+{%load static%}
 
 {%block HeadContent%}
     <title>Edit post</title>
@@ -40,15 +41,20 @@
         <div class="col-sm-12">
             <h4 class="h4">Preview</h4>
         </div>
-
+        
     </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <h4 id="PreviewTitleH4" class="h4"></h4>
-            <pre id="PreviewContentPRE"></pre>
+    
+    <div class="row mb-3">
+        <div class="col-sm-3 col-md-2 AvatarContainer text-center">
+            <img class="AvatarIMG" src="{%static 'forum/images/placeholder_icon.png' %}"/>
+            <a class="d-block" href="{%url 'forum:user_detail' user.pk %}">{{user.username}}</a>
         </div>
 
+        <div id="PostBodyContainer" class="col-sm-9 col-md-10">
+            <h5 id="PreviewTitleH4" class="h5"></h5>
+            <hr>
+            <div id="PreviewContentPRE"></div>
+        </div>
     </div>
 </div>
 {%endblock%}
@@ -75,12 +81,26 @@
         var preview_content = $('#PreviewContentPRE');
         var post_title = $('#PostTitleTB');
         var post_content = $('#PostContentTA')
-        function previewTitleUpdater(){
+
+        function loadPreviewContent(data){
+            preview_content.html(data);
+        }
+        
+        function previewUpdater(){
             preview_title.text(post_title.val());
-            preview_content.text(post_content.val());
+            
+            var data = {
+                csrfmiddlewaretoken : "{{csrf_token}}",
+                md_text : post_content.val(),
+            };
+            
+            var url = "{%url 'forum:markdown_to_html'%}";
+            
+            $.post(url, data, loadPreviewContent);
+            
         }
 
-        $('#PreviewID').click(previewTitleUpdater);
+        $('#PreviewID').click(previewUpdater);
     });
 
 </script>

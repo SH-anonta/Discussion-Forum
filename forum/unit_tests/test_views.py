@@ -1,8 +1,10 @@
 from unittest import skip
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
+from forum.models import UserProfile
 from forum.unit_tests.modelFactory import UserFactory
 from forum.unit_tests.utility import UrlContainer, TemplateNames
 
@@ -89,7 +91,29 @@ class RegisterTest(TestCase):
         resp= self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
-    def test_RegisterPostValidData(self):
-        pass
-        #todo implement
+    def sendPostRequest(self, data):
+        url = UrlContainer.getRegisterPage()
+        return self.client.post(url, data)
 
+    valid_data= {
+        'username' : 'UserName',
+        'email' : 'username@example.com',
+        'password' : 'password',
+        'confirm_password' : 'password',
+    }
+
+    def verifyUserData(self, user, data):
+        self.assertEqual(user.username, data['username'])
+        self.assertEqual(user.email, data['email'])
+
+    def test_RegisterPostValidData(self):
+        self.sendPostRequest(self.valid_data)
+
+        #one user account should have been created
+        self.assertEqual(User.objects.count(), 1)
+        #one UserProfile should be created for one uer
+        self.assertEqual(UserProfile.objects.count(), 1)
+        
+        user = User.objects.get(username=self.valid_data['username'])
+        self.assertIsNotNone(user.userprofile)
+        self.verifyUserData(user, self.valid_data)

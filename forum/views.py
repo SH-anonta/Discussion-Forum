@@ -205,12 +205,12 @@ class Register(View):
         context= {'show_registration_failed_msg': False}
         return render(request, 'forum/registration_page.html', context)
 
-    # todo complete validation, using model validators
+    # todo complete data validations
     def post(self, request):
         POST = request.POST
         uname = POST['username']
         email= POST['email']
-        pw= POST['passowrd']
+        pw= POST['password']
         confirm_pw= POST['confirm_password']
 
         if pw != confirm_pw or User.objects.filter(username=uname).exists():
@@ -219,6 +219,7 @@ class Register(View):
 
         user = User(username= uname)
         user.set_password(pw)
+        user.email= email
         user.save()
 
         UserProfile.objects.create(user= user)

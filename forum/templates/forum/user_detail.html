@@ -11,9 +11,11 @@
         <div class="col-sm-8">
             <h5 class="h5">User Profile</h5>
         </div>
+        {%if user.is_staff or user == user_profile%}
         <div class="col-sm-4 text-right">
-            <a class="btn btn-sm" href="{%url 'forum:edit_user'%}?user_id={{user_profile.pk}}">Edit</a>
+            <a class="btn" href="{%url 'forum:edit_user'%}?user_id={{user_profile.pk}}">Edit</a>
         </div>
+        {%endif%}
     </div>
     
     <div class="row">

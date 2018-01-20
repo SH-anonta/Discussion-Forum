@@ -26,8 +26,8 @@
                         </option>
                     {%endfor%}
                 </select>
-                <input id="PostTitleTB" type="text" name="post_title" class="form-control" placeholder="Post title">
-                <textarea id="PostContentTA" name="post_content" class="form-control" placeholder="Markdown is supported"></textarea>
+                <input id="PostTitleTB" required type="text" name="post_title" class="form-control" placeholder="Post title">
+                <textarea id="PostContentTA" required  name="post_content" class="form-control" placeholder="Markdown is supported"></textarea>
                 {%include 'forum/fragments/markdown_help_link.html'%}
                 <button id="PreviewID" class="btn" type="button">Preview</button>
                 <button id="PostFormSubmitBTN" type="submit" class="btn">Post</button>

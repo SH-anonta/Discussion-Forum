@@ -4,20 +4,21 @@
 <div class="container">
     <div id="FormRow" class="row mt-3">
         <div class="col-lg-8 offset-lg-2 col-sm-10 offset-sm-1">
-            <form method="POST" action="">
-                
+            <form method="POST" action="{%url 'forum:edit_user'%}">
+                {%csrf_token%}
+                <input type="hidden" name="user_id" value="{{user_profile.pk}}">
                 <table id="UserEditFormTable">
                     <tr>
                         <td>User Name</td>
                         <td>
-                            <input class="form-control" type="text" placeholder="{{user_profile.username}}" readonly>
+                            <input readonly class="form-control" type="text" placeholder="{{user_profile.username}}">
                         </td>
                     </tr>
                     
                     <tr>
                         <td>Email</td>
                         <td>
-                            <input class="form-control" type="email" name="email" value="{{user_profile.email}}">
+                            <input class="form-control" required type="email" name="email" value="{{user_profile.email}}">
                         </td>
                     </tr>
                     

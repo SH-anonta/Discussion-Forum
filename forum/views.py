@@ -360,3 +360,26 @@ class EditUserProfile(View):
         }
 
         return render(request, 'forum/edit_user_editor.html', context)
+    
+    def post(self, request):
+        POST = request.POST
+        
+        user_id = POST['user_id']
+        user = get_object_or_404(User, pk= user_id)
+        
+        # todo do authorization 
+        # todo do data validation
+        
+        user.email= POST['email']
+        
+        new_pw=  POST['new_password']
+        confirm_pw=  POST['confirm_password']
+        
+        if new_pw != "":
+            if new_pw != confirm_pw:
+                return HttpResponse('passwords do not match')
+            
+            user.set_password(new_pw)
+        user.save()
+        
+        return redirect(reverse('forum:user_detail', args=[user.id]))

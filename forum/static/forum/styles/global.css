@@ -1,12 +1,11 @@
-/*
-body{
-    min-height: 1000px;
+.btn:focus,
+.btn:active
+.btn-sm:focus,
+.btn-sm:active
+a{
+   outline: none !important;
+   box-shadow: none;
 }
-
-#main_content{
-    min-height: 100%;
-}
-*/
 
 ::-moz-selection { /* Code for Firefox */
     background: #C3D0CA;

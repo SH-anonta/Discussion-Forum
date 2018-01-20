@@ -10,10 +10,10 @@
     <div class="col-lg-4 offset-lg-4 col-sm-8 offset-sm-2 ">
         <form id="RegistrationForm" action="{%url 'forum:registration_page' %}" method="POST">
             {%csrf_token%}
-            <input class="form-control" name="username" id="UserNameTB" type="text" placeholder="User name">
-            <input class="form-control" name="email" id="EmailTB" type="email" placeholder="Email">
-            <input class="form-control" name="password" id="PasswordTB" type="password" placeholder="Password">
-            <input class="form-control" name="confirm_password" id="ConfirmPasswordTB" type="password" placeholder="Confirm Password">
+            <input required class="form-control" name="username" id="UserNameTB" type="text" placeholder="User name">
+            <input required class="form-control" name="email" id="EmailTB" type="email" placeholder="Email">
+            <input required class="form-control" name="password" id="PasswordTB" type="password" placeholder="Password">
+            <input required class="form-control" name="confirm_password" id="ConfirmPasswordTB" type="password" placeholder="Confirm Password">
 
             <button class="btn btn-block" id="RegisterBTN" type="submit">Register</button>
         </form>

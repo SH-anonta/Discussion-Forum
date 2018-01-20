@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div id="PostsTableRow" class="row">
         <div class="col-sm-12">
             {#This fragment uses "post_list" context variable#}
             {%include 'forum/fragments/posts_table_for_board.html'%}
@@ -32,3 +32,11 @@
 </div>
 {%endblock%}
 
+
+{%block PageStyles%}
+    <style>
+        #PostsTableRow{
+            min-height: 1000px;
+        }
+    </style>
+{%endblock%}

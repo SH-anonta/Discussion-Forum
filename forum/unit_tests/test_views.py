@@ -83,8 +83,7 @@ class UserDetailTest(TestCase):
         url = UrlContainer.getUserDetailUrl(user.pk)
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-
-    #todo implement
+        self.assertTemplateUsed(resp, TemplateNames.user_detail)
 
 class RegisterTest(TestCase):
     def test_RegisterPageLoads(self):
@@ -151,18 +150,18 @@ class MarkDownToHtmlTest(TestCase):
 
 class EditUserProfileTest(TestCase):
     def setUp(self):
-        self.admin = UserFactory.createUser('Admin', 'password')
+        self.admin = UserFactory.createUser('Admin', 'password', staff=True)
         self.user1 = UserFactory.createUser('User1', 'password')
         self.user2 = UserFactory.createUser('User2', 'password')
 
     def loginAsAdmin(self):
-        self.clinet.login(username='Admin', password='password')
+        self.client.login(username='Admin', password='password')
 
     def loginAsUser1(self):
-        self.clinet.login(username='User1', password='password')
+        self.client.login(username='User1', password='password')
 
     def loginAsUser2(self):
-        self.clinet.login(username='User2', password='password')
+        self.client.login(username='User2', password='password')
 
     def sendGetRequestToEditUser1(self):
         url = UrlContainer.getEditUserProfileUrl(self.user1.pk)
@@ -174,7 +173,6 @@ class EditUserProfileTest(TestCase):
 
         resp = self.sendGetRequestToEditUser1()
 
-        self.assertEqual(resp, 200)
         self.assertTemplateUsed(resp, TemplateNames.user_profile_editor)
 
     def test_editorPageLoadsForProfileOwner(self):
@@ -183,7 +181,6 @@ class EditUserProfileTest(TestCase):
 
         resp = self.sendGetRequestToEditUser1()
 
-        self.assertEqual(resp, 200)
         self.assertTemplateUsed(resp, TemplateNames.user_profile_editor)
 
     def test_editorPageDoesNotLoadForUser2(self):

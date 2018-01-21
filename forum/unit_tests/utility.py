@@ -55,7 +55,7 @@ class UrlContainer:
 
     @classmethod
     def getEditUserProfileUrl(cls, user_id):
-        return reverse('forum:', args=[user_id])
+        return reverse('forum:edit_user', args=[user_id])
 
 
 class TemplateNames:

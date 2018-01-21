@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.views import View
 
 from forum.models import Board, Post, Reply, UserProfile
-from forum.unit_tests.modelFactory import PostFactory
+from forum.unit_tests.modelFactory import PostFactory, ReplyFactory
 from forum.utility import MarkdownToHtmlConverter
 
 # get only
@@ -47,14 +47,21 @@ class PostDetail(View):
     """
         show the post's content and replies
     """
+    REPLY_PER_PAGE= 10
+
     def get(self, request, post_id):
         post = get_object_or_404(Post, pk=post_id)
 
         if not post.userIsAuthorizedToViewPost(request.user):
             return self.unauthenticatedUserResponse(request)
 
+        paginator = Paginator(post.reply_set.all(), self.REPLY_PER_PAGE)
+        page_number= request.GET.get('page', 1)
+        reply_list = paginator.get_page(page_number)
+
         context = {
-            'post': post
+            'post': post,
+            'reply_list' : reply_list
         }
 
         return render(request, 'forum/post_detail.html', context)
@@ -431,3 +438,8 @@ class EditUserProfile(View):
         }
 
         return render(request, 'forum/show_message.html', context)
+
+def yyy(request):
+    p = Post.objects.get(title='PostTitle100')
+    u = User.objects.get(username='Arif')
+    ReplyFactory.createReplies(100, u, p)

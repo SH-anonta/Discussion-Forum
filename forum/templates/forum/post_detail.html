@@ -74,7 +74,7 @@
     
     <div class="ReplyContainers row">
     <div class="col-sm-12">
-        {%for reply in post.reply_set.all%}
+        {%for reply in reply_list%}
         <div class="ReplyContainer container">
             
             <div class="row ReplyHeader">
@@ -108,6 +108,37 @@
             
     </div>
     </div>
+
+
+    <div id="PaginatorRow" class="row mt-3 mb-3">
+        <div class="col-sm-12 text-center">
+            {%if reply_list.has_previous%}
+                <a class="btn btn-pagination" href="{%url 'forum:post_detail' post.pk%}?page={{reply_list.previous_page_number}}">
+                    Previous
+                </a>
+            {%else%}
+                <a class="btn btn-disabled btn-pagination" href="#">
+                    Previous
+                </a>
+            {%endif%}
+
+                <h5 class="h5 current ml-3 mr-3 d-inline">
+                    Page {{ reply_list.number }} of {{ reply_list.paginator.num_pages }}
+
+                </h5>
+
+            {%if reply_list.has_next%}
+                <a class="btn btn-pagination" href="{%url 'forum:post_detail' post.pk%}?page={{reply_list.next_page_number }}">
+                    Next
+                </a>
+            {%else%}
+                <a class="btn btn-disabled btn-pagination" href="#">
+                    Next
+                </a>
+            {%endif%}
+        </div>
+    </div>
+
 
     {%if user.is_authenticated%}
     <div class="row">

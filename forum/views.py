@@ -57,7 +57,6 @@ class PostDetail(View):
         }
         return render(request, 'forum/show_message.html', context)
 
-
 class UserDetail(View):
     def get(self, request, user_id):
         user = get_object_or_404(User, pk=user_id)
@@ -89,6 +88,16 @@ class DeletedPosts(View):
         }
 
         return render(request, 'forum/show_message.html', context)
+
+class RecentPostList(View):
+    def get(self, request):
+        posts = Post.objects.filter(deleted=False).order_by('-creation_date')
+
+        context= {
+            'post_list' : posts
+        }
+
+        return render(request, 'forum/recent_post_list.html', context)
 
 # post only
 
@@ -174,7 +183,7 @@ class UserList(View):
     def get(self, request):
 
         context= {
-            'members' : User.objects.all().order_by('username')
+            'members' : User.objects.order_by('username')
         }
 
         return render(request, 'forum/user_list.html', context)

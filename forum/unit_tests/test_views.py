@@ -119,7 +119,6 @@ class RegisterTest(TestCase):
         self.assertIsNotNone(user.userprofile)
         self.verifyUserData(user, self.valid_data)
 
-@skip #todo fix test, test fails because of csrf_token not provided with request
 class MarkDownToHtmlTest(TestCase):
     def loginAsUser(self):
         UserFactory.createUser('User', 'password')
@@ -142,10 +141,10 @@ class MarkDownToHtmlTest(TestCase):
         expected_data= MarkdownToHtmlConverter.convert(data)
 
         payload = {'md_text': data}
-        resp= self.client.get(UrlContainer.getMarkDownToHtmlUrl(), payload)
+        resp= self.client.post(UrlContainer.getMarkDownToHtmlUrl(), payload)
 
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(expected_data, resp.content)
+        self.assertEqual(expected_data, resp.content.decode())
 
 
 class EditUserProfileTest(TestCase):

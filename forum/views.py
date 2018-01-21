@@ -55,7 +55,8 @@ class PostDetail(View):
         if not post.userIsAuthorizedToViewPost(request.user):
             return self.unauthenticatedUserResponse(request)
 
-        paginator = Paginator(post.reply_set.all(), self.REPLY_PER_PAGE)
+        all_replies = post.reply_set.order_by('creation_date')
+        paginator = Paginator(all_replies, self.REPLY_PER_PAGE)
         page_number= request.GET.get('page', 1)
         reply_list = paginator.get_page(page_number)
 

@@ -23,6 +23,7 @@
         </div>
     </div>
 
+    {%if reply_list.number == 1%} {#show post only in the first page#}
     <div id="PostContentRow" class="row">
         <div class="col-sm-12">
             <div class="container PostContainer">
@@ -70,8 +71,17 @@
             
 
     </div>
+    {%endif%}
     
-    
+    <div class="row">
+        <div class="col-sm-12">
+
+            <h4 class="h4">Replies</h4>
+            <hr>
+        </div>
+
+    </div>
+
     <div class="ReplyContainers row">
     <div class="col-sm-12">
         {%for reply in reply_list%}

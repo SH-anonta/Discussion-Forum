@@ -4,7 +4,7 @@
 <div class="container">
     <div id="FormRow" class="row mt-3">
         <div class="col-lg-8 offset-lg-2 col-sm-10 offset-sm-1">
-            <form method="POST" action="{%url 'forum:edit_user'%}">
+            <form method="POST" action="{%url 'forum:edit_user' user_profile.pk%}">
                 {%csrf_token%}
                 <input type="hidden" name="user_id" value="{{user_profile.pk}}">
                 <table id="UserEditFormTable">

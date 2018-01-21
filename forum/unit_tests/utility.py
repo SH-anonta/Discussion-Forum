@@ -49,8 +49,17 @@ class UrlContainer:
     def getCreatePostUrl(cls):
         return reverse('forum:create_post')
 
+    @classmethod
+    def getMarkDownToHtmlUrl(cls):
+        return reverse('forum:markdown_to_html')
+
+    @classmethod
+    def getEditUserProfileUrl(cls, user_id):
+        return reverse('forum:', args=[user_id])
+
 
 class TemplateNames:
+    user_profile_editor = 'forum/edit_user_editor.html'
     home_page= 'forum/home_page.html'
     about_page= 'forum/about_page.html'
     login_page = 'forum/login_page.html'

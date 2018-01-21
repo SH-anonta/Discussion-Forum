@@ -8,7 +8,6 @@ from django.urls import reverse
 from django.views import View
 
 from forum.models import Board, Post, Reply, UserProfile
-from forum.unit_tests.modelFactory import PostFactory, ReplyFactory
 from forum.utility import MarkdownToHtmlConverter
 
 # get only
@@ -398,8 +397,7 @@ class MarkDownToHtml(View):
         return HttpResponse(html)
 
 class EditUserProfile(View):
-    def get(self, request):
-        user_id = request.GET.get('user_id', -1)
+    def get(self, request, user_id):
         user = get_object_or_404(User, pk= user_id)
 
         if not user.userprofile.userAuthorizedToEditUser(request.user):
@@ -411,10 +409,9 @@ class EditUserProfile(View):
 
         return render(request, 'forum/edit_user_editor.html', context)
     
-    def post(self, request):
+    def post(self, request, user_id):
         POST = request.POST
-        
-        user_id = POST['user_id']
+
         user = get_object_or_404(User, pk= user_id)
 
         if not user.userprofile.userAuthorizedToEditUser(request.user):
@@ -443,7 +440,3 @@ class EditUserProfile(View):
 
         return render(request, 'forum/show_message.html', context)
 
-def yyy(request):
-    p = Post.objects.get(title='PostTitle100')
-    u = User.objects.get(username='Arif')
-    ReplyFactory.createReplies(100, u, p)

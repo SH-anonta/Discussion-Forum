@@ -30,6 +30,6 @@ urlpatterns = [
     path('register', Register.as_view(), name='registration_page'),
     path('edit-post', login_required(EditPost.as_view()), name='edit_post'),
     path('edit-reply', login_required(EditReply.as_view()), name='edit_reply'),
-    path('edit-user', login_required(EditUserProfile.as_view()), name='edit_user'),
     path('create-post', login_required(CreatePost.as_view()),name='create_post'),
+    path('user/<int:user_id>/edit', login_required(EditUserProfile.as_view()), name='edit_user'),
 ]

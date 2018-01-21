@@ -155,19 +155,71 @@ class EditReplyTest(TestCase):
         self.assertTemplateUsed(resp, TemplateNames.show_message)
 
     # for post requests
-    def getFormDataToEditUser1Reply(self):
+
+    def getValidData(self):
         data = {
-            'reply_id': 1
+            'reply_id' : self.reply.pk,
+            'reply_content' : 'new contents go here'
         }
 
         return data
 
-    def test_adminCanEditUser1Reply(self):
-        pass
 
-    def test_user1canEditOwnReply(self):
-        self.client.login(username='Admin', password='password')
-        pass
+    def sendPostRequestToEditUser1Reply(self, data):
+        url = UrlContainer.getEditReplyUrl()
+        return self.client.post(url, data)
+
+    def assertUser1ReplyWasUpdatedSuccessfully(self, data):
+        updated_reply = Reply.objects.get(pk=self.reply.pk)
+
+        #check things that shouldn't change are the same
+        self.assertEqual(updated_reply.reply_to, self.reply.reply_to)
+        self.assertEqual(updated_reply.creator, self.reply.creator)
+
+        # check that other stuff are changed correctly
+        self.assertEqual(updated_reply.content, data['reply_content'])
+
+        # check that markdown is correctly converted and saved as html
+        expected_converted_data = MarkdownToHtmlConverter.convert(data['reply_content'])
+        self.assertEqual(updated_reply.content_processed, expected_converted_data)
+
+    def test_adminCanEditUser1Reply(self):
+        self.loginAsAdmin()
+
+        data = self.getValidData()
+        resp = self.sendPostRequestToEditUser1Reply(data)
+        self.assertUser1ReplyWasUpdatedSuccessfully(data)
+
+        #edit is successful and user is redirected to the reply's post's detail page
+        self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.reply.reply_to.pk))
+
+    def test_user1CanEditOwnReply(self):
+        self.loginAsUser1()
+
+        data = self.getValidData()
+        resp = self.sendPostRequestToEditUser1Reply(data)
+        self.assertUser1ReplyWasUpdatedSuccessfully(data)
+
+        # edit is successful and user is redirected to the reply's post's detail page
+        self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.reply.reply_to.pk))
+
+    def user1ReplyWasUnchanged(self):
+        a = Reply.objects.get(pk= self.reply.pk)
+        b = self.reply
+
+        creator= a.creator == b.creator
+        post= a.reply_to == b.reply_to
+        content = a.content == b.content
+        content_processed = a.content_processed  == b.content_processed
+
+        return creator and post and content and content_processed
 
     def test_user2CanNotEditUser1Reply(self):
-        pass
+        self.loginAsUser2()
+
+        data = self.getValidData()
+        resp = self.sendPostRequestToEditUser1Reply(data)
+
+        self.assertTrue(self.user1ReplyWasUnchanged())
+        # edit failed and the user is shown no permission message
+        self.assertTemplateUsed(resp, TemplateNames.show_message)

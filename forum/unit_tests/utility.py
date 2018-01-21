@@ -61,8 +61,13 @@ class UrlContainer:
     def getCreateReplyUrl(cls):
         return reverse('forum:create_reply')
 
+    @classmethod
+    def getEditReplyUrl(cls):
+        return reverse('forum:edit_reply')
+
 
 class TemplateNames:
+    edit_reply_editor = 'forum/edit_reply_editor.html'
     user_profile_editor = 'forum/edit_user_editor.html'
     home_page= 'forum/home_page.html'
     about_page= 'forum/about_page.html'

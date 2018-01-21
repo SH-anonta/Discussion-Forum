@@ -102,7 +102,7 @@ class DeleteReplyTest(TestCase):
 class EditReplyTest(TestCase):
     def setUp(self):
         # only user1's reply will be edited, everyone will attempt to edit it
-        self.user1 = UserFactory.createUser('user1', 'password')
+        self.user1 = UserFactory.createUser('User1', 'password')
         self.user2 = UserFactory.createUser('User2', 'password')
         self.admin = UserFactory.createUser('Admin', 'password', staff=True)
 
@@ -120,7 +120,39 @@ class EditReplyTest(TestCase):
         success = self.client.login(username='Admin', password='password')
         self.assertTrue(success)
 
+    def sendGetRequest(self):
+        url = UrlContainer.getEditReplyUrl()
+        data= {
+            'reply_id' : self.reply.pk
+        }
+
+        return self.client.get(url, data)
+
     # for get requests
+
+    def test_editorPageLoadsForUser1EditingOwnReply(self):
+        self.loginAsUser1()
+
+        resp= self.sendGetRequest()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, TemplateNames.edit_reply_editor)
+
+    def test_editorPageLoadsForAdminEditingUser1Reply(self):
+        self.loginAsAdmin()
+
+        resp = self.sendGetRequest()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, TemplateNames.edit_reply_editor)
+
+    def test_editorPageDoesNotLoadForUser2EditingUser1Reply(self):
+        self.loginAsUser2()
+
+        resp = self.sendGetRequest()
+
+        # the user is shown the you don't have permission message
+        self.assertTemplateUsed(resp, TemplateNames.show_message)
 
     # for post requests
     def getFormDataToEditUser1Reply(self):

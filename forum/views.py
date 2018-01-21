@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
@@ -90,11 +91,16 @@ class DeletedPosts(View):
         return render(request, 'forum/show_message.html', context)
 
 class RecentPostList(View):
+    POSTS_PER_PAGE = 10
     def get(self, request):
         posts = Post.objects.filter(deleted=False).order_by('-creation_date')
 
+        paginator = Paginator(posts, self.POSTS_PER_PAGE )
+
+        page_number = request.GET.get('page', 1)
+
         context= {
-            'post_list' : posts
+            'post_list' : paginator.get_page(page_number),
         }
 
         return render(request, 'forum/recent_post_list.html', context)

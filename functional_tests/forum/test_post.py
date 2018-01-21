@@ -90,7 +90,6 @@ class CreatePostTests(BaseTestCase):
         self.assertEqual(post_title, post_detail_page.getPostTitle())
         self.assertEqual(post_content, post_detail_page.getPostContent())
 
-
 class DeletePostTest(BaseTestCase):
     def loadData(self):
         uname= 'User'

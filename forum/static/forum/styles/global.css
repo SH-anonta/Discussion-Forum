@@ -97,7 +97,6 @@ pre{
     font-weight: bold;
 }
 
-
 .AvatarContainer{
     background-color: #31493C;
 }
@@ -111,4 +110,13 @@ pre{
     margin-top: 10px;
     height: 80px;
     width:80px;
+}
+
+.btn-disabled,
+.btn-disabled:hover{
+    background-color: grey !important;
+}
+
+.btn-pagination{
+    min-width: 100px;
 }

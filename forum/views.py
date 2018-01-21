@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views import View
 
 from forum.models import Board, Post, Reply, UserProfile
+from forum.unit_tests.modelFactory import PostFactory
 from forum.utility import MarkdownToHtmlConverter
 
 # get only
@@ -23,15 +24,21 @@ class AboutPage(View):
         return render(request, 'forum/about_page.html')
 
 class BoardPosts(View):
+    POSTS_PER_PAGE= 20
+
     def get(self, request, board_id):
         """View list of (not deleted) posts of a page"""
 
         board = get_object_or_404(Board, pk=board_id)
         posts = board.post_set.filter(deleted=False).order_by('-creation_date')
 
+        paginator = Paginator(posts, self.POSTS_PER_PAGE)
+        page_number = request.GET.get('page', 1)
+        post_list = paginator.get_page(page_number)
+
         context= {
             'board' : board,
-            'post_list' : posts
+            'post_list' : post_list
         }
 
         return render(request, 'forum/board_posts.html', context)

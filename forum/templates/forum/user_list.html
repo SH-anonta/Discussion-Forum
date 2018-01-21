@@ -22,7 +22,7 @@
                         <th>Replies</th>
                     </tr>
                     
-                    {%for member in members%}
+                    {%for member in user_list%}
                     <tr>
                         <td>
                             <a href="{%url 'forum:user_detail' member.pk%}">{{member.username}}</a>
@@ -38,6 +38,34 @@
 
         </div>
 
+    <div id="PaginatorRow" class="row mt-3 mb-3">
+        <div class="col-sm-12 text-center">
+            {%if user_list.has_previous%}
+                <a class="btn btn-pagination" href="{%url 'forum:user_list'%}?page={{user_list.previous_page_number }}">
+                    Previous
+                </a>
+            {%else%}
+                <a class="btn btn-disabled btn-pagination" href="#">
+                    Previous
+                </a>
+            {%endif%}
+
+                <h5 class="h5 current ml-3 mr-3 d-inline">
+                    Page {{ user_list.number }} of {{ user_list.paginator.num_pages }}
+
+                </h5>
+
+            {%if user_list.has_next%}
+                <a class="btn btn-pagination" href="{%url 'forum:user_list'%}?page={{user_list.next_page_number }}">
+                    Next
+                </a>
+            {%else%}
+                <a class="btn btn-disabled btn-pagination" href="#">
+                    Next
+                </a>
+            {%endif%}
+        </div>
+    </div>
 
     </div>
 {%endblock%}

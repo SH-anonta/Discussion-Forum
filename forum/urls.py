@@ -17,7 +17,6 @@ urlpatterns = [
     path('users', UserList.as_view(), name='user_list'),
     path('recent-posts', RecentPostList.as_view(), name='recent_post_list'),
 
-
     # post only
     path('delete-post', login_required(DeletePost.as_view()), name='delete_post'),
     path('restore-post', login_required(RestorePost.as_view()), name='restore_post'),

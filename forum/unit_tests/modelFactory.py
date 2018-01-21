@@ -23,9 +23,11 @@ class UserFactory:
 
         users= []
         for x in range(n):
-            name = uname + str(cls.nextid())
+            u_id  = str(cls.nextid())
+            name = uname + u_id
             u = User.objects.create_user(username=name, password=pw)
             u.is_staff = staff
+            u.email = "%s@forum.rog" % (uname+ u_id,)
             u.save()
 
             up = UserProfile.objects.create(user= u)

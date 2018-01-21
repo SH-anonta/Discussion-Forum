@@ -91,7 +91,7 @@ class DeletedPosts(View):
         return render(request, 'forum/show_message.html', context)
 
 class RecentPostList(View):
-    POSTS_PER_PAGE = 10
+    POSTS_PER_PAGE = 20
     def get(self, request):
         posts = Post.objects.filter(deleted=False).order_by('-creation_date')
 
@@ -104,6 +104,22 @@ class RecentPostList(View):
         }
 
         return render(request, 'forum/recent_post_list.html', context)
+
+class UserList(View):
+    USERS_PER_PAGE= 20
+
+    def get(self, request):
+        users = User.objects.order_by('username')
+        paginator = Paginator(users, self.USERS_PER_PAGE)
+
+        page_number = request.GET.get('page', 1)
+        user_ist= paginator.get_page(page_number)
+
+        context= {
+            'user_list' : user_ist
+        }
+
+        return render(request, 'forum/user_list.html', context)
 
 # post only
 
@@ -184,15 +200,6 @@ class DeleteReply(View):
         }
 
         return render(request, 'forum/show_message.html', context)
-
-class UserList(View):
-    def get(self, request):
-
-        context= {
-            'members' : User.objects.order_by('username')
-        }
-
-        return render(request, 'forum/user_list.html', context)
 
 # get and post
 

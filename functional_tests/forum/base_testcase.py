@@ -85,7 +85,7 @@ class BaseTestCase(StaticLiveServerTestCase):
 
     def assertPostDetailPageLoaded(self):
         """test if the browser is currently in post editor page"""
-        url_pattern = '^https?://[0-9a-zA-Z.]+:\d+/forum/post/\d+$'
+        url_pattern = '^https?://[0-9a-zA-Z.]+:\d+/forum/post/\d+'
         self.assertRegex(self.browser.current_url, url_pattern)
 
     def login(self, uname, pw):

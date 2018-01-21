@@ -150,7 +150,10 @@ class CreateReply(View):
         reply.updateContent(content)
         reply.save()
 
-        return redirect(reverse('forum:post_detail', args= [reply_to_post_id]) )
+        url = reverse('forum:post_detail', args= [reply_to_post_id])
+        redirect_url = '%s?page=999999'
+        # after reply is created, go to the last page of post_detail (where this reply can be seen)
+        return redirect(redirect_url % (url,))
 
 class DeletePost(View):
     def post(self, request):

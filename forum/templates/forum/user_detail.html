@@ -17,11 +17,22 @@
         </div>
         {%endif%}
     </div>
-    
-    <div class="row">
+
+    <div class="row text-center">
+        <div class="col-sm-12">
+            <img class="AvatarIMG mt-0 mb-3" src="{%static 'forum/images/placeholder_icon.png'%}">
+            <p>click to change avatar</p>
+        </div>
+
+
+
+
+    </div>
+
+    <div class="row ">
         <div class="col-sm-12">
             
-            <table id="UserDataTable" class="table">
+            <table id="UserDataTable" class="table mx-auto">
                 <tr>
                     <td>User Name</td>
                     <td>{{user_profile.username}}</td>
@@ -56,11 +67,15 @@
     <style>
         #UserDataTable{
 /*            table-layout: fixed;*/
-            max-width: 500px;
+            max-width: 400px;
+            
         }
         
         #UserDataTable td:first-child{
             font-weight: bold;
+            column-width: 500px;
+            padding-left: 30px;
         }
+        
     </style>
 {%endblock%}

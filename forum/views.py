@@ -42,6 +42,7 @@ class BoardPosts(View):
 
         return render(request, 'forum/board_posts.html', context)
 
+#todo send show_edit_options variable to templates and remove permission checking in templates
 class PostDetail(View):
     """
         show the post's content and replies
@@ -72,6 +73,7 @@ class PostDetail(View):
         }
         return render(request, 'forum/show_message.html', context)
 
+#todo send show_edit_options variable to templates and remove permission checking in templates
 class UserDetail(View):
     def get(self, request, user_id):
         user = get_object_or_404(User, pk=user_id)

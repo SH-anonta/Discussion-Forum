@@ -148,7 +148,6 @@ class CreatePostTest(TestCase):
 
     # todo test for invalid data
 
-
 class EditPostTest(TestCase):
 
     def setUp(self):
@@ -346,3 +345,9 @@ class DeleteRestorePostTest(TestCase):
 
         # initially there was 1 post, one post delete attempt should fail have
         self.assertDeletedPostCount(0)
+
+class RecentPostListTest(TestCase):
+    pass
+    #todo implement
+
+

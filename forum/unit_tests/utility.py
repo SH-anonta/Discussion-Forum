@@ -65,8 +65,14 @@ class UrlContainer:
     def getEditReplyUrl(cls):
         return reverse('forum:edit_reply')
 
+    @classmethod
+    def getRecentPostsUrl(cls):
+        return reverse('forum:recent_post_list')
+
 
 class TemplateNames:
+    #todo turn these into readonly properties
+    recent_posts_list = 'forum/recent_post_list.html'
     edit_reply_editor = 'forum/edit_reply_editor.html'
     user_profile_editor = 'forum/edit_user_editor.html'
     home_page= 'forum/home_page.html'

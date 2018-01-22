@@ -69,13 +69,15 @@ class UrlContainer:
     def getRecentPostsUrl(cls):
         return reverse('forum:recent_post_list')
 
+    @classmethod
+    def getUserListUrl(cls):
+        return reverse('forum:user_list')
+
 
 class TemplateNames:
     #todo turn these into readonly properties
-    recent_posts_list = 'forum/recent_post_list.html'
-    edit_reply_editor = 'forum/edit_reply_editor.html'
-    user_profile_editor = 'forum/edit_user_editor.html'
     home_page= 'forum/home_page.html'
+    user_list = 'forum/user_list.html'
     about_page= 'forum/about_page.html'
     login_page = 'forum/login_page.html'
     board_posts= 'forum/board_posts.html'
@@ -84,7 +86,10 @@ class TemplateNames:
     show_message = 'forum/show_message.html'
     deleted_posts= 'forum/deleted_posts.html'
     edit_post_editor= 'forum/edit_post_editor.html'
+    recent_posts_list = 'forum/recent_post_list.html'
+    edit_reply_editor = 'forum/edit_reply_editor.html'
     registration_page = 'forum/registration_page.html'
+    user_profile_editor = 'forum/edit_user_editor.html'
     create_post_editor= 'forum/create_post_editor.html'
     global_base_template= 'forum/global_base_template.html'
     layout_base_template= 'forum/layout_base_template.html'

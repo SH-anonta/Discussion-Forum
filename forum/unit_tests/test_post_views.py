@@ -347,7 +347,18 @@ class DeleteRestorePostTest(TestCase):
         self.assertDeletedPostCount(0)
 
 class RecentPostListTest(TestCase):
-    pass
-    #todo implement
+    def setUp(self):
+        self.posts = PostFactory.createPosts(2)
+
+    def test_pageLoads(self):
+        """This page should be accessible to all"""
+
+        url = UrlContainer.getRecentPostsUrl()
+
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, TemplateNames.recent_posts_list)
+
 
 

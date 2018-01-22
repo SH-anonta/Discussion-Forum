@@ -130,15 +130,15 @@ class EditUserProfileTest(TestCase):
 
 class UserListTest(TestCase):
     def setUp(self):
-        self.posts = PostFactory.createPosts(5)
+        self.users = UserFactory.createUsers(2)
 
     def test_PageLoads(self):
         """page should load for anyone"""
 
         # not logged in,
 
-        url = UrlContainer.getRecentPostsUrl()
+        url = UrlContainer.getUserListUrl()
         resp = self.client.get(url)
 
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, TemplateNames.recent_posts_list)
+        self.assertTemplateUsed(resp, TemplateNames.user_list)

@@ -149,7 +149,6 @@ class CreatePostTest(TestCase):
     # todo test for invalid data
 
 
-# todo test content_processed is saved correctly
 class EditPostTest(TestCase):
 
     def setUp(self):
@@ -183,7 +182,12 @@ class EditPostTest(TestCase):
         #IMPORTANT: get updated post object from db
         post = Post.objects.get(pk=self.post.pk)
 
-        return post.title == self.new_title and post.content == self.new_content
+        expected_converted_data= MarkdownToHtmlConverter.convert(self.new_content)
+        post_content = post.content == self.new_content
+        content_processed = post.content_processed == expected_converted_data
+        post_title = post.title == self.new_title
+
+        return post_content and content_processed and post_title
 
     def loginAsAuthor(self):
         loggen_in= self.client.login(username= 'Author', password='password')

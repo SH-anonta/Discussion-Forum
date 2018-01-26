@@ -1,8 +1,7 @@
-from functional_tests.forum.base_testcase import BaseTestCase
-from unittest import skip
-from time import sleep
 
 from forum.models import User
+from forum.tests.functional_tests.base_testcase import BaseTestCase
+
 
 class LoginTest(BaseTestCase):
 

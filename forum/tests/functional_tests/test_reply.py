@@ -1,8 +1,5 @@
-from time import sleep
-from unittest import skip
-
-from functional_tests.forum.base_testcase import BaseTestCase
-from forum.unit_tests.modelFactory import *
+from forum.tests.functional_tests.base_testcase import BaseTestCase
+from forum.tests.unit_tests.modelFactory import *
 from forum.models import UserProfile
 
 class CreateReplyTest(BaseTestCase):

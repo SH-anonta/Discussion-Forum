@@ -1,9 +1,8 @@
-from unittest import skip
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from forum.unit_tests.modelFactory import UserFactory, PostFactory
-from forum.unit_tests.utility import UrlContainer, TemplateNames
+from forum.tests.unit_tests.modelFactory import UserFactory
+from forum.tests.unit_tests.utility import UrlContainer, TemplateNames
 
 class UserDetailTest(TestCase):
     def test_pageLoads(self):

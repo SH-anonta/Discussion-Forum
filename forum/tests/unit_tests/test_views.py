@@ -1,10 +1,9 @@
-from unittest import skip
 from django.contrib.auth.models import User
 from django.test import TestCase
 
 from forum.models import UserProfile
-from forum.unit_tests.modelFactory import UserFactory
-from forum.unit_tests.utility import UrlContainer, TemplateNames
+from forum.tests.unit_tests.modelFactory import UserFactory
+from forum.tests.unit_tests.utility import UrlContainer, TemplateNames
 from forum.utility import MarkdownToHtmlConverter
 
 

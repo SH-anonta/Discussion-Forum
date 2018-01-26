@@ -1,12 +1,9 @@
-from unittest import skip
-
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
 from selenium import webdriver
-import re
 
 # This class is to be inherited, don't put test code in here
-from functional_tests.forum.page_objects import BoardPostsPage, PostDetailPage, HomePage, PostEditorPage
+from forum.tests.functional_tests.page_objects import BoardPostsPage, PostDetailPage, HomePage, PostEditorPage
 
 
 class BaseTestCase(StaticLiveServerTestCase):

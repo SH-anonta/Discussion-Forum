@@ -1,10 +1,9 @@
-from datetime import datetime
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from forum.models import User, Board, Post, Reply
-from forum.unit_tests import modelFactory
-from forum.unit_tests.modelFactory import BoardFactory, PostFactory, ReplyFactory
+from forum.tests.unit_tests import modelFactory
+from forum.tests.unit_tests.modelFactory import BoardFactory, PostFactory, ReplyFactory
 from forum.utility import MarkdownToHtmlConverter
 
 

@@ -1,11 +1,9 @@
-from unittest import skip
-
 from django.test import TestCase
 from django.urls import reverse
 
 from forum.models import Post
-from forum.unit_tests.utility import UrlContainer, TemplateNames
-from forum.unit_tests.modelFactory import PostFactory, UserFactory, BoardFactory
+from forum.tests.unit_tests.utility import UrlContainer, TemplateNames
+from forum.tests.unit_tests.modelFactory import PostFactory, UserFactory, BoardFactory
 from forum.utility import MarkdownToHtmlConverter
 
 

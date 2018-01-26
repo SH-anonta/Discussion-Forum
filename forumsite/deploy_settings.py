@@ -1,0 +1,2 @@
+from forumsite.settings import *
+

@@ -442,3 +442,4 @@ class EditUserProfile(View):
 
         return render(request, 'forum/show_message.html', context)
 
+#todo add registration and login with google account

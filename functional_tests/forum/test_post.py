@@ -6,6 +6,8 @@ from forum.unit_tests.modelFactory import *
 from forum.models import UserProfile
 
 class CreatePostTests(BaseTestCase):
+    #todo add test for checking markdown converts to html correctly
+
     def loadData(self):
         BoardFactory.createBoards(1)
         uname= 'User'
@@ -100,7 +102,6 @@ class DeletePostTest(BaseTestCase):
         PostFactory.createPosts(1, author= u)
 
     def test_DeleteButtonUnavailableWhenNotLoggedIn(self):
-        browser = self.browser
 
         homepage = self.homepage
         board_posts_page = self.board_posts_page
@@ -168,3 +169,53 @@ class DeletePostTest(BaseTestCase):
         # todo fix test
         # deleted_post_count= Post.objects.filter(deleted=True).count()
         # self.assertEqual(deleted_post_count, 1)
+
+class EditPostTest(BaseTestCase):
+
+    def loadData(self):
+        user1= UserFactory.createUser('Admin', 'password')
+        admin= UserFactory.createUser('User1', 'password')
+        user2= UserFactory.createUsers(1)
+
+        PostFactory.createPosts(1, user1)
+
+    def loginAsUser1(self):
+        self.login('User1', 'password')
+
+    def loginAsAdmin(self):
+        self.login('Admin', 'password')
+
+    def test_unAuthenticatedUserCanNotSeeEditButton(self):
+        homepage = self.homepage
+        board_posts_page = self.board_posts_page
+        post_detail_page = self.post_detail_page
+
+        # the user goes to the home page, sees list of (links to)boards
+        self.goToHomePage()
+
+        # the user clicks on the first board link
+        boards = homepage.getBoardLinks()
+        boards[0].click()
+
+        # the user is sent to the board's board_posts page
+        self.assertBoardPostsPageLoaded()
+
+        #the user sees a list of (1) posts
+        # first post is created by User1
+        # user clicks on the first post link
+
+        posts = board_posts_page.getPostLinks()
+        posts[0].click()
+
+        # the user is sent to the post's post detail page
+        self.assertFalse(self.assertPostDetailPageLoaded())
+
+
+        # the user does not see any edit button on the post
+        post_detail_page.editButtonAvailable()
+
+    #todo write test for
+    # unauthenticated users doesn't see edit button
+    # admins can edit other user's posts
+    # users can edit their own posts
+    # users can't edit other's post

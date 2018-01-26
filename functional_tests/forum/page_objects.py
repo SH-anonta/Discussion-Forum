@@ -119,6 +119,9 @@ class PostDetailPage:
         # al = ff.switch_to.alert()
         # Alert(self.browser).accept()
 
+    def editButtonAvailable(self):
+        return self.browser.find_elements_by_id('EditPostBTN') != 0
+
 class PostEditorPage:
     def __init__(self, web_driver):
         self.browser= web_driver

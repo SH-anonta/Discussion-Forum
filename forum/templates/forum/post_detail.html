@@ -32,7 +32,7 @@
                         <b>Posted {{post.creation_date|timesince}} ago</b>
                         {%if user.is_staff or user == post.creator.user %}
 
-                            <a class="btn btn-sm" href="{%url 'forum:edit_post'%}?post_id={{post.pk}}" >Edit</a>
+                            <a id="EditPostBTN" class="btn btn-sm" href="{%url 'forum:edit_post'%}?post_id={{post.pk}}" >Edit</a>
 
                             {%if post.deleted%}
                                 <form id="RestorePostForm" class="d-inline" action="{%url 'forum:restore_post'%}" method="POST">

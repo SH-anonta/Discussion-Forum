@@ -1,4 +1,4 @@
-
+import re
 from django.core.exceptions import ValidationError
 
 # constants
@@ -19,6 +19,10 @@ POST_CONTENT_MIN_LEN= 1
 REPLY_CONTENT_MAX_LEN= 1000
 REPLY_CONTENT_MIN_LEN= 16
 
+EMAIL_ADDRESS_NAME_MIN_LEN= 4
+EMAIL_ADDRESS_NAME_MAX_LEN= 50
+
+valid_username_pattern = re.compile(r'^\w{4,20}$')
 # validators
 
 def validate_username(uname):
@@ -27,6 +31,12 @@ def validate_username(uname):
         raise ValidationError('User name must be at least %d characters long' % (USER_NAME_MIN_LEN,))
     if l > USER_NAME_MAX_LEN:
         raise ValidationError('User name can not be longer than %d characters' % (USER_NAME_MAX_LEN,))
+
+    global valid_username_pattern
+    if not valid_username_pattern.finditer(uname):
+        raise ValidationError('Invalid Username')
+
+
 
 def validate_password(password):
     l= len(password)

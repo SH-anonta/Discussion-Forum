@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
+from forum import validators
 from forum.models import User
 from forum.validators import validate_password, validate_username
 
@@ -21,33 +22,51 @@ class UserRegistrationForm(forms.Form):
 
     #todo write and validators for confirm_password and email fields
 
+class RegistrationForm(forms.Form):
+    username = forms.CharField(
+        validators=[
+            validators.validate_username,
+        ],
+        max_length= validators.USER_NAME_MAX_LEN,
+        widget= forms.fields.TextInput(attrs={
+            'class' : 'form-control',
+            'placeholder': 'User Name',
+        }) 
+    )
+    email = forms.EmailField(
+        validators=[
+        ],
+        max_length= validators.EMAIL_ADDRESS_NAME_MAX_LEN,
+        widget= forms.fields.EmailField(attrs={
+            'class' : 'form-control',
+            'placeholder': 'Email',
+        })
+    )
 
-# For forms admin site
-class RegisterForm(forms.ModelForm):
-    password1= forms.CharField(widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
+    password = forms.CharField(
+        validators=[
+            validators.validate_password,
+        ],
+        max_length= validators.USER_PASSWORD_MAX_LEN,
+        widget=forms.PasswordInput( attrs={
+             'class': 'form-control'
+        })
+    )
 
+    confirm_password  = forms.CharField(
+        max_length= validators.USER_PASSWORD_MAX_LEN,
+        widget=forms.PasswordInput( attrs={
+             'class': 'form-control'
+        })
+    )
 
-    class Meta:
-        model = User
-        fields= ('username',)
+    def clean(self):
+        if self.cleaned_data['password'] != self.cleaned_data['confirm_password']:
+            raise ValueError('Passwords do not match')
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        qs = User.objects.filter(username=username)
+    
+    
 
-        if qs.exists():
-            raise forms.ValidationError('Username is unavailable')
-
-        return username
-
-    def clean_password2(self):
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Passwords don't match")
-
-        return password2
 
 class UserAdminCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)

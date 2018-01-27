@@ -1,4 +1,6 @@
 import re
+
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 # constants
@@ -26,17 +28,15 @@ valid_username_pattern = re.compile(r'^\w{4,20}$')
 # validators
 
 def validate_username(uname):
-    l= len(uname)
-    if l < USER_NAME_MIN_LEN:
-        raise ValidationError('User name must be at least %d characters long' % (USER_NAME_MIN_LEN,))
-    if l > USER_NAME_MAX_LEN:
-        raise ValidationError('User name can not be longer than %d characters' % (USER_NAME_MAX_LEN,))
-
+    msg = 'Invalid UserName!\nUser name must be 4-10 characters long and only contain alpha numeric characters'
     global valid_username_pattern
-    if not valid_username_pattern.finditer(uname):
-        raise ValidationError('Invalid Username')
 
+    if not valid_username_pattern.search(uname):
+        raise ValidationError(msg)
 
+    # check for existing username uniqueness
+    if User.objects.filter(username= uname).exists():
+        raise ValidationError('User name is not available')
 
 def validate_password(password):
     l= len(password)
@@ -45,3 +45,6 @@ def validate_password(password):
     if l > USER_PASSWORD_MAX_LEN:
         raise ValidationError('Password can not be longer than %d characters' % (USER_PASSWORD_MAX_LEN,))
 
+def validate_email(email):
+    if User.objects.filter(email=email).exists():
+        raise ValidationError('This email is being used in an existing account')

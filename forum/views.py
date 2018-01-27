@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.views import View
 
+from forum.forms import UserRegistrationForm
 from forum.models import Board, Post, Reply, UserProfile
 from forum.utility import MarkdownToHtmlConverter
 
@@ -252,20 +253,23 @@ class Register(View):
         if request.user.is_authenticated:
             return redirect('forum:homepage')
 
-        context= {'show_registration_failed_msg': False}
+        context= {
+            'show_registration_failed_msg': False,
+            'form' : UserRegistrationForm()
+        }
+
         return render(request, 'forum/registration_page.html', context)
 
-    # todo complete data validations
     def post(self, request):
-        POST = request.POST
-        uname = POST['username']
-        email= POST['email']
-        pw= POST['password']
-        confirm_pw= POST['confirm_password']
+        form = UserRegistrationForm(request.POST)
 
-        if pw != confirm_pw or User.objects.filter(username=uname).exists():
-            context = {'show_registration_failed_msg': True}
-            render(request, 'forum/registration_page.html', context)
+        if not form.is_valid():
+            return render(request, 'forum/registration_page.html', {'form' : form})
+
+        cleaned_data = form.cleaned_data
+        uname = cleaned_data['username']
+        email= cleaned_data['email']
+        pw= cleaned_data['password']
 
         user = User(username= uname)
         user.set_password(pw)

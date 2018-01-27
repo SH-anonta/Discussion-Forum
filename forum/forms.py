@@ -1,4 +1,6 @@
 from django import forms
+from django.core.exceptions import ValidationError
+
 from forum import validators
 
 
@@ -10,10 +12,12 @@ class UserRegistrationForm(forms.Form):
     )
     email = forms.EmailField(
         validators=[
+            validators.validate_email,
         ],
     )
 
     password = forms.CharField(
+
         validators=[
             validators.validate_password,
         ],
@@ -25,10 +29,6 @@ class UserRegistrationForm(forms.Form):
         ],
     )
 
-    def clean(self):
-        cleaned_data = super(UserRegistrationForm, self).clean()
+    def clean_confirm_password(self):
         if self.cleaned_data['password'] != self.cleaned_data['confirm_password']:
-            self.errors['pw_error']= 'Passwords do not match'
-            # raise ValueError('Passwords do not match')
-
-        return cleaned_data
+            raise ValidationError('Passwords do not match')

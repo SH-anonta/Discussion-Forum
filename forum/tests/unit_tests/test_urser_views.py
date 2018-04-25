@@ -5,6 +5,7 @@ from forum.tests.unit_tests.modelFactory import UserFactory
 from forum.tests.unit_tests.utility import UrlContainer, TemplateNames
 
 class UserDetailTest(TestCase):
+    # Test Case: 33
     def test_pageLoads(self):
         user = UserFactory.createUsers(1)[0]
 
@@ -63,6 +64,8 @@ class EditUserProfileTest(TestCase):
         return pw_changed and email_changed
 
     # get request tests
+
+    # Test Case: 34
     def test_editorPageLoadsForAdmin(self):
         """Admin should be able to access editor to edit User1's account"""
         self.loginAsAdmin()
@@ -71,6 +74,7 @@ class EditUserProfileTest(TestCase):
 
         self.assertTemplateUsed(resp, TemplateNames.user_profile_editor)
 
+    # Test Case: 35
     def test_editorPageLoadsForProfileOwner(self):
         """User1 should be able to access editor page when trying to edit his own account"""
         self.loginAsUser1()
@@ -79,6 +83,7 @@ class EditUserProfileTest(TestCase):
 
         self.assertTemplateUsed(resp, TemplateNames.user_profile_editor)
 
+    # Test Case: 36
     def test_editorPageDoesNotLoadForUser2(self):
         """User2 should not be able to access editor page when trying to edit User1's profile"""
         self.loginAsUser2()
@@ -89,6 +94,8 @@ class EditUserProfileTest(TestCase):
         self.assertTemplateUsed(resp, TemplateNames.show_message)
 
     # post request tests
+
+    # Test Case: 37
     def test_AdminCanEditProfiles(self):
         self.loginAsAdmin()
 
@@ -100,6 +107,7 @@ class EditUserProfileTest(TestCase):
         # edit was successful and user is redirected to the edited user profile's detail page
         self.assertRedirects(resp, UrlContainer.getUserDetailUrl(self.user1.pk))
 
+    # Test Case: 38
     def test_user1CanEditOwnProfile(self):
         self.loginAsUser1()
 
@@ -111,6 +119,7 @@ class EditUserProfileTest(TestCase):
         # edit was successful and user is redirected to the edited user profile's detail page
         self.assertRedirects(resp, UrlContainer.getUserDetailUrl(self.user1.pk))
 
+    # Test Case: 39
     def test_user2CanNotEditUser1Profile(self):
         """non admin users should not be able to edit other user's profiles"""
 
@@ -131,6 +140,7 @@ class UserListTest(TestCase):
     def setUp(self):
         self.users = UserFactory.createUsers(2)
 
+    # Test Case: 40
     def test_PageLoads(self):
         """page should load for anyone"""
 

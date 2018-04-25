@@ -21,12 +21,14 @@ class PostDetailTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'forum/post_detail.html')
 
+
     def loginAsNonAdminAuthorOfPost(self):
         self.client.login(username='Author', password='password')
 
     def loginAsAdmin(self):
         self.client.login(username='Admin', password='password')
 
+    # Test Case: 8
     def test_pageLoadsForNotLoggedInUser(self):
 
         #url to first post
@@ -35,6 +37,7 @@ class PostDetailTest(TestCase):
 
         self.assertPostWasLoaded(resp)
 
+    # Test Case: 9
     def test_pageLoadsForLoggedInUser(self):
         url = self.getUrlToPost()
 
@@ -44,6 +47,7 @@ class PostDetailTest(TestCase):
         resp= self.client.get(url)
         self.assertPostWasLoaded(resp)
 
+    # Test Case: 10
     def test_deletedPostIsNotLoadedForNonAdmin(self):
         url = self.getUrlToPost()
 
@@ -59,6 +63,7 @@ class PostDetailTest(TestCase):
         self.assertContains(resp, 'Error: This post has been deleted.')
         self.assertTemplateUsed(resp, 'forum/show_message.html')
 
+    # Test Case: 11
     def test_deletedPostIsLoadedForAdmin(self):
         """Admins should be able to view deleted posts"""
 
@@ -110,6 +115,7 @@ class CreatePostTest(TestCase):
 
         return data
 
+    # Test Case: 12
     def test_editorPageLoadsForUsers(self):
         self.loginAsAuthor()
         resp = self.sendGetRequest()
@@ -122,7 +128,7 @@ class CreatePostTest(TestCase):
         converted_data = MarkdownToHtmlConverter.convert(data['post_content'])
         self.assertEqual(post.content_processed, converted_data)
 
-
+    # Test Case: 13
     def test_validData(self):
         self.loginAsAuthor()
 
@@ -198,6 +204,7 @@ class EditPostTest(TestCase):
     def loginAsAdmin(self):
         self.client.login(username='Admin', password='password')
 
+    # Test Case: 14
     def test_postAuthorCanEdit(self):
         self.loginAsAuthor()
 
@@ -207,7 +214,7 @@ class EditPostTest(TestCase):
         self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.post.pk))
         self.assertTrue(self.editWasSuccessful())
 
-
+    # Test Case: 15
     def test_adminCanEditAnyPost(self):
         self.loginAsAdmin()
 
@@ -217,6 +224,7 @@ class EditPostTest(TestCase):
         self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.post.pk))
         self.assertTrue(self.editWasSuccessful())
 
+    # Test Case: 16
     def test_nonAuthorNonAdminCanNotEdit(self):
         self.loginAsUser()
 
@@ -244,6 +252,7 @@ class DeletedPostsTest(TestCase):
     def loginAsAdmin(self):
         self.client.login(username='Admin', password='password')
 
+    # Test Case: 17
     def test_adminsCanViewPage(self):
         self.loginAsAdmin()
 
@@ -252,6 +261,7 @@ class DeletedPostsTest(TestCase):
         resp = self.client.get(url)
         self.assertTemplateUsed(resp, TemplateNames.deleted_posts)
 
+    # Test Case: 18
     def test_UsersCanNotLoadPage(self):
         self.loginAsNonAdminAuthorOfPost()
 
@@ -274,6 +284,7 @@ class DeleteRestorePostTest(TestCase):
         deleted_posts = Post.objects.filter(deleted=True).count()
         self.assertEqual(deleted_posts, n)
 
+    # Test Case: 19
     def test_postAuthorCanDeletePost(self):
         """
             A user should be able to delete their own post
@@ -293,6 +304,7 @@ class DeleteRestorePostTest(TestCase):
         #1 post was created then deleted
         self.assertDeletedPostCount(1)
 
+    # Test Case: 20
     def test_adminsCanDeleteOtherUsersPost(self):
         """Admins can delete any user's post"""
         client = self.client
@@ -310,6 +322,7 @@ class DeleteRestorePostTest(TestCase):
         # 1 post was created then deleted
         self.assertDeletedPostCount(1)
 
+    # Test Case: 21
     def test_nonAdminUserCanNotRestorePost(self):
 
         #deleting the post initially
@@ -329,6 +342,7 @@ class DeleteRestorePostTest(TestCase):
         # initially 1 post was deleted and the delete attempt has failed
         self.assertDeletedPostCount(1)
 
+    # Test Case: 22
     def test_nonAuthorNonAdminCanNotDeletePost(self):
         """
             Non Admin users should not be able to delete other user's posts
@@ -348,6 +362,7 @@ class RecentPostListTest(TestCase):
     def setUp(self):
         self.posts = PostFactory.createPosts(2)
 
+    # Test Case: 23
     def test_pageLoads(self):
         """This page should be accessible to all"""
 

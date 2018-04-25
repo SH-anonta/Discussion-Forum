@@ -8,6 +8,7 @@ from forum.utility import MarkdownToHtmlConverter
 
 
 class HomePageTest(TestCase):
+    # Test Case: 41
     def test_pageLoads(self):
         url = UrlContainer.getHomePageUrl()
 
@@ -17,6 +18,7 @@ class HomePageTest(TestCase):
         self.assertTemplateUsed(resp, 'forum/home_page.html')
 
 class LoginTest(TestCase):
+    # Test Case: 42
     def test_pageLoads(self):
         url = UrlContainer.getLoginPageUrl()
         resp = self.client.get(url)
@@ -66,6 +68,7 @@ class LoginTest(TestCase):
         self.assertTemplateUsed(resp,'forum/login_page.html')
 
 class AboutPageTest(TestCase):
+    # Test Case: 43
     def test_pageLoads(self):
         url = UrlContainer.getAboutPage()
 
@@ -74,6 +77,7 @@ class AboutPageTest(TestCase):
         self.assertTemplateUsed(resp, TemplateNames.about_page)
 
 class RegisterTest(TestCase):
+    # Test Case: 44
     def test_RegisterPageLoads(self):
         url = UrlContainer.getLoginPageUrl()
 
@@ -95,6 +99,7 @@ class RegisterTest(TestCase):
         self.assertEqual(user.username, data['username'])
         self.assertEqual(user.email, data['email'])
 
+    # Test Case: 45
     def test_RegisterPostValidData(self):
         self.sendPostRequest(self.valid_data)
 
@@ -112,7 +117,7 @@ class MarkDownToHtmlTest(TestCase):
         UserFactory.createUser('User', 'password')
         self.client.login(username='User', password='password')
 
-
+    # Test Case: 46
     def test_conversion(self):
         self.loginAsUser()
 

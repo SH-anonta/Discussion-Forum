@@ -39,6 +39,7 @@ class CreateReplyTest(TestCase):
         self.assertEqual(reply.content_processed, expected_data)
         self.assertEqual(reply.creator.pk, self.user.pk)
 
+    # Test Case: 24
     def test_userCanCreateReply(self):
         self.loginAsUser()
         data= self.getValidData()
@@ -61,6 +62,7 @@ class DeleteReplyTest(TestCase):
         data = {'reply_id': 1}
         return data
 
+    # Test Case: 25
     def test_replyAuthorCanDelete(self):
         self.client.login(username='Author', password='password')
         url = UrlContainer.getDeleteReplyUrl()
@@ -73,6 +75,7 @@ class DeleteReplyTest(TestCase):
         # after successful delete, user should be redirected to the post(that contained the reply)
         self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.reply.reply_to.pk))
 
+    # Test Case: 26
     def test_adminCanDeleteAnyReply(self):
         self.client.login(username='Admin', password='password')
         url = UrlContainer.getDeleteReplyUrl()
@@ -85,6 +88,7 @@ class DeleteReplyTest(TestCase):
         # after successful delete, the admin should be redirected to the post(that contained the reply)
         self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.reply.reply_to.pk))
 
+    # Test Case: 27
     def test_nonAuthorNonAdminCanNotDelete(self):
         self.client.login(username='User', password='password')
         url = UrlContainer.getDeleteReplyUrl()
@@ -128,6 +132,7 @@ class EditReplyTest(TestCase):
 
     # for get requests
 
+    # Test Case: 28
     def test_editorPageLoadsForUser1EditingOwnReply(self):
         self.loginAsUser1()
 
@@ -136,6 +141,7 @@ class EditReplyTest(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, TemplateNames.edit_reply_editor)
 
+    # Test Case: 29
     def test_editorPageLoadsForAdminEditingUser1Reply(self):
         self.loginAsAdmin()
 
@@ -144,6 +150,7 @@ class EditReplyTest(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, TemplateNames.edit_reply_editor)
 
+    # Test Case: 30
     def test_editorPageDoesNotLoadForUser2EditingUser1Reply(self):
         self.loginAsUser2()
 
@@ -181,6 +188,7 @@ class EditReplyTest(TestCase):
         expected_converted_data = MarkdownToHtmlConverter.convert(data['reply_content'])
         self.assertEqual(updated_reply.content_processed, expected_converted_data)
 
+    # Test Case: 30
     def test_adminCanEditUser1Reply(self):
         self.loginAsAdmin()
 
@@ -191,6 +199,7 @@ class EditReplyTest(TestCase):
         #edit is successful and user is redirected to the reply's post's detail page
         self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.reply.reply_to.pk))
 
+    # Test Case: 31
     def test_user1CanEditOwnReply(self):
         self.loginAsUser1()
 
@@ -200,6 +209,7 @@ class EditReplyTest(TestCase):
 
         # edit is successful and user is redirected to the reply's post's detail page
         self.assertRedirects(resp, UrlContainer.getPostDetailUrl(self.reply.reply_to.pk))
+
 
     def user1ReplyWasUnchanged(self):
         a = Reply.objects.get(pk= self.reply.pk)
@@ -212,6 +222,7 @@ class EditReplyTest(TestCase):
 
         return creator and post and content and content_processed
 
+    # Test Case: 32
     def test_user2CanNotEditUser1Reply(self):
         self.loginAsUser2()
 

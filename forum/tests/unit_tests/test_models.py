@@ -8,20 +8,25 @@ from forum.utility import MarkdownToHtmlConverter
 
 
 class UserTest(TestCase):
+
+    # Test Case: 1
     def test_creation(self):
         modelFactory.UserFactory.createUsers(2)
         self.assertEqual(User.objects.count(), 2)
 
-    def test_CustomUserModelIsInUse(self):
-        self.assertEqual(User, get_user_model(), 'Customer User model is not in use')
+    # removed
+    # def test_CustomUserModelIsInUse(self):
+    #     self.assertEqual(User, get_user_model(), 'Customer User model is not in use')
 
     # todo write tests for invalid data handling
 
 class BoardTest(TestCase):
+    # Test Case: 2
     def test_creation(self):
         modelFactory.BoardFactory.createBoards(2)
         self.assertEqual(Board.objects.count(), 2)
 
+    # Test Case: 3
     def testPostCount(self):
         """
             test that board models return correct number of post they contain
@@ -45,10 +50,12 @@ class BoardTest(TestCase):
 
 
 class PostTest(TestCase):
+    # Test Case: 4
     def test_creation(self):
         modelFactory.PostFactory.createPosts(5)
         self.assertEqual(Post.objects.count(), 5)
 
+    # Test Case: 5
     def test_MarkDownIsRenderedCorrectly(self):
         post = PostFactory.createPosts(1)[0]
 
@@ -67,10 +74,13 @@ class PostTest(TestCase):
         self.assertEqual(converted_content, updated.content_processed)
 
 class ReplyTest(TestCase):
+
+    # Test Case: 6
     def test_creation(self):
         modelFactory.ReplyFactory.createReplies(3)
         self.assertEqual(Reply.objects.count(), 3)
 
+    # Test Case: 7
     def test_MarkDownIsRenderedCorrectly(self):
         reply = ReplyFactory.createReplies(1)[0]
 

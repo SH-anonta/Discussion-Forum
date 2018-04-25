@@ -10,6 +10,7 @@ class CreateReplyTest(BaseTestCase):
         u= User.objects.create_user(username= uname, password= pw)
         UserProfile.objects.create(user= u)
 
+    # Test Case: 57
     def test_createReply(self):
         browser = self.browser
 
@@ -51,4 +52,5 @@ class CreateReplyTest(BaseTestCase):
         #and the user sees his post in it
         self.assertTrue(post_detail_page.pageHasReply(reply_content))
 
-    #todo create test for trying to reply unauthorized
+    # todo create test for trying to reply unauthorized
+    # todo create test for unauthorized reply edit

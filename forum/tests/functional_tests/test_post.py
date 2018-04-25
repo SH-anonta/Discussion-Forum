@@ -12,6 +12,7 @@ class CreatePostTests(BaseTestCase):
         u= User.objects.create_user(username= uname, password= pw)
         UserProfile.objects.create(user=u)
 
+    # Test Case: 51
     def test_CreatePostButtonUnavailableWhenNotLoggedIn(self):
         """
             "New thread" button in board_posts template should
@@ -34,6 +35,7 @@ class CreatePostTests(BaseTestCase):
         #He looks at the top right of the page and does not see any button named "New Post"
         self.assertFalse(board_posts_page.newPostButtonIsPresent())
 
+    # Test Case: 52
     def test_CreatePost(self):
         browser = self.browser
 
@@ -98,6 +100,7 @@ class DeletePostTest(BaseTestCase):
 
         PostFactory.createPosts(1, author= u)
 
+    # Test Case: 53
     def test_DeleteButtonUnavailableWhenNotLoggedIn(self):
 
         homepage = self.homepage
@@ -123,6 +126,7 @@ class DeletePostTest(BaseTestCase):
         # delete button since he's not logged in
         self.assertFalse(post_detail_page.deletePostButtonIsAvailable())
 
+    # Test Case: 54
     def test_DeleteOwnPostSuccessful(self):
         browser = self.browser
 
@@ -182,6 +186,7 @@ class EditPostTest(BaseTestCase):
     def loginAsAdmin(self):
         self.login('Admin', 'password')
 
+    # Test Case: 55
     def test_unAuthenticatedUserCanNotSeeEditButton(self):
         homepage = self.homepage
         board_posts_page = self.board_posts_page

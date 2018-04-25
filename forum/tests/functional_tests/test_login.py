@@ -13,6 +13,8 @@ class LoginTest(BaseTestCase):
         u.save()
 
     # tests
+
+    # Test Case: 48
     def test_user_login_logout(self):
         """Simple login and then logout test"""
 
@@ -38,6 +40,7 @@ class LoginTest(BaseTestCase):
         login_link = browser.find_element_by_id('loginLNK')
         self.assertTrue('Login' in login_link.text)
 
+    # Test Case: 49
     def test_login_fail(self):
         """
             Story: User tries to login with invalid data
@@ -66,6 +69,7 @@ class LoginTest(BaseTestCase):
         # and he sees the message 'Login failed' near the form
         self.assertTrue('Login failed' in browser.page_source)
 
+    # Test Case: 50
     def test_relogin_attempt(self):
         """
             Story: User logs in successfully then tries to login again,

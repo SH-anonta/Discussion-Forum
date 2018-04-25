@@ -5,6 +5,7 @@ class RegistrationTest(BaseTestCase):
     def loadData(self):
         pass
 
+    # Test Case: 56
     def test_basicRegistration(self):
         browser = self.browser
         #Page object
